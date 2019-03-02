@@ -11,6 +11,7 @@
 
 .idea
 /__tests__
+/components/__tests__
 
 # misc
 .DS_Store
