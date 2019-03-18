@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Header, Content, Footer, FooterTab, Button, Icon, Text } from 'native-base';
+import { Container, Content, Footer, FooterTab, Button, Icon, Text } from 'native-base';
 
 export default class FooterTabsIconTextExample extends Component {
     render() {

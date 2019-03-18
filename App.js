@@ -1,6 +1,8 @@
+// React Navigation
 import {createStackNavigator, createAppContainer} from 'react-navigation';
+
+// Import Screens
 import QuizScreen from "./screens/QuizScreen";
-import HomeScreen from "./screens/HomeScreen";
 import PortfolioScreen from "./screens/PortfolioScreen";
 import FundScreen from "./screens/FundScreen";
 

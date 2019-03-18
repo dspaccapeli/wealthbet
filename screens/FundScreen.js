@@ -1,27 +1,18 @@
 // React
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 
-import { SafeAreaView, StatusBar, Platform } from 'react-native';
-
-// Expo
-import { Font } from 'expo';
-import { Ionicons } from '@expo/vector-icons';
 // Native Base
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
+import { Button, Text } from 'native-base';
 
 // Styles
-
 import { styles } from "../styles/util";
 
 // Components
-
 import DevNavigationFooter from "../components/DevNavigationFooter"
 
+/* Structure
 
-// Structure
-
-/*
     QuizScreen
     |
     --- QuizHeader
@@ -34,8 +25,8 @@ import DevNavigationFooter from "../components/DevNavigationFooter"
 */
 
 export default class FundScreen extends Component {
-    // Navigation options
 
+    // Navigation options
     static navigationOptions = {
         title: 'Quiz',
     };
