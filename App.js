@@ -1,25 +1,39 @@
+// React
 import React, { Component } from 'react';
-import { AppRegistry, SectionList, StyleSheet, Text, View } from 'react-native';
+// Expo
+import { Font } from 'expo';
+import { Ionicons } from '@expo/vector-icons';
+// Native Base
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
+
 
 export default class Quiz extends Component {
     render() {
         return (
-            <View>
+            <Container>
                 <QuizHeader />
                 <QuestionContainer />
                 <StepBar />
-            </View>
+            </Container>
         );
+    }
+
+    async componentDidMount() {
+        await Font.loadAsync({
+            'Roboto': require('native-base/Fonts/Roboto.ttf'),
+            'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+            ...Ionicons.font,
+        });
     }
 }
 
 class QuizHeader extends Component {
     render() {
         return (
-            <View>
+            <Container>
                 <Text>Quiz</Text>
                 <Text>We want to know more about you</Text>
-            </View>
+            </Container>
         );
     }
 }
@@ -28,10 +42,10 @@ class QuizHeader extends Component {
 class QuestionContainer extends Component {
     render() {
         return (
-            <View>
+            <Container>
                 <Question />
                 <Choices />
-            </View>
+            </Container>
         );
     }
 }
@@ -39,10 +53,10 @@ class QuestionContainer extends Component {
 class Question extends Component {
     render() {
         return (
-            <View>
+            <Container>
                 <Text>Question 1:</Text>
                 <Text>Do you like Apple?</Text>
-            </View>
+            </Container>
         );
     }
 }
@@ -50,11 +64,11 @@ class Question extends Component {
 class Choices extends Component {
     render() {
         return (
-            <View>
+            <Container>
                 <Text>Yes</Text>
                 <Text>No</Text>
                 <Text>Maybe</Text>
-            </View>
+            </Container>
         );
     }
 }
@@ -62,9 +76,9 @@ class Choices extends Component {
 class StepBar extends Component {
     render() {
         return (
-            <View>
+            <Container>
                 <Text>Step 1</Text>
-            </View>
+            </Container>
         );
     }
 }
