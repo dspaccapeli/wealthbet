@@ -1,12 +1,35 @@
 // React
 import React, { Component } from 'react';
 import { View } from 'react-native';
+
+import { SafeAreaView } from 'react-native';
+
 // Expo
 import { Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
+
 // Native Base
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
 
+// Styles
+import { styles } from "../styles/util";
+
+// Components
+
+import DevNavigationFooter from "../components/DevNavigationFooter"
+
+/* Structure
+
+    QuizScreen
+    |
+    --- QuizHeader
+    |
+    --- QuestionContainer
+        |
+        --- Question
+        |
+        --- Choices
+*/
 
 export default class QuizScreen extends Component {
     // Navigation options
@@ -17,12 +40,11 @@ export default class QuizScreen extends Component {
 
     render() {
         return (
-            <Container>
-                <Header/>
+            <SafeAreaView style={ styles.underStatusBar }>
                 <QuizHeader />
                 <QuestionContainer />
-                <StepBar />
-            </Container>
+                <DevNavigationFooter navigation={this.props.navigation}/>
+            </SafeAreaView>
         );
     }
 
@@ -62,7 +84,7 @@ class Question extends Component {
     render() {
         return (
             <View>
-                <Text>Question 1:</Text>
+                <Text>Question 1 of 3:</Text>
                 <Text>Do you like Apple?</Text>
             </View>
         );
@@ -73,38 +95,19 @@ class Choices extends Component {
     render() {
         return (
             <View>
-                <Button block success>
+                <Button block>
                     <Text>Yes</Text>
                 </Button>
-                <Button block Danger>
+                <Button block>
                     <Text>No</Text>
                 </Button>
-                <Button block warning>
+                <Button block>
                     <Text>Maybe</Text>
                 </Button>
             </View>
         );
     }
 }
-
-class StepBar extends Component {
-    render() {
-        return (
-            <View>
-                <Text>Step 1</Text>
-            </View>
-        );
-    }
-}
-
-
-
-// QuizScreen
-// QuizHeader
-// QuestionContainer
-// Question
-// Choices
-// StepBar
 
 
 // skip this line if using Create React Native App

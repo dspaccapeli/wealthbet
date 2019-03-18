@@ -18,7 +18,6 @@ import { styles } from "../styles/util";
 
 import DevNavigationFooter from "../components/DevNavigationFooter"
 
-
 // Structure
 
 /*
@@ -33,7 +32,7 @@ import DevNavigationFooter from "../components/DevNavigationFooter"
         --- Choices
 */
 
-export default class FundScreen extends Component {
+export default class PortfolioScreen extends Component {
     // Navigation options
 
     static navigationOptions = {
@@ -63,7 +62,7 @@ class QuizHeader extends Component {
     render() {
         return (
             <View>
-                <Text>FUND</Text>
+                <Text>PORTFOLIO</Text>
                 <Text>We want to know more about you</Text>
             </View>
         );
