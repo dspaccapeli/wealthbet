@@ -1,15 +1,19 @@
 // React
 import React, { Component } from 'react';
-import { View, SafeAreaView } from 'react-native';
+import { View } from 'react-native';
 
 // Native Base
-import { Button, Text } from 'native-base';
+import { Container, Content, Button, Text } from 'native-base';
 
 // Styles
 import { styles } from "../styles/util";
 
 // Components
 import DevNavigationFooter from "../components/DevNavigationFooter"
+
+// JS utils
+
+import { loremIpsum } from "../constants/util"
 
 /* Structure
 
@@ -33,11 +37,13 @@ export default class PortfolioScreen extends Component {
 
     render() {
         return (
-            <SafeAreaView style={ styles.underStatusBar }>
-                <QuizHeader />
-                <QuestionContainer />
-                <DevNavigationFooter navigation={this.props.navigation}/>
-            </SafeAreaView>
+            <Container style={ styles.underStatusBar }>
+                <Content>
+                    <QuizHeader />
+                    <QuestionContainer />
+                </Content>
+                <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
+            </Container>
         );
     }
 

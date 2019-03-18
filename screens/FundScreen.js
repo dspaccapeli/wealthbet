@@ -1,6 +1,6 @@
 // React
 import React, { Component } from 'react';
-import { View, SafeAreaView } from 'react-native';
+import { View } from 'react-native';
 
 // Native Base
 import { Text, Button, Container, Content, Card, CardItem, Body, Segment } from 'native-base';
@@ -15,6 +15,9 @@ import DevNavigationFooter from "../components/DevNavigationFooter"
 import { StackedAreaChart } from 'react-native-svg-charts'
 import * as shape from 'd3-shape'
 
+// JS utils
+
+import { loremIpsum } from "../constants/util"
 
 /* Structure
 
@@ -50,15 +53,17 @@ export default class FundScreen extends Component {
 
     render() {
         return (
-            <SafeAreaView style={ styles.underStatusBar }>
-                <FundHeader />
-                <FundChart />
-                <FundStatistics />
-                <FundInfo />
-                <News />
-                <Sell />
-                <DevNavigationFooter navigation={this.props.navigation}/>
-            </SafeAreaView>
+            <Container style={ styles.underStatusBar }>
+                <Content>
+                    <FundHeader />
+                    <FundChart />
+                    <FundStatistics />
+                    <FundInfo />
+                    <News />
+                    <Sell />
+                </Content>
+                <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
+            </Container>
         );
     }
 
@@ -155,20 +160,20 @@ class TimeScale extends React.PureComponent {
 
     render() {
         return (
-                <Segment style={ styles.noBackgroundColor }>
-                    <Button first>
-                        <Text>6 months</Text>
-                    </Button>
-                    <Button>
-                        <Text>YTD</Text>
-                    </Button>
-                    <Button>
-                        <Text>5 years</Text>
-                    </Button>
-                    <Button last active>
-                        <Text>All time</Text>
-                    </Button>
-                </Segment>
+            <Segment style={ styles.noBackgroundColor }>
+                <Button first>
+                    <Text>6 months</Text>
+                </Button>
+                <Button>
+                    <Text>YTD</Text>
+                </Button>
+                <Button>
+                    <Text>5 years</Text>
+                </Button>
+                <Button last active>
+                    <Text>All time</Text>
+                </Button>
+            </Segment>
         )
     }
 }
@@ -197,7 +202,7 @@ class FundDescription extends  Component {
         return (
             <View>
                 <Text> Info </Text>
-                <Text> Lorem Ipsum </Text>
+                <Text> { loremIpsum } </Text>
             </View>
         );
     }
@@ -213,7 +218,7 @@ class FundAlert extends  Component {
                 <CardItem>
                     <Body>
                     <Text>
-                        Lorem ipsum
+                        { loremIpsum }
                     </Text>
                     </Body>
                 </CardItem>
@@ -227,7 +232,7 @@ class News extends  Component {
         return (
             <View>
                 <Text> News </Text>
-                <Text> Lorem Ipsum </Text>
+                <Text> { loremIpsum } </Text>
             </View>
         );
     }

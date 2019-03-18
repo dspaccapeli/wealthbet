@@ -4,34 +4,31 @@ import { Container, Content, Footer, FooterTab, Button, Icon, Text } from 'nativ
 export default class FooterTabsIconTextExample extends Component {
     render() {
         return (
-            <Container>
-                <Content />
-                <Footer>
-                    <FooterTab>
-                        <Button
-                            vertical
-                            onPress={() => this.props.navigation.navigate('Quiz')}
-                        >
-                            <Icon name="md-help" />
-                            <Text>Quiz</Text>
-                        </Button>
-                        <Button
-                            vertical
-                            onPress={() => this.props.navigation.navigate('Portfolio')}
-                        >
-                            <Icon name="md-briefcase" />
-                            <Text>Portfolio</Text>
-                        </Button>
-                        <Button
-                            vertical
-                            onPress={() => this.props.navigation.navigate('Fund')}
-                        >
-                            <Icon name="md-analytics" />
-                            <Text>Fund</Text>
-                        </Button>
-                    </FooterTab>
-                </Footer>
-            </Container>
+            <Footer>
+                <FooterTab>
+                    <Button
+                        vertical
+                        onPress={() => this.props.navigation.navigate('Quiz')}
+                    >
+                        <Icon name="md-help" />
+                        <Text>Quiz</Text>
+                    </Button>
+                    <Button
+                        vertical
+                        onPress={() => this.props.navigation.navigate('Portfolio')}
+                    >
+                        <Icon name="md-briefcase" />
+                        <Text>Portfolio</Text>
+                    </Button>
+                    <Button
+                        vertical
+                        onPress={() => this.props.navigation.navigate('Fund')}
+                    >
+                        <Icon name="md-analytics" />
+                        <Text>Fund</Text>
+                    </Button>
+                </FooterTab>
+            </Footer>
         );
     }
 }
