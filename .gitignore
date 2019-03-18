@@ -12,6 +12,7 @@
 .idea
 /__tests__
 /components/__tests__
+PasteBin.js
 
 # misc
 .DS_Store
