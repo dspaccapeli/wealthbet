@@ -7,12 +7,16 @@ import PortfolioScreen from "./screens/PortfolioScreen";
 import FundScreen from "./screens/FundScreen";
 
 import React from 'react';
+import CalculatorScreen from "./screens/CalculatorScreen";
+import PresentationScreen from "./screens/PresentationScreen";
 
 const MainNavigator = createStackNavigator(
     {
         Quiz: {screen: QuizScreen},
         Portfolio: {screen: PortfolioScreen},
         Fund: {screen: FundScreen},
+        Presentation: {screen: PresentationScreen},
+        Calculator: {screen: CalculatorScreen},
     },
     {
         mode: 'modal',

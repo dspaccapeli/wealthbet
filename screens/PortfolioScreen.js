@@ -17,15 +17,29 @@ import { loremIpsum } from "../constants/util"
 
 /* Structure
 
-    QuizScreen
+    PortfolioScreen
     |
-    --- QuizHeader
+    --- PortfolioHeader
+        |
+        --- PortfolioTitle
+        |
+        --- UserProfile
     |
-    --- QuestionContainer
+    --- PortfolioChart
         |
-        --- Question
+        --- ChartArea
+    |
+    --- PortfolioStatistics
+    |
+    --- FundList
         |
-        --- Choices
+        --- FundCard
+            |
+            --- FundAlert
+            |
+            --- FundInfo
+    |
+    --- AddFund
 */
 
 export default class PortfolioScreen extends Component {
@@ -39,8 +53,25 @@ export default class PortfolioScreen extends Component {
         return (
             <Container style={ styles.underStatusBar }>
                 <Content>
-                    <QuizHeader />
-                    <QuestionContainer />
+                    <PortfolioHeader />
+                    {/*
+                    --- PortfolioTitle
+                    |
+                    --- UserProfile*/}
+                    <PortfolioChart />
+                    {/*
+                    --- ChartArea
+                    |
+                    --- PortfolioStatistics*/}
+                    <FundList />
+                    {/*
+                    --- FundCard
+                    |
+                    --- FundAlert
+                    |
+                    --- FundInfo
+                    */}
+                    <AddFund />
                 </Content>
                 <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
             </Container>
