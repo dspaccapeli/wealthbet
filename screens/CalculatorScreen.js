@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
+import {styles} from "../styles/util";
+import DevNavigationFooter from "./PortfolioScreen";
 
 export default class CalculatorScreen extends Component {
     render () {
         return (
-            <Container>
+            <Container style={ styles.underStatusBar }>
                 <Header>
                     Calculator
                 </Header>
@@ -28,6 +30,7 @@ export default class CalculatorScreen extends Component {
 
 
                 </Content>
+                <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
             </Container>
         );
     }

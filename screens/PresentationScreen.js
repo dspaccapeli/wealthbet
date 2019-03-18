@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
+import {styles} from "../styles/util";
+import DevNavigationFooter from "./PortfolioScreen";
 
 export default class PresentationScreen extends Component {
     render () {
         return (
-            <Container>
+            <Container style={ styles.underStatusBar }>
                 <Header>
                     Presentation
                 </Header>
@@ -21,6 +23,7 @@ export default class PresentationScreen extends Component {
                         // See more button
                     </FundsSlideShow>
                 </Content>
+                <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
             </Container>
         );
     }
