@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { View, SafeAreaView } from 'react-native';
 
 // Native Base
-import { Button, Text } from 'native-base';
+import { Text, Button, Container, Content, Card, CardItem, Body, Segment } from 'native-base';
 
 // Styles
 import { styles } from "../styles/util";
@@ -11,31 +11,52 @@ import { styles } from "../styles/util";
 // Components
 import DevNavigationFooter from "../components/DevNavigationFooter"
 
+// Chart
+import { StackedAreaChart } from 'react-native-svg-charts'
+import * as shape from 'd3-shape'
+
+
 /* Structure
 
-    QuizScreen
+    FundScreen
     |
-    --- QuizHeader
+    --- FundHeader
     |
-    --- QuestionContainer
+    --- FundChart
         |
-        --- Question
+        --- ChartArea
         |
-        --- Choices
+        --- TimeScale
+    |
+    --- FundStatistics
+    |
+    --- FundInfo
+        |
+        --- FundDescription
+        |
+        --- FundAlert
+    |
+    --- News
+    |
+    --- Sell
 */
 
 export default class FundScreen extends Component {
 
     // Navigation options
     static navigationOptions = {
-        title: 'Quiz',
+        title: 'Fund',
     };
 
     render() {
         return (
             <SafeAreaView style={ styles.underStatusBar }>
-                <QuizHeader />
-                <QuestionContainer />
+                <FundHeader />
+                <FundChart />
+                <FundStatistics />
+                <FundInfo />
+                <News />
+                <Sell />
                 <DevNavigationFooter navigation={this.props.navigation}/>
             </SafeAreaView>
         );
@@ -50,57 +71,178 @@ export default class FundScreen extends Component {
     } */
 }
 
-class QuizHeader extends Component {
+class FundHeader extends Component {
     render() {
         return (
             <View>
-                <Text>FUND</Text>
-                <Text>We want to know more about you</Text>
+                <Text>Fund 1</Text>
+                <Text>Short description</Text>
             </View>
         );
     }
 }
 
-
-class QuestionContainer extends Component {
+class FundChart extends  Component {
     render() {
         return (
             <View>
-                <Question />
-                <Choices />
+                <ChartArea />
+                <TimeScale />
             </View>
         );
     }
 }
 
-class Question extends Component {
+class ChartArea extends React.PureComponent {
+
+    render() {
+
+        const data = [
+            {
+                month: new Date(2015, 0, 1),
+                apples: 3840,
+                bananas: 1920,
+                cherries: 960,
+                dates: 400,
+            },
+            {
+                month: new Date(2015, 1, 1),
+                apples: 1600,
+                bananas: 1440,
+                cherries: 960,
+                dates: 400,
+            },
+            {
+                month: new Date(2015, 2, 1),
+                apples: 640,
+                bananas: 960,
+                cherries: 3640,
+                dates: 400,
+            },
+            {
+                month: new Date(2015, 3, 1),
+                apples: 3320,
+                bananas: 480,
+                cherries: 640,
+                dates: 400,
+            },
+        ];
+
+        const colors = [ '#8800cc', '#aa00ff', '#cc66ff', '#eeccff' ];
+        const keys   = [ 'apples', 'bananas', 'cherries', 'dates' ];
+        const svgs = [
+            { onPress: () => console.log('apples') },
+            { onPress: () => console.log('bananas') },
+            { onPress: () => console.log('cherries') },
+            { onPress: () => console.log('dates') },
+        ];
+
+        return (
+            <StackedAreaChart
+                style={ { height: 200, paddingVertical: 16 } }
+                data={ data }
+                keys={ keys }
+                colors={ colors }
+                curve={ shape.curveNatural }
+                showGrid={ false }
+                svgs={ svgs }
+            />
+        )
+    }
+}
+
+class TimeScale extends React.PureComponent {
+
+    render() {
+        return (
+                <Segment style={ styles.noBackgroundColor }>
+                    <Button first>
+                        <Text>6 months</Text>
+                    </Button>
+                    <Button>
+                        <Text>YTD</Text>
+                    </Button>
+                    <Button>
+                        <Text>5 years</Text>
+                    </Button>
+                    <Button last active>
+                        <Text>All time</Text>
+                    </Button>
+                </Segment>
+        )
+    }
+}
+
+class FundStatistics extends  Component {
+    render() {
+        return (
+            <Text>PUT 100 VALUE 200 GAIN 3%</Text>
+        )
+    }
+}
+
+class FundInfo extends  Component {
     render() {
         return (
             <View>
-                <Text>Question 1 of 3:</Text>
-                <Text>Do you like Apple?</Text>
+                <FundDescription />
+                <FundAlert />
             </View>
         );
     }
 }
 
-class Choices extends Component {
+class FundDescription extends  Component {
     render() {
         return (
             <View>
-                <Button block>
-                    <Text>Yes</Text>
-                </Button>
-                <Button block>
-                    <Text>No</Text>
-                </Button>
-                <Button block>
-                    <Text>Maybe</Text>
-                </Button>
+                <Text> Info </Text>
+                <Text> Lorem Ipsum </Text>
             </View>
         );
     }
 }
+
+class FundAlert extends  Component {
+    render() {
+        return (
+            <Card>
+                <CardItem header>
+                    <Text>Important</Text>
+                </CardItem>
+                <CardItem>
+                    <Body>
+                    <Text>
+                        Lorem ipsum
+                    </Text>
+                    </Body>
+                </CardItem>
+            </Card>
+        );
+    }
+}
+
+class News extends  Component {
+    render() {
+        return (
+            <View>
+                <Text> News </Text>
+                <Text> Lorem Ipsum </Text>
+            </View>
+        );
+    }
+}
+
+class Sell extends  Component {
+    render() {
+        return (
+            <Button large>
+                <Text>Sell</Text>
+            </Button>
+        );
+    }
+}
+
 
 
 // skip this line if using Create React Native App

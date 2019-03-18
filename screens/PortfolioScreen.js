@@ -28,7 +28,7 @@ export default class PortfolioScreen extends Component {
 
     // Navigation options
     static navigationOptions = {
-        title: 'Quiz',
+        title: 'Portfolio',
     };
 
     render() {
