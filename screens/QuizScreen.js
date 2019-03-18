@@ -8,16 +8,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
 
 
-export default class Quiz extends Component {
+export default class QuizScreen extends Component {
+    // Navigation options
+
+    static navigationOptions = {
+        title: 'Quiz',
+    };
+
     render() {
         return (
             <Container>
-                <Header>
-                    <Button transparent>
-                        <Icon name='ios-arrow-back' />
-                    </Button>
-
-                </Header>
+                <Header/>
                 <QuizHeader />
                 <QuestionContainer />
                 <StepBar />
@@ -98,7 +99,7 @@ class StepBar extends Component {
 
 
 
-// Quiz
+// QuizScreen
 // QuizHeader
 // QuestionContainer
 // Question
