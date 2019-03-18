@@ -57,7 +57,7 @@ class QuizHeader extends Component {
         return (
             <View>
                 <Text>Quiz</Text>
-                <Text>We want to know more about you</Text>
+                <Text note>We want to know more about you</Text>
             </View>
         );
     }
@@ -80,7 +80,7 @@ class Question extends Component {
         return (
             <View>
                 <Text>Question 1 of 3:</Text>
-                <Text>Do you like Apple?</Text>
+                <Text note>Do you like Apple?</Text>
             </View>
         );
     }

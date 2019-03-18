@@ -202,7 +202,7 @@ class FundDescription extends  Component {
         return (
             <View>
                 <Text> Info </Text>
-                <Text> { loremIpsum } </Text>
+                <Text note> { loremIpsum } </Text>
             </View>
         );
     }
@@ -217,7 +217,7 @@ class FundAlert extends  Component {
                 </CardItem>
                 <CardItem>
                     <Body>
-                    <Text>
+                    <Text note>
                         { loremIpsum }
                     </Text>
                     </Body>
@@ -232,7 +232,7 @@ class News extends  Component {
         return (
             <View>
                 <Text> News </Text>
-                <Text> { loremIpsum } </Text>
+                <Text note> { loremIpsum } </Text>
             </View>
         );
     }

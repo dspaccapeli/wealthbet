@@ -14,5 +14,8 @@ export const styles = StyleSheet.create({
     },
     noBackgroundColor : {
         backgroundColor: '#ffffff',
+    },
+    roundElement : {
+        borderRadius: 64,
     }
 });

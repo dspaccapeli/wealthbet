@@ -21,7 +21,7 @@ const MainNavigator = createStackNavigator(
     {
         mode: 'modal',
         headerMode: 'none',
-        initialRouteName: "Fund"
+        initialRouteName: "Portfolio"
     });
 
 const AppContainer = createAppContainer(MainNavigator);
