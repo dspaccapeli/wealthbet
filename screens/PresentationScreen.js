@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Container, View, Header, Button, Body, Content, Card, CardItem, Thumbnail, Left, Icon, Text, Image } from 'native-base';
-import CardSilder from 'react-native-cards-slider';
+import { Container, View, DeckSwiper,  Header, Button, Body, Content, Card, CardItem, Thumbnail, Left, Icon, Text, Image } from 'native-base';
 import {styles} from "../styles/util";
 import DevNavigationFooter from "../components/DevNavigationFooter"
 import {FundChart, FundDescription} from "./FundScreen";
@@ -10,9 +9,7 @@ export default class PresentationScreen extends Component {
         return (
             <Container style={ styles.underStatusBar }>
                 <Content>
-                    <Text>
-                        These are the funds that we selected for you.
-                    </Text>
+                    <PresentationHeader/>
                     <FundSlideshow/>
                 </Content>
                 <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
@@ -21,45 +18,39 @@ export default class PresentationScreen extends Component {
     }
 }
 
-class FundSlideshow extends Component{
+class PresentationHeader extends Component {
+    render () {
+        return (
+            <Text>These are the fund that we selected for you.</Text>
+        );
+    }
+}
+
+// TODO: replace this with the list of the selected funds
+let cards = [1];
+
+class FundSlideshow extends Component {
     render() {
         return (
             <Container>
-                <CardSilder style={{marginTop: 30}}>
-                    <Card>
-                        <CardItem>
-                            <FundChart/>
-                        </CardItem>
-                        <CardItem>
-                            <FundDescription/>
-                        </CardItem>
-                        <CardItem>
-                            <FundWhy/>
-                        </CardItem>
-                    </Card>
-                    <Card>
-                        <CardItem>
-                            <FundChart/>
-                        </CardItem>
-                        <CardItem>
-                            <FundDescription/>
-                        </CardItem>
-                        <CardItem>
-                            <FundWhy/>
-                        </CardItem>
-                    </Card>
-                    <Card>
-                        <CardItem>
-                            <FundChart/>
-                        </CardItem>
-                        <CardItem>
-                            <FundDescription/>
-                        </CardItem>
-                        <CardItem>
-                            <FundWhy/>
-                        </CardItem>
-                    </Card>
-                </CardSilder>
+                <View>
+                    <DeckSwiper
+                        dataSource={cards}
+                        renderItem={item =>
+                            <Card style={{ elevation: 3 }}>
+                                <CardItem>
+                                    <FundChart/>
+                                </CardItem>
+                                <CardItem>
+                                    <FundDescription/>
+                                </CardItem>
+                                <CardItem>
+                                    <FundWhy/>
+                                </CardItem>
+                            </Card>
+                        }
+                    />
+                </View>
             </Container>
         );
     }

@@ -3,13 +3,14 @@ import React, { Component } from 'react';
 import { View, SafeAreaView } from 'react-native';
 
 // Native Base
-import {Button, Container, Content, Text} from 'native-base';
+import {Button, Body, Card, CardItem, Container, Content, DeckSwiper, Text} from 'native-base';
 
 // Styles
 import { styles } from "../styles/util";
 
 // Components
 import DevNavigationFooter from "../components/DevNavigationFooter"
+import {FundChart, FundDescription} from "./FundScreen";
 
 /* Structure
 
@@ -42,14 +43,6 @@ export default class QuizScreen extends Component {
             </Container>
         );
     }
-
-    /* async componentDidMount() {
-        await Font.loadAsync({
-            'Roboto': require('native-base/Fonts/Roboto.ttf'),
-            'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-            ...Ionicons.font,
-        });
-    } */
 }
 
 class QuizHeader extends Component {
@@ -63,14 +56,33 @@ class QuizHeader extends Component {
     }
 }
 
+const questions = [ {
+    question: "Do you like Apple?",
+    answer: ["Yes", "No", "Maybe"]
+}];
 
 class QuestionContainer extends Component {
     render() {
         return (
+            <Container>
             <View>
-                <Question />
-                <Choices />
+                <DeckSwiper
+                    dataSource={questions}
+                    renderItem={item =>
+                        <Card style={{ elevation: 3 }}>
+                            <Body>
+                            <CardItem>
+                                <Question question = {item.question}/>
+                            </CardItem>
+                            <CardItem>
+                                <Choices answer = {item.answer} />
+                            </CardItem>
+                            </Body>
+                        </Card>
+                    }
+                />
             </View>
+            </Container>
         );
     }
 }
@@ -79,8 +91,7 @@ class Question extends Component {
     render() {
         return (
             <View>
-                <Text>Question 1 of 3:</Text>
-                <Text note>Do you like Apple?</Text>
+                <Text note>{this.props.question}</Text>
             </View>
         );
     }
@@ -90,20 +101,14 @@ class Choices extends Component {
     render() {
         return (
             <View>
-                <Button block>
-                    <Text>Yes</Text>
-                </Button>
-                <Button block>
-                    <Text>No</Text>
-                </Button>
-                <Button block>
-                    <Text>Maybe</Text>
-                </Button>
+                {this.props.answer.map(function (answer) {
+                    return (
+                    <Button block key={answer}>
+                        <Text>{answer}</Text>
+                    </Button>
+                    );
+                })}
             </View>
         );
     }
 }
-
-
-// skip this line if using Create React Native App
-// AppRegistry.registerComponent('AwesomeProject', () => SectionListBasics);

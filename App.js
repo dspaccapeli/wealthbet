@@ -20,9 +20,9 @@ const MainNavigator = createStackNavigator(
         Calculator: {screen: CalculatorScreen},
     },
     {
-        mode: 'modal',
-        headerMode: 'none',
-        initialRouteName: "Portfolio"
+        mode: "modal",
+        headerMode: "none",
+        initialRouteName: "Quiz"
     });
 
 const AppContainer = createAppContainer(MainNavigator);
