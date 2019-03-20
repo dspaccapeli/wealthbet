@@ -5,6 +5,65 @@ import { token } from "IEXToken"
 const fundManagerName = "Fidelity";
 const fundType = "Index";
 
+export default class DataModel {
+    constructor(){
+        // Initialize API request elements
+        this.mutualFundRequest = "/ref-data/mutual-funds/symbols/";
+        this.version = "/beta/";
+        this.tokenString = "?token=" + token;
+        this.baseUrl = "https://cloud.iexapis.com";
+
+        // Initializing mutual fund array
+        this.mutualFundList = [];
+
+        // Fetching the funds list
+        fetch(this.baseUrl + this.version + this.mutualFundRequest + this.tokenString)
+            .then(response => response.json())
+            .then(data => {this.mutualFundList = data});
+
+        // Filtering the funds
+        this.shownFunds = [];
+
+        Array.from(this.mutualFundList).forEach(
+            (fund) => {
+                if(fund.name.includes(fundManagerName) && fund.name.includes(fundType)) {
+                    this.shownFunds.push(fund);
+                }
+            });
+    }
+
+    getFund(symbol= "FBIFX"){
+        let selectedFundJson;
+        fetch(this.baseUrl + this.version + `/stock/${symbol}/quote` + token)
+            .then(response => response.json())
+            .then(json => {selectedFundJson = json});
+    }
+
+    getFundLogo(symbol= "FBIFX"){
+        let selectedFundJson;
+        fetch(this.baseUrl + this.version + `/stock/${symbol}/quote` + token)
+            .then(response => response.json())
+            .then(json => {selectedFundJson = json});
+    }
+
+    /*
+        Refer to path parameters here : https://iexcloud.io/docs/api/#historical-prices
+        range = max, 5y, 2y, 1y, ytd, 6m, 3m, 1m, 1d
+     */
+    getHistoricalData(symbol = "FBIFX", range = "ytd", order = "ascending"){
+        let historicalDataJson = undefined;
+
+        fetch(this.baseUrl + this.version + `/stock/${symbol}/chart/${range}` + token)
+            .then(response => response.json())
+            .then(json => { historicalDataJson = json });
+
+        if (order === "ascending" && historicalDataJson !== undefined){
+            return historicalDataJson.map(discretePoint => { discretePoint.close });
+        } else {
+            return historicalDataJson.reverse().map(discretePoint => { discretePoint.close });
+        }
+    }
+}
 
 // Utility function to extract _n_ random item from an array
 function getRandomElements(arr, n) {
@@ -19,69 +78,4 @@ function getRandomElements(arr, n) {
         taken[x] = --len in taken ? taken[len] : len;
     }
     return result;
-}
-
-export default class DataModel {
-    constructor(){
-        // Initialize API request elements
-        this.mutualFundRequest = "/ref-data/mutual-funds/symbols/";
-        this.version = "/beta/";
-        this.tokenString = "?token=" + token;
-        this.baseUrl = "https://cloud.iexapis.com";
-
-        // Initializing mutual fund array
-        this.mutualFundList = [];
-
-        // Fetching the funds list
-        fetch(this.baseUrl + this.version + this.mutualFundRequest + this.tokenString)
-            .then(response=>response.json())
-            .then(data=>{this.mutualFundList = data});
-
-        // Filtering the funds
-        this.shownFunds = [];
-
-        Array.from(this.mutualFundList).forEach(
-            (fund)=>{
-                if(fund.name.includes(fundManagerName) && fund.name.includes(fundType))
-                {
-                    this.shownFunds.push(fund);
-                }
-            });
-    }
-
-    getFund(symbol= "FBIFX"){
-        let selectedFundJson;
-        fetch(this.baseUrl + this.version + `/stock//${symbol}/quote` + token)
-            .then(response=>response.json())
-            .then(json=>{selectedFundJson=json});
-    }
-
-    getFundLogo(symbol= "FBIFX"){
-        let selectedFundJson;
-        fetch(this.baseUrl + this.version + `/stock//${symbol}/quote` + token)
-            .then(response=>response.json())
-            .then(json=>{selectedFundJson=json});
-    }
-
-    /*
-        Refer to path parameters here : https://iexcloud.io/docs/api/#historical-prices
-        range = max, 5y, 2y, 1y, ytd, 6m, 3m, 1m, 1d
-     */
-    getHistoricalData(symbol = "FBIFX", range = "ytd", order = "ascending"){
-        let historicalDataJson;
-
-        fetch(this.baseUrl + this.version + "/stock/`${symbol}`/chart/`${range}`" + token)
-            .then(response=>response.json())
-            .then(json=>{ historicalDataJson=json });
-
-        if (order === "ascending"){
-            return historicalDataJson
-                .map(discretePoint => { discretePoint.close });
-        } else {
-            return historicalDataJson
-                .reverse()
-                .map(discretePoint => { discretePoint.close });
-        }
-    }
-
 }
