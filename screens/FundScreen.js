@@ -76,7 +76,7 @@ export default class FundScreen extends Component {
     } */
 }
 
-class FundHeader extends Component {
+export class FundHeader extends Component {
     render() {
         return (
             <View>
@@ -87,7 +87,7 @@ class FundHeader extends Component {
     }
 }
 
-class FundChart extends  Component {
+export class FundChart extends  Component {
     render() {
         return (
             <View>
@@ -178,7 +178,7 @@ class TimeScale extends React.PureComponent {
     }
 }
 
-class FundStatistics extends  Component {
+export class FundStatistics extends  Component {
     render() {
         return (
             <Text>PUT 100 VALUE 200 GAIN 3%</Text>
@@ -186,7 +186,7 @@ class FundStatistics extends  Component {
     }
 }
 
-class FundInfo extends  Component {
+export class FundInfo extends  Component {
     render() {
         return (
             <View>
@@ -197,7 +197,7 @@ class FundInfo extends  Component {
     }
 }
 
-class FundDescription extends  Component {
+export class FundDescription extends  Component {
     render() {
         return (
             <View>
