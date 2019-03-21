@@ -52,33 +52,27 @@ class DataModel {
         Refer to path parameters here : https://iexcloud.io/docs/api/#historical-prices
         range = max, 5y, 2y, 1y, ytd, 6m, 3m, 1m, 1d
      */
-    async getHistoricalData(symbol = "FBIFX", range = "1d", order = "ascending"){
-
-        let historicalDataJson = await fetch(this.baseUrl + this.version + `stock/${symbol}/chart/${range}` + this.tokenString);
-        historicalDataJson = await historicalDataJson.json();
-
-        /*historicalDataJson = Array.from(historicalDataJson);
-        console.log(historicalDataJson);
-        console.log(typeof Array.from(historicalDataJson));
-        console.log('now' + typeof historicalDataJson);*/
-
-        let result;
-        if(historicalDataJson !== undefined) {
-            if (order === "ascending") {
-                result = Array.from(historicalDataJson)
-                    .map(discretePoint => {
-                        discretePoint.close
+     getHistoricalData(symbol = "FBIFX", range = "3m", order = "ascending"){
+         return fetch(this.baseUrl + this.version + `stock/${symbol}/chart/${range}` + this.tokenString)
+            .then(this.processResponse)
+            .then(historicalDataJson => {
+                if (order === "ascending") {
+                    return historicalDataJson.map(discretePoint => {
+                        return {value: discretePoint.close}
                     });
-            } else {
-                result = Array.from(historicalDataJson)
-                    .reverse()
-                    .map(discretePoint => {
-                        discretePoint.close
+                } else {
+                    return historicalDataJson.reverse().map(discretePoint => {
+                        return {value: discretePoint.close}
                     });
-            }
+                }
+            });
+    }
+
+    processResponse(response) {
+        if (response.ok) {
+            return response.json();
         }
-        console.log(typeof Array.from(result).map((i)=>{return {value: i}}));
-        return  Array.from(result).map((i)=>{return {value: i}})
+        throw response;
     }
 }
 
