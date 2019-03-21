@@ -15,7 +15,7 @@ export default class CalculatorScreen extends Component {
                     <FundDescription/>
                     <FundCalculator navigation={this.props.navigation}/>
                 </Content>
-                <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
+                {/*<DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>*/}
             </Container>
         );
     }

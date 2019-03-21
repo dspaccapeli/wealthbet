@@ -89,7 +89,7 @@ export default class FundScreen extends Component {
                     <News />
                     <Sell />
                 </Content>
-                <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
+                {/*<DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>*/}
             </Container>
         );
     }
