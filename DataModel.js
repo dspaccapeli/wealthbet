@@ -1,14 +1,14 @@
 // Import the IEX token from the .gitignored file
-import { token } from "IEXToken"
+import { token } from "./IEXToken.js"
 
 // General string search helpful in our search
 const fundManagerName = "Fidelity";
 const fundType = "Index";
 
-export default class DataModel {
+class DataModel {
     constructor(){
         // Initialize API request elements
-        this.mutualFundRequest = "/ref-data/mutual-funds/symbols/";
+        this.mutualFundRequest = "ref-data/mutual-funds/symbols/";
         this.version = "/beta/";
         this.tokenString = "?token=" + token;
         this.baseUrl = "https://cloud.iexapis.com";
@@ -17,6 +17,7 @@ export default class DataModel {
         this.mutualFundList = [];
 
         // Fetching the funds list
+        /*
         fetch(this.baseUrl + this.version + this.mutualFundRequest + this.tokenString)
             .then(response => response.json())
             .then(data => {this.mutualFundList = data});
@@ -30,18 +31,19 @@ export default class DataModel {
                     this.shownFunds.push(fund);
                 }
             });
+            */
     }
 
     getFund(symbol= "FBIFX"){
         let selectedFundJson;
-        fetch(this.baseUrl + this.version + `/stock/${symbol}/quote` + token)
+        fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
             .then(response => response.json())
             .then(json => {selectedFundJson = json});
     }
 
     getFundLogo(symbol= "FBIFX"){
         let selectedFundJson;
-        fetch(this.baseUrl + this.version + `/stock/${symbol}/quote` + token)
+        fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
             .then(response => response.json())
             .then(json => {selectedFundJson = json});
     }
@@ -50,18 +52,33 @@ export default class DataModel {
         Refer to path parameters here : https://iexcloud.io/docs/api/#historical-prices
         range = max, 5y, 2y, 1y, ytd, 6m, 3m, 1m, 1d
      */
-    getHistoricalData(symbol = "FBIFX", range = "ytd", order = "ascending"){
-        let historicalDataJson = undefined;
+    async getHistoricalData(symbol = "FBIFX", range = "1d", order = "ascending"){
 
-        fetch(this.baseUrl + this.version + `/stock/${symbol}/chart/${range}` + token)
-            .then(response => response.json())
-            .then(json => { historicalDataJson = json });
+        let historicalDataJson = await fetch(this.baseUrl + this.version + `stock/${symbol}/chart/${range}` + this.tokenString);
+        historicalDataJson = await historicalDataJson.json();
 
-        if (order === "ascending" && historicalDataJson !== undefined){
-            return historicalDataJson.map(discretePoint => { discretePoint.close });
-        } else {
-            return historicalDataJson.reverse().map(discretePoint => { discretePoint.close });
+        /*historicalDataJson = Array.from(historicalDataJson);
+        console.log(historicalDataJson);
+        console.log(typeof Array.from(historicalDataJson));
+        console.log('now' + typeof historicalDataJson);*/
+
+        let result;
+        if(historicalDataJson !== undefined) {
+            if (order === "ascending") {
+                result = Array.from(historicalDataJson)
+                    .map(discretePoint => {
+                        discretePoint.close
+                    });
+            } else {
+                result = Array.from(historicalDataJson)
+                    .reverse()
+                    .map(discretePoint => {
+                        discretePoint.close
+                    });
+            }
         }
+        console.log(typeof Array.from(result).map((i)=>{return {value: i}}));
+        return  Array.from(result).map((i)=>{return {value: i}})
     }
 }
 
@@ -79,3 +96,6 @@ function getRandomElements(arr, n) {
     }
     return result;
 }
+
+const apiManager = new DataModel();
+export default apiManager;

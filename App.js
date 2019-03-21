@@ -22,7 +22,7 @@ const MainNavigator = createStackNavigator(
     {
         mode: "modal",
         headerMode: "none",
-        initialRouteName: "Quiz"
+        initialRouteName: "Fund"
     });
 
 const AppContainer = createAppContainer(MainNavigator);
