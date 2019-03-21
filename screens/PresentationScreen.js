@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, View, DeckSwiper,  Header, Button, Body, Content, Card, CardItem, Thumbnail, Left, Icon, Text, Image } from 'native-base';
+import { Container, View, DeckSwiper,  Header, Button, Body, Content, Card, CardItem, Thumbnail, Left, Icon, Text, Image, Right } from 'native-base';
 import {styles} from "../styles/util";
 import DevNavigationFooter from "../components/DevNavigationFooter"
 import {FundChart, FundDescription} from "./FundScreen";
@@ -10,7 +10,7 @@ export default class PresentationScreen extends Component {
             <Container style={ styles.underStatusBar }>
                 <Content>
                     <PresentationHeader/>
-                    <FundSlideshow/>
+                    <FundSlideshow navigation={this.props.navigation}/>
                 </Content>
                 <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
             </Container>
@@ -21,7 +21,9 @@ export default class PresentationScreen extends Component {
 class PresentationHeader extends Component {
     render () {
         return (
-            <Text>These are the fund that we selected for you.</Text>
+            <View style={{padding: 10}}>
+                <Text>These are the funds that we selected for you. You can swipe through them. Click on one if you want to find out more.</Text>
+            </View>
         );
     }
 }
@@ -47,6 +49,9 @@ class FundSlideshow extends Component {
                                 <CardItem>
                                     <FundWhy/>
                                 </CardItem>
+                                <CardItem footer>
+                                    <SeeMoreButton navigation = {this.props.navigation}/>
+                                </CardItem>
                             </Card>
                         }
                     />
@@ -63,6 +68,19 @@ class FundWhy extends Component {
                 <Text> Why? </Text>
                 <Text note> This is a great fund! </Text>
             </View>
+        );
+    }
+}
+
+class SeeMoreButton extends Component {
+    render () {
+        return (
+            <Right>
+                <Button seeMore onPress={() => this.props.navigation.navigate("Calculator") }>
+                    <Text>See more</Text>
+                    <Icon name="arrow-forward" />
+                </Button>
+            </Right>
         );
     }
 }
