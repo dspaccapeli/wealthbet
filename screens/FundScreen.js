@@ -103,11 +103,40 @@ export class FundChart extends  Component {
 class ChartArea extends React.PureComponent {
     constructor(props){
         super(props);
-
-        this.data = apiManager.getHistoricalData();
+        this.state = {
+            status: "LOADING",
+        };
+    }
+    componentDidMount() {
+        apiManager
+            .getHistoricalData()
+            .then(data => {
+                this.setState({
+                    status: "LOADED",
+                    data: data,
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    status: "ERROR",
+                });
+            });
     }
 
     render() {
+        let data;
+        switch (this.state.status) {
+            case "LOADING":
+                data = [{value: 5}];
+                console.log("Data is loading");
+                break;
+            case "LOADED":
+                data = this.state.data;
+                break;
+            case "ERROR":
+                data = [{value: 10}, {value: 10}];
+                console.log("There is a problem in the data");
+        }
 
         const colors = [ '#8800cc'];
         const keys   = [ 'value'];
@@ -118,7 +147,7 @@ class ChartArea extends React.PureComponent {
         return (
             <StackedAreaChart
                 style={ { height: 200, paddingVertical: 16 } }
-                data={this.data}
+                data={data}
                 keys={ keys }
                 colors={ colors }
                 curve={ shape.curveNatural }
