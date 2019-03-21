@@ -64,7 +64,7 @@ export default class PortfolioScreen extends Component {
                     <FundList />
                     <AddFund />
                 </Content>
-                <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
+                {/*<DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>*/}
             </Container>
         );
     }

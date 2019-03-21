@@ -39,7 +39,7 @@ export default class QuizScreen extends Component {
                     <QuizHeader />
                     <QuestionContainer navigation={this.props.navigation} />
                 </Content>
-                <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
+                {/*<DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>*/}
             </Container>
         );
     }
