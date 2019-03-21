@@ -49,12 +49,6 @@ import Card from "react-native-svg-charts/src/card";
 */
 
 export default class PortfolioScreen extends Component {
-
-    // Navigation options
-    static navigationOptions = {
-        title: 'Portfolio',
-    };
-
     render() {
         return (
             <Container style={ styles.underStatusBar }>
@@ -256,6 +250,3 @@ class AddFund extends Component {
         );
     }
 }
-
-// skip this line if using Create React Native App
-// AppRegistry.registerComponent('AwesomeProject', () => SectionListBasics);

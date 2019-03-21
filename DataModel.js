@@ -35,10 +35,8 @@ class DataModel {
     }
 
     getFund(symbol= "FBIFX"){
-        let selectedFundJson;
-        fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
-            .then(response => response.json())
-            .then(json => {selectedFundJson = json});
+        return fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
+            .then(this.processResponse);
     }
 
     getFundLogo(symbol= "FBIFX"){

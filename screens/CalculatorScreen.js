@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import {Container, Button, View, Content, Form, Item, Label, Text, Input, Grid, Col, Right } from 'native-base';
 import {styles} from "../styles/util";
-import {FundChart, FundHeader, FundDescription} from "./FundScreen"
+import {FundChart, FundHeader, FundDescription, defaultFund} from "./FundScreen"
 import DevNavigationFooter from "../components/DevNavigationFooter"
-import { TextInput } from 'react-native';
 
 
 export default class CalculatorScreen extends Component {
@@ -11,7 +10,7 @@ export default class CalculatorScreen extends Component {
         return (
             <Container style={styles.underStatusBar}>
                 <Content>
-                    <FundHeader/>
+                    <FundHeader fund = {defaultFund}/>
                     <FundChart/>
                     <FundDescription/>
                     <FundCalculator navigation={this.props.navigation}/>

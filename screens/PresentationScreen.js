@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container, View, DeckSwiper,  Header, Button, Body, Content, Card, CardItem, Thumbnail, Left, Icon, Text, Image, Right } from 'native-base';
 import {styles} from "../styles/util";
 import DevNavigationFooter from "../components/DevNavigationFooter"
-import {FundChart, FundDescription} from "./FundScreen";
+import {FundChart, FundDescription, FundHeader} from "./FundScreen";
 
 export default class PresentationScreen extends Component {
     render () {
@@ -40,6 +40,9 @@ class FundSlideshow extends Component {
                         dataSource={cards}
                         renderItem={item =>
                             <Card style={{ elevation: 3 }}>
+                                <CardItem>
+                                    <FundHeader/>
+                                </CardItem>
                                 <CardItem>
                                     <FundChart/>
                                 </CardItem>

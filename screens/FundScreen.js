@@ -47,17 +47,42 @@ import apiManager from "../DataModel"
 */
 
 export default class FundScreen extends Component {
+    constructor () {
+        super();
+        this.state = {
+            status: "LOADING",
+        };
+    }
 
-    // Navigation options
-    static navigationOptions = {
-        title: 'Fund',
-    };
+    // Here we make the API call for fund information.
+    componentDidMount() {
+        apiManager
+            .getFund()
+            .then(fund => {
+                this.setState({
+                    status: "LOADED",
+                    fund: {
+                        symbol: fund.symbol,
+                        companyName: fund.companyName
+                    }
+                })
+            })
+            .catch(() => {
+                this.setState({
+                    status: "ERROR",
+                });
+            });
+    }
 
     render() {
+        let fund = defaultFund;
+        if (this.state.status === "LOADED") {
+            fund = this.state.fund;
+        }
         return (
             <Container style={ styles.underStatusBar }>
                 <Content>
-                    <FundHeader />
+                    <FundHeader fund={fund} />
                     <FundChart />
                     <FundStatistics />
                     <FundInfo />
@@ -68,22 +93,21 @@ export default class FundScreen extends Component {
             </Container>
         );
     }
-
-    /* async componentDidMount() {
-        await Font.loadAsync({
-            'Roboto': require('native-base/Fonts/Roboto.ttf'),
-            'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-            ...Ionicons.font,
-        });
-    } */
 }
 
 export class FundHeader extends Component {
+    constructor () {
+        super ();
+        this.fund = defaultFund;
+    }
     render() {
+        if (this.props.fund) {
+            this.fund = this.props.fund;
+        }
         return (
             <View>
-                <Text>Fund 1</Text>
-                <Text>Short description</Text>
+                <Text>{this.fund.symbol}</Text>
+                <Text>{this.fund.companyName}</Text>
             </View>
         );
     }
@@ -107,6 +131,8 @@ class ChartArea extends React.PureComponent {
             status: "LOADING",
         };
     }
+
+    // Here we make the API call for historical data for the chart.
     componentDidMount() {
         apiManager
             .getHistoricalData()
@@ -159,10 +185,9 @@ class ChartArea extends React.PureComponent {
 }
 
 class TimeScale extends React.PureComponent {
-
     render() {
         return (
-            <Segment style={ styles.noBackgroundColor }>
+            <Segment style={{backgroundColor: '#8800cc'}}>
                 <Button first>
                     <Text>6 months</Text>
                 </Button>
@@ -183,7 +208,9 @@ class TimeScale extends React.PureComponent {
 export class FundStatistics extends  Component {
     render() {
         return (
-            <Text>PUT 100 VALUE 200 GAIN 3%</Text>
+            <Body>
+            <Text> PUT 100 VALUE 200 GAIN 3%</Text>
+            </Body>
         )
     }
 }
@@ -219,9 +246,9 @@ class FundAlert extends  Component {
                 </CardItem>
                 <CardItem>
                     <Body>
-                    <Text note>
-                        { loremIpsum }
-                    </Text>
+                        <Text note>
+                            { loremIpsum }
+                        </Text>
                     </Body>
                 </CardItem>
             </Card>
@@ -243,14 +270,14 @@ class News extends  Component {
 class Sell extends  Component {
     render() {
         return (
-            <Button large>
-                <Text>Sell</Text>
-            </Button>
+            <Body>
+            <Button><Text>Sell</Text></Button>
+            </Body>
         );
     }
 }
 
-
-
-// skip this line if using Create React Native App
-// AppRegistry.registerComponent('AwesomeProject', () => SectionListBasics);
+export const defaultFund = {
+    symbol: "FBIFXXX",
+    companyName: "Freedom Index 2020"
+};
