@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Wealthbet",
-    "slug": "Wealthbet",
+    "slug": "wealthbet",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": [
@@ -24,6 +24,8 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "This app is developed under a course at KTH. It is an app that let you search for investment opportunities after a small quiz and presents way of adding them to your virtual portfolio.",
+    "githubUrl": "https://github.com/dspaccapeli/wealthbet"
   }
 }

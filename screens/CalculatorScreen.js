@@ -3,10 +3,15 @@ import {Container, Button, View, Content, Form, Item, Label, Text, Input, Grid, 
 import {styles} from "../styles/util";
 import {FundChart, FundHeader, FundDescription, defaultFund} from "./FundScreen"
 import DevNavigationFooter from "../components/DevNavigationFooter"
+import {devMode} from "../util";
 
 
 export default class CalculatorScreen extends Component {
     render() {
+        let NavigationFooter;
+        if (devMode) {
+            NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
+        }
         return (
             <Container style={styles.underStatusBar}>
                 <Content>
@@ -15,7 +20,7 @@ export default class CalculatorScreen extends Component {
                     <FundDescription/>
                     <FundCalculator navigation={this.props.navigation}/>
                 </Content>
-                {/*<DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>*/}
+                {NavigationFooter}
             </Container>
         );
     }

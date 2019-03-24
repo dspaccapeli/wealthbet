@@ -4,15 +4,21 @@ import {styles} from "../styles/util";
 import DevNavigationFooter from "../components/DevNavigationFooter"
 import {FundChart, FundDescription, FundHeader} from "./FundScreen";
 
+import { devMode } from '../util.js';
+
 export default class PresentationScreen extends Component {
     render () {
+        let NavigationFooter;
+        if (devMode) {
+            NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
+        }
         return (
             <Container style={ styles.underStatusBar }>
                 <Content>
                     <PresentationHeader/>
                     <FundSlideshow navigation={this.props.navigation}/>
                 </Content>
-                <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>
+                {NavigationFooter}
             </Container>
         );
     }

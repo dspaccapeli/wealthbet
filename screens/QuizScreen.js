@@ -12,6 +12,8 @@ import { styles } from "../styles/util";
 import DevNavigationFooter from "../components/DevNavigationFooter"
 import {FundChart, FundDescription} from "./FundScreen";
 
+import {devMode} from "../util";
+
 /* Structure
 
     QuizScreen
@@ -33,13 +35,17 @@ export default class QuizScreen extends Component {
     };
 
     render() {
+        let NavigationFooter;
+        if (devMode) {
+            NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
+        }
         return (
             <Container style={ styles.underStatusBar }>
                 <Content>
                     <QuizHeader />
                     <QuestionContainer navigation={this.props.navigation} />
                 </Content>
-                {/*<DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>*/}
+                {NavigationFooter}
             </Container>
         );
     }
@@ -68,8 +74,8 @@ const questions = [
 ];
 
 class QuestionContainer extends Component {
-    constructor () {
-        super();
+    constructor (props) {
+        super(props);
     }
 
     render() {

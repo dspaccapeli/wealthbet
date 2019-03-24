@@ -21,6 +21,8 @@ import {StackedAreaChart} from "react-native-svg-charts";
 import * as shape from "d3-shape";
 import Card from "react-native-svg-charts/src/card";
 
+import {devMode} from "../util";
+
 /* Structure
 
     PortfolioScreen
@@ -50,6 +52,10 @@ import Card from "react-native-svg-charts/src/card";
 
 export default class PortfolioScreen extends Component {
     render() {
+        let NavigationFooter;
+        if (devMode) {
+            NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
+        }
         return (
             <Container style={ styles.underStatusBar }>
                 <Content>
@@ -58,7 +64,7 @@ export default class PortfolioScreen extends Component {
                     <FundList />
                     <AddFund />
                 </Content>
-                {/*<DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>*/}
+                {NavigationFooter}
             </Container>
         );
     }

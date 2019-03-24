@@ -20,6 +20,7 @@ import { loremIpsum } from "../constants/util"
 
 // Api manger
 import apiManager from "../DataModel"
+import {devMode} from "../util";
 
 /* Structure
 
@@ -79,6 +80,12 @@ export default class FundScreen extends Component {
         if (this.state.status === "LOADED") {
             fund = this.state.fund;
         }
+
+        // Dev footer
+        let NavigationFooter;
+        if (devMode) {
+            NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
+        }
         return (
             <Container style={ styles.underStatusBar }>
                 <Content>
@@ -89,7 +96,7 @@ export default class FundScreen extends Component {
                     <News />
                     <Sell />
                 </Content>
-                {/*<DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>*/}
+                {NavigationFooter}
             </Container>
         );
     }
@@ -154,14 +161,14 @@ class ChartArea extends React.PureComponent {
         switch (this.state.status) {
             case "LOADING":
                 data = [{value: 5}];
-                console.log("Data is loading");
+                // console.log("Data is loading");
                 break;
             case "LOADED":
                 data = this.state.data;
                 break;
             case "ERROR":
                 data = [{value: 10}, {value: 10}];
-                console.log("There is a problem in the data");
+                // console.log("There is a problem in the data");
         }
 
         const colors = [ '#8800cc'];
