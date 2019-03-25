@@ -11,6 +11,9 @@ import React from 'react';
 import CalculatorScreen from "./screens/CalculatorScreen";
 import PresentationScreen from "./screens/PresentationScreen";
 
+import { firstPage } from "./util";
+import SettingsScreen from "./screens/SettingsScreen";
+
 const MainNavigator = createStackNavigator(
     {
         Quiz: {screen: QuizScreen},
@@ -18,11 +21,12 @@ const MainNavigator = createStackNavigator(
         Fund: {screen: FundScreen},
         Presentation: {screen: PresentationScreen},
         Calculator: {screen: CalculatorScreen},
+        Settings: {screen: SettingsScreen},
     },
     {
         mode: "modal",
         headerMode: "none",
-        initialRouteName: "Quiz"
+        initialRouteName: firstPage
     });
 
 const AppContainer = createAppContainer(MainNavigator);

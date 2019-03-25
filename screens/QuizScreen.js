@@ -76,36 +76,62 @@ const questions = [
 class QuestionContainer extends Component {
     constructor (props) {
         super(props);
+
+        this.swipeRight = this.swipeRight.bind(this);
+        this.navigateToPresentation = this.navigateToPresentation.bind(this);
+    }
+
+    swipeRight = (swiper=this.getSwiper()) => {
+        swiper._root.swipeRight();
+    };
+
+    setSwiper(swiper){
+        this.deckSwiper = swiper;
+    }
+
+    getSwiper(){
+        return this.deckSwiper;
+    }
+
+    navigateToPresentation(){
+        this.props.navigation.navigate("Presentation");
     }
 
     render() {
         return (
             <Container>
-            <View>
-                <DeckSwiper
-                    looping={false}
-                    ref={(c) => this._deckSwiper = c}
-                    dataSource={questions}
-                    renderItem={item =>
-                        <Card style={{ elevation: 2 }}>
-                            <Body>
-                            <CardItem>
-                                <Question question = {item.question}/>
-                            </CardItem>
-                            <CardItem>
-                                <Choices answer = {item.answer} />
-                            </CardItem>
-                            </Body>
-                        </Card>
-                    }
-                    renderEmpty={() => {
-                        this.props.navigation.navigate("Presentation");
-                    }}
-                />
-            </View>
+                <View>
+                    <DeckSwiper
+                        looping={false}
+                        ref={(c) => this.setSwiper(c)}
+                        dataSource={questions}
+                        renderItem={item =>
+                            <Card style={{ elevation: 2}}>
+                                <Body>
+                                <CardItem>
+                                    <Question question={item.question}/>
+                                </CardItem>
+                                <CardItem>
+                                    <Choices answer={item.answer} swipe={() => this.swipeRight()} />
+                                </CardItem>
+                                </Body>
+                            </Card>
+                        }
+                        renderEmpty={() => {
+                            return (
+                                <Button iconRight onPress={() => this.navigateToPresentation()}>
+                                    <Text>Next question</Text>
+                                    <Icon name="arrow-forward" />
+                                </Button>
+                            )
+                        }}
+                        onSwipeRight={(item) => {console.log('right')}}
+                        onSwipeLeft={(item) => {console.log('left')}}
+                    />
+                </View>
                 <View style={{ flexDirection: "row", flex: 1, position: "absolute", bottom: 100, left: 0, right: 0, justifyContent: 'space-between', padding: 15 }}>
                     <Right>
-                        <Button iconRight onPress={() => this._deckSwiper._root.swipeRight()}>
+                        <Button iconRight onPress={() => this.swipeRight()}>
                             <Text>Next question</Text>
                             <Icon name="arrow-forward" />
                         </Button>
@@ -127,21 +153,27 @@ class Question extends Component {
 }
 
 class Choices extends Component {
-    _buttonPressed() {
-        console.log("Pressed");
+    constructor(props){
+        super(props);
     }
 
     render() {
-        return (
-            <View>
-                 {this.props.answer.map(function (answer) {
-                    return (
+
+        let optionList = [];
+
+        this.props.answer.forEach((answer) =>{
+                optionList.push(
                     <Button block key={answer}
-                            onPress={this._buttonPressed}>
+                            onPress={this.props.swipe}>
                         <Text>{answer}</Text>
                     </Button>
-                    );
-                })}
+                )
+            }
+        );
+
+        return (
+            <View>
+                {optionList}
             </View>
         );
     }
