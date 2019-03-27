@@ -8,6 +8,8 @@ import {Container, Content} from "native-base";
 
 import {cardStyles, styles} from "../styles/util";
 
+import { Font } from 'expo';
+
 // demo purposes only
 function * range (start, end) {
   for (let i = start; i <= end; i++) {
@@ -33,10 +35,30 @@ export default class Example extends Component {
 }
 
 class QuizHeader extends Component {
+  state = {
+    fontLoaded: false,
+  };
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      'poppins-extra-bold': require('../assets/fonts/Poppins-ExtraBold.ttf'),
+    });
+
+    this.setState({ fontLoaded: true });
+  };
+
   render() {
     return (
         <View style={{backgroundColor: 'red'}}>
-          <Text>Quiz</Text>
+          {
+            this.state.fontLoaded ? (
+                <Text style={{
+            fontFamily: "poppins-extra-bold",
+            fontSize: 30,
+            textAlign: "center",
+            margin: 10
+          }}>Quiz</Text>) : null
+          }
           <Text note>We want to know more about you</Text>
         </View>
     );
