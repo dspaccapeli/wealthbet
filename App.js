@@ -1,26 +1,23 @@
 // React Navigation
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 import {Text, Container} from 'native-base';
-
 import React from 'react';
 
+
 // Import Screens
-import { firstPage } from "./util";
 import QuizScreen from "./screens/QuizScreen";
 import PortfolioScreen from "./screens/PortfolioScreen";
 import FundScreen from "./screens/FundScreen";
 import CalculatorScreen from "./screens/CalculatorScreen";
 import PresentationScreen from "./screens/PresentationScreen";
 import LoginScreen from "./screens/LoginScreen";
-
-
-
+import { firstPage } from "./util";
 
 // Configuration for Firebase
 
 import * as firebase from "firebase";
 
-var config = {
+const config = {
     apiKey: "AIzaSyDFz9TsUz9sP9guck1J4Rc2UFzr62tCo_Q",
     authDomain: "wealthbet-19.firebaseapp.com",
     databaseURL: "https://wealthbet-19.firebaseio.com",
@@ -30,7 +27,6 @@ var config = {
 };
 
 firebase.initializeApp(config);
-
 
 const MainNavigator = createStackNavigator(
     {
@@ -42,7 +38,7 @@ const MainNavigator = createStackNavigator(
         Login: {screen: LoginScreen},
     },
     {
-        mode: "card",
+        mode: "modal",
         headerMode: "none",
         initialRouteName: firstPage
     });
@@ -50,8 +46,8 @@ const MainNavigator = createStackNavigator(
 const AppContainer = createAppContainer(MainNavigator);
 
 export default class App extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = { isReady: false };
     }
 
