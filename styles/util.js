@@ -20,6 +20,12 @@ export const styles = StyleSheet.create({
     },
     pushedBottom : {
         marginBottom : 100,
+    },
+    loginContainer: {
+        flex: 1,
+        backgroundColor: "#ffff",
+        justifyContent: "center",
+        padding: 10
     }
 });
 
