@@ -7,24 +7,24 @@ import QuizScreen from "./screens/QuizScreen";
 import PortfolioScreen from "./screens/PortfolioScreen";
 import FundScreen from "./screens/FundScreen";
 
-import React from 'react';
 import CalculatorScreen from "./screens/CalculatorScreen";
 import PresentationScreen from "./screens/PresentationScreen";
 
 import { firstPage } from "./util";
-import SettingsScreen from "./screens/SettingsScreen";
+import React from 'react';
+
+
 
 const MainNavigator = createStackNavigator(
     {
         Quiz: {screen: QuizScreen},
         Portfolio: {screen: PortfolioScreen},
         Fund: {screen: FundScreen},
-        Presentation: {screen: PresentationScreen},
         Calculator: {screen: CalculatorScreen},
-        Settings: {screen: SettingsScreen},
+        Presentation: {screen: PresentationScreen},
     },
     {
-        mode: "modal",
+        mode: "card",
         headerMode: "none",
         initialRouteName: firstPage
     });
@@ -32,8 +32,8 @@ const MainNavigator = createStackNavigator(
 const AppContainer = createAppContainer(MainNavigator);
 
 export default class App extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { isReady: false };
     }
 

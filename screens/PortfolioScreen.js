@@ -57,7 +57,8 @@ export default class PortfolioScreen extends Component {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
         }
         return (
-            <Container style={ styles.underStatusBar }>
+            <Container>
+                <View style={ styles.statusBar } />
                 <Content>
                     <PortfolioHeader />
                     <PortfolioChart />
