@@ -1,38 +1,38 @@
-// React
-import React, { Component } from 'react';
-import { View, SafeAreaView } from 'react-native';
-
-// Native Base
-import {Button, Body, Card, CardItem, Icon, Container, Content, DeckSwiper, Text, Right} from 'native-base';
-
-// Styles
-import { styles } from "../styles/util";
-
-// Components
-import DevNavigationFooter from "../components/DevNavigationFooter"
-import {FundChart, FundDescription} from "./FundScreen";
+import React, { Component } from 'react'
+import Swiper from 'react-native-deck-swiper'
+import { Text, View } from 'react-native'
 
 import {devMode} from "../util";
 
-/* Structure
+import DevNavigationFooter from "../components/DevNavigationFooter"
+import {Container} from "native-base";
 
-    QuizScreen
-    |
-    --- QuizHeader
-    |
-    --- QuestionContainer
-        |
-        --- Question
-        |
-        --- Choices
-*/
+import {cardStylesPresentation, cardStylesQuiz, styles} from "../styles/util";
+
+import { Font } from 'expo';
+
+// demo purposes only
+function * range (start, end) {
+    for (let i = start; i <= end; i++) {
+        yield i
+    }
+}
 
 export default class QuizScreen extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            questionNumberTotal : 4,
+            questionNumberActive : 1,
+        }
+    }
 
-    // Navigation options
-    static navigationOptions = {
-        title: 'Quiz',
-    };
+    updateActiveQuestion(){
+        let newActiveQuestionNumber = this.state.questionNumberActive +1;
+        this.setState({
+            questionNumberActive : newActiveQuestionNumber,
+        })
+    }
 
     render() {
         let NavigationFooter;
@@ -40,141 +40,225 @@ export default class QuizScreen extends Component {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
         }
         return (
-            <Container style={ styles.underStatusBar }>
-                <Content>
-                    <QuizHeader />
-                    <QuestionContainer navigation={this.props.navigation} />
-                </Content>
+            <Container>
+                <View style={ styles.statusBar } />
+                <QuizHeader />
+                <CardView navigation={this.props.navigation} question={this.state.questionNumberTotal} onSwipe={() => this.updateActiveQuestion()}/>
+                <StatusDot number={this.state.questionNumberTotal} active={this.state.questionNumberActive}/>
                 {NavigationFooter}
             </Container>
+
         );
+    }
+}
+
+class StatusDot extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render(){
+        const numbers = Array.from({length: this.props.number}, (x, i) => i);
+        let statusDot = numbers.map((i) => {
+            if((i+1) === this.props.active){
+                    return <View key={i} style={cardStylesQuiz.statusDotActive}/>
+                }
+                return <View key={i} style={cardStylesQuiz.statusDotInactive}/>
+            }
+        );
+        return(
+            <View style = {{
+                backgroundColor: '#4D9E67',
+                paddingTop: 10,
+                paddingBottom: 10,
+                justifyContent: 'center',
+                flexDirection: 'row',
+            }}>
+                {statusDot}
+            </View>
+        )
+
     }
 }
 
 class QuizHeader extends Component {
-    render() {
-        return (
-            <View>
-                <Text>Quiz</Text>
-                <Text note>We want to know more about you</Text>
-            </View>
-        );
-    }
-}
-
-const questions = [
-    {
-        question: "Do you like Apple?",
-        answer: ["Yes", "No", "Maybe"]
-    },
-    {
-        question: "Do you like oil companies?",
-        answer: ["Yes", "No", "Maybe"]
-    },
-];
-
-class QuestionContainer extends Component {
-    constructor (props) {
-        super(props);
-
-        this.swipeRight = this.swipeRight.bind(this);
-        this.navigateToPresentation = this.navigateToPresentation.bind(this);
-    }
-
-    swipeRight = (swiper=this.getSwiper()) => {
-        swiper._root.swipeRight();
+    state = {
+        fontLoaded: false,
     };
 
-    setSwiper(swiper){
-        this.deckSwiper = swiper;
-    }
+    async componentDidMount() {
+        await Font.loadAsync({
+            'poppins-extra-bold': require('../assets/fonts/Poppins-Bold.ttf'),
+            'poppins-medium': require('../assets/fonts/Poppins-Medium.ttf'),
+        });
 
-    getSwiper(){
-        return this.deckSwiper;
-    }
-
-    navigateToPresentation(){
-        this.props.navigation.navigate("Presentation");
-    }
+        this.setState({ fontLoaded: true });
+    };
 
     render() {
         return (
-            <Container>
-                <View>
-                    <DeckSwiper
-                        looping={false}
-                        ref={(c) => this.setSwiper(c)}
-                        dataSource={questions}
-                        renderItem={item =>
-                            <Card style={{ elevation: 2}}>
-                                <Body>
-                                <CardItem>
-                                    <Question question={item.question}/>
-                                </CardItem>
-                                <CardItem>
-                                    <Choices answer={item.answer} swipe={() => this.swipeRight()} />
-                                </CardItem>
-                                </Body>
-                            </Card>
-                        }
-                        renderEmpty={() => {
-                            return (
-                                <Button iconRight onPress={() => this.navigateToPresentation()}>
-                                    <Text>Next question</Text>
-                                    <Icon name="arrow-forward" />
-                                </Button>
-                            )
-                        }}
-                        onSwipeRight={(item) => {console.log('right')}}
-                        onSwipeLeft={(item) => {console.log('left')}}
-                    />
-                </View>
-                <View style={{ flexDirection: "row", flex: 1, position: "absolute", bottom: 100, left: 0, right: 0, justifyContent: 'space-between', padding: 15 }}>
-                    <Right>
-                        <Button iconRight onPress={() => this.swipeRight()}>
-                            <Text>Next question</Text>
-                            <Icon name="arrow-forward" />
-                        </Button>
-                    </Right>
-                </View>
-            </Container>
-        );
-    }
-}
-
-class Question extends Component {
-    render() {
-        return (
-            <View>
-                <Text note>{this.props.question}</Text>
+            <View style={styles.backgroundColor}>
+                {
+                    this.state.fontLoaded ? (
+                        <Text style={{
+                            fontFamily: "poppins-extra-bold",
+                            fontSize: 30,
+                            textAlign: "left",
+                            marginLeft: 25,
+                            marginRight: 25,
+                            marginTop: 15,
+                        }}>Quiz</Text>) : null
+                }
+                {
+                    this.state.fontLoaded ? (
+                        <Text note style={{
+                            fontFamily: "poppins-medium",
+                            fontSize: 17,
+                            textAlign: "left",
+                            marginLeft: 25,
+                            marginRight: 25
+                        }}>Answer these questions and we'll show you your future 🔮</Text>) : null
+                }
             </View>
         );
     }
 }
 
-class Choices extends Component {
-    constructor(props){
+class CardView extends React.Component {
+    constructor (props) {
         super(props);
+        this.state = {
+            cards: [...range(1, this.props.question)],
+            swipedAllCards: false,
+            swipeDirection: '',
+            cardIndex: 0
+        }
     }
 
-    render() {
-
-        let optionList = [];
-
-        this.props.answer.forEach((answer) =>{
-                optionList.push(
-                    <Button block key={answer}
-                            onPress={this.props.swipe}>
-                        <Text>{answer}</Text>
-                    </Button>
-                )
-            }
-        );
-
+    renderCard = (card, index) => {
         return (
-            <View>
-                {optionList}
+            <View style={cardStylesQuiz.card}>
+                <Text style={cardStylesQuiz.text}>{card} - {index}</Text>
             </View>
-        );
+        )
+    };
+
+    onSwiped = (type) => {
+        console.log(`on swiped ${type}`);
+        this.props.onSwipe();
+    };
+
+    onSwipedAllCards = () => {
+        this.setState({
+            swipedAllCards: true
+        });
+        this.props.navigation.navigate('Presentation');
+    };
+
+    swipeLeft = () => {
+        this.swiper.swipeLeft()
+    };
+
+    render () {
+        return (
+            <View style={cardStylesQuiz.container}>
+                <Swiper
+                    ref={swiper => {
+                        this.swiper = swiper
+                    }}
+                    onSwiped={() => this.onSwiped('general')}
+                    onSwipedLeft={() => this.onSwiped('left')}
+                    onSwipedRight={() => this.onSwiped('right')}
+                    onSwipedTop={() => this.onSwiped('top')}
+                    onSwipedBottom={() => this.onSwiped('bottom')}
+                    onTapCard={this.swipeLeft}
+                    cards={this.state.cards}
+                    cardIndex={this.state.cardIndex}
+                    cardVerticalMargin={15}
+                    renderCard={this.renderCard}
+                    onSwipedAll={this.onSwipedAllCards}
+                    stackSize={this.props.question}
+                    backgroundColor={'#4D9E67'}
+                    stackSeparation={15}
+                    disableTopSwipe={true}
+                    disableBottomSwipe={true}
+                    overlayLabels={{
+                        bottom: {
+                            title: 'BLEAH',
+                            style: {
+                                label: {
+                                    backgroundColor: '#20BF55',
+                                    borderColor: '#20BF55',
+                                    color: 'white',
+                                    borderWidth: 1
+                                },
+                                wrapper: {
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }
+                            }
+                        },
+                        left: {
+                            title: 'NOPE',
+                            style: {
+                                label: {
+                                    backgroundColor: '#ea3232',
+                                    borderColor: '#ea3232',
+                                    color: 'white',
+                                    borderWidth: 1
+                                },
+                                wrapper: {
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'flex-start',
+                                    marginTop: 30,
+                                    marginLeft: -30
+                                }
+                            }
+                        },
+                        right: {
+                            title: 'LIKE',
+                            style: {
+                                label: {
+                                    backgroundColor: '#20BF55',
+                                    borderColor: '#20BF55',
+                                    color: 'white',
+                                    borderWidth: 1
+                                },
+                                wrapper: {
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'flex-start',
+                                    marginTop: 30,
+                                    marginLeft: 30
+                                }
+                            }
+                        },
+                        top: {
+                            title: 'SUPER LIKE',
+                            style: {
+                                label: {
+                                    backgroundColor: '#20BF55',
+                                    borderColor: '#20BF55',
+                                    color: 'white',
+                                    borderWidth: 1
+                                },
+                                wrapper: {
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }
+                            }
+                        }
+                    }}
+                    animateOverlayLabelsOpacity
+                    animateCardOpacity
+                    swipeBackCard
+                >
+                    {/*<Button onPress={() => this.swiper.swipeBack()} title='Swipe Back' />*/}
+                </Swiper>
+            </View>
+        )
     }
 }

@@ -2,17 +2,19 @@
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 import {Text, Container} from 'native-base';
 
+import React from 'react';
+
 // Import Screens
+import { firstPage } from "./util";
 import QuizScreen from "./screens/QuizScreen";
 import PortfolioScreen from "./screens/PortfolioScreen";
 import FundScreen from "./screens/FundScreen";
-
-import React from 'react';
 import CalculatorScreen from "./screens/CalculatorScreen";
 import PresentationScreen from "./screens/PresentationScreen";
 import LoginScreen from "./screens/LoginScreen";
-import { firstPage } from "./util";
-import SettingsScreen from "./screens/SettingsScreen";
+
+
+
 
 // Configuration for Firebase
 
@@ -38,10 +40,9 @@ const MainNavigator = createStackNavigator(
         Presentation: {screen: PresentationScreen},
         Calculator: {screen: CalculatorScreen},
         Login: {screen: LoginScreen},
-        Settings: {screen: SettingsScreen},
     },
     {
-        mode: "modal",
+        mode: "card",
         headerMode: "none",
         initialRouteName: firstPage
     });
@@ -49,15 +50,15 @@ const MainNavigator = createStackNavigator(
 const AppContainer = createAppContainer(MainNavigator);
 
 export default class App extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { isReady: false };
     }
 
     async componentWillMount() {
         await Expo.Font.loadAsync(
             { Roboto: require("native-base/Fonts/Roboto.ttf"),
-                Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+              Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
             });
         this.setState({ isReady: true });
     }

@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import SettingsScreen from '../screens/SettingsScreen';
+import SettingsScreen from '../screens/QuizScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
