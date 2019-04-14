@@ -1,14 +1,23 @@
-import React, { Component } from 'react';
-import {Container, Text, View} from "native-base";
-import Swiper from 'react-native-deck-swiper';
+import React, { Component } from 'react'
+import Swiper from 'react-native-deck-swiper'
+import { Text, View } from 'react-native'
 
 import {devMode} from "../util";
+
 import DevNavigationFooter from "../components/DevNavigationFooter"
+import {Container, Content} from "native-base";
 
-import {cardStylesPresentation, cardStylesQuiz, styles} from "../styles/util";
+import {cardStylesQuiz, cardStyles, styles} from "../styles/util";
 
-import { Font } from 'expo';
-import {db} from '../App'
+//import { Font } from 'expo';
+import StatusDot from "../components/StatusDot";
+
+// demo purposes only
+function * range (start, end) {
+    for (let i = start; i <= end; i++) {
+        yield i
+    }
+}
 
 export default class QuizScreen extends Component {
     constructor(props){
@@ -20,23 +29,13 @@ export default class QuizScreen extends Component {
     }
 
     updateActiveQuestion(){
-        let newActiveQuestionNumber = this.state.questionNumberActive + 1;
+        let newActiveQuestionNumber = this.state.questionNumberActive +1;
         this.setState({
             questionNumberActive : newActiveQuestionNumber,
         })
     }
 
-    readQuestions() {
-        console.log("somethign 8");
-        db.collection("questions").doc("quiz").get()
-            .then(querySnapshot => {
-                console.log("querysnap");
-            });
-    }
-
-
     render() {
-        this.readQuestions();
         let NavigationFooter;
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
@@ -45,8 +44,17 @@ export default class QuizScreen extends Component {
             <Container>
                 <View style={ styles.statusBar } />
                 <QuizHeader />
-                <CardView navigation={this.props.navigation} question={this.state.questionNumberTotal} onSwipe={() => this.updateActiveQuestion()}/>
-                <StatusDot number={this.state.questionNumberTotal} active={this.state.questionNumberActive}/>
+                <Content style={ styles.backgroundColor }>
+                    <CardView
+                        navigation={this.props.navigation}
+                        question={this.state.questionNumberTotal}
+                        onSwipe={() => this.updateActiveQuestion()}
+                    />
+                </Content>
+                <StatusDot
+                    number={this.state.questionNumberTotal}
+                    active={this.state.questionNumberActive}
+                />
                 {NavigationFooter}
             </Container>
 
@@ -54,73 +62,25 @@ export default class QuizScreen extends Component {
     }
 }
 
-class StatusDot extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render(){
-        const numbers = Array.from({length: this.props.number}, (x, i) => i);
-        let statusDot = numbers.map((i) => {
-            if((i+1) === this.props.active){
-                    return <View key={i} style={cardStylesQuiz.statusDotActive}/>
-                }
-                return <View key={i} style={cardStylesQuiz.statusDotInactive}/>
-            }
-        );
-        return(
-            <View style = {{
-                backgroundColor: '#4D9E67',
-                paddingTop: 10,
-                paddingBottom: 10,
-                justifyContent: 'center',
-                flexDirection: 'row',
-            }}>
-                {statusDot}
-            </View>
-        )
-
-    }
-}
-
 class QuizHeader extends Component {
-    state = {
-        fontLoaded: false,
-    };
-
-    async componentDidMount() {
-        await Font.loadAsync({
-            'poppins-extra-bold': require('../assets/fonts/Poppins-Bold.ttf'),
-            'poppins-medium': require('../assets/fonts/Poppins-Medium.ttf'),
-        });
-
-        this.setState({ fontLoaded: true });
-    };
-
     render() {
         return (
             <View style={styles.backgroundColor}>
-                {
-                    this.state.fontLoaded ? (
-                        <Text style={{
+                    <Text style={{
                             fontFamily: "poppins-extra-bold",
                             fontSize: 30,
                             textAlign: "left",
                             marginLeft: 25,
                             marginRight: 25,
                             marginTop: 15,
-                        }}>Quiz</Text>) : null
-                }
-                {
-                    this.state.fontLoaded ? (
-                        <Text note style={{
+                        }}>Quiz</Text>
+                    <Text note style={{
                             fontFamily: "poppins-medium",
                             fontSize: 17,
                             textAlign: "left",
                             marginLeft: 25,
                             marginRight: 25
-                        }}>Answer these questions and we'll show you your future 🔮</Text>) : null
-                }
+                    }}>Answer these questions and we'll show you your future 🔮</Text>
             </View>
         );
     }
@@ -130,8 +90,7 @@ class CardView extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            // cards: [...range(1, this.props.question)],
-            cards: this.props.question,
+            cards: [...range(1, this.props.question)],
             swipedAllCards: false,
             swipeDirection: '',
             cardIndex: 0
@@ -141,13 +100,13 @@ class CardView extends React.Component {
     renderCard = (card, index) => {
         return (
             <View style={cardStylesQuiz.card}>
-                <Text style={cardStylesQuiz.text}>{card} - {index}</Text>
+                <Text style={cardStyles.text}>{card} - {index}</Text>
             </View>
         )
     };
 
     onSwiped = (type) => {
-        console.log(`on swiped ${type}`);
+        //console.log(`on swiped ${type}`);
         this.props.onSwipe();
     };
 

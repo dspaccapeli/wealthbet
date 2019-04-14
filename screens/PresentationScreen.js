@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, View, DeckSwiper, Button, Content, Card, CardItem, Icon, Text, Right } from 'native-base';
-import {cardStylesPresentation, styles} from "../styles/util";
+import {cardStylesPresentation, cardStyles, styles} from "../styles/util";
 import DevNavigationFooter from "../components/DevNavigationFooter"
 import {FundChart, FundDescription, FundHeader} from "./FundScreen";
 
@@ -8,12 +8,37 @@ import { devMode } from '../util.js';
 
 import Swiper from 'react-native-deck-swiper'
 
+import StatusDot from "../components/StatusDot";
+
 export default class PresentationScreen extends Component {
     constructor(props){
         super(props);
         this.state = {
-            questionNumberTotal : 4,
-        };
+            questionNumberTotal : 3,
+            questionNumberActive : 1,
+        }
+    }
+
+    updateActiveQuestion(direction){
+        let newActiveQuestionNumber;
+
+        if (direction === 'left'){
+            if(this.state.questionNumberActive === 3){
+                newActiveQuestionNumber = 1;
+            } else {
+                newActiveQuestionNumber = this.state.questionNumberActive +1;
+            }
+        } else {
+            if(this.state.questionNumberActive === 1){
+                newActiveQuestionNumber = 3;
+            } else {
+                newActiveQuestionNumber = this.state.questionNumberActive - 1;
+            }
+        }
+
+        this.setState({
+            questionNumberActive : newActiveQuestionNumber,
+        })
     }
 
     render () {
@@ -24,10 +49,20 @@ export default class PresentationScreen extends Component {
         return (
             <Container>
                 <View style={ styles.statusBar } />
+                <PresentationHeader/>
                 <Content style={ styles.backgroundColor }>
-                    <PresentationHeader/>
-                    <FundSlideshow navigation={this.props.navigation} question={this.state.questionNumberTotal}/>
+                    <FundSlideshow
+                        navigation={this.props.navigation}
+                        question={this.state.questionNumberTotal}
+                        cardIndex={1}
+                        onSwipeLeft={() => this.updateActiveQuestion('left')}
+                        onSwipeRight={() => this.updateActiveQuestion('right')}
+                    />
                 </Content>
+                <StatusDot
+                    number={this.state.questionNumberTotal}
+                    active={this.state.questionNumberActive}
+                />
                 {NavigationFooter}
             </Container>
         );
@@ -128,18 +163,15 @@ class FundSlideshow extends React.Component {
     renderCard = (card, index) => {
         return (
             <View style={cardStylesPresentation.card}>
-                <Text style={cardStylesPresentation.text}>{card} - {index}</Text>
+                <Text style={cardStyles.text}>{card} - {index}</Text>
             </View>
         )
     };
 
     onSwiped = (type) => {
         console.log(`on swiped ${type}`);
+        //console.log(this.state.cards);
     };
-
-    onSwipedLeft(type){
-        this.swiper.swipeBack();
-    }
 
     onSwipedAllCards = () => {
         this.setState({
@@ -148,20 +180,28 @@ class FundSlideshow extends React.Component {
         this.props.navigation.navigate('Presentation');
     };
 
+    // Opposite paramters
+    swipeRight = () => {
+        this.props.onSwipeRight();
+
+    };
+
     swipeLeft = () => {
-        this.swiper.swipeLeft()
+        this.props.onSwipeLeft();
     };
 
     render () {
         return (
-            <View style={cardStylesPresentation.container}>
+            <View style={cardStyles.container}>
                 <Swiper
                     ref={swiper => {
                         this.swiper = swiper
                     }}
                     onSwiped={() => this.onSwiped('general')}
-                    onSwipedLeft={() => this.onSwiped('left')} //this.onSwipedLeft('left')
-                    onSwipedRight={() => this.onSwiped('right')}
+                    //onSwipedLeft={() => this.onSwiped('left')}
+                    onSwipedLeft={this.swipeLeft}
+                    //onSwipedRight={() => this.onSwiped('right')}
+                    onSwipedRight={this.swipeRight}
                     onSwipedTop={() => this.onSwiped('top')}
                     onSwipedBottom={() => this.onSwiped('bottom')}
                     onTapCard={this.swipeLeft}
@@ -247,122 +287,14 @@ class FundSlideshow extends React.Component {
                     }}
                     animateOverlayLabelsOpacity
                     animateCardOpacity
+                    infinite={true}
                     swipeBackCard={true}
                     showSecondCard={false}
-                    goBackToPreviousCardOnSwipeLeft
-                    outputRotationRange={["1deg", "0deg", "1deg"]}
+                    goBackToPreviousCardOnSwipeRight={true}
+                    outputRotationRange={["0deg", "0deg", "0deg"]}
                 >
                 </Swiper>
             </View>
         )
     }
 }
-
-
-/*
-class FundSlideshow extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            slider1ActiveSlide: SLIDER_1_FIRST_ITEM
-        };
-    }
-
-    _renderItemWithParallax({item, index}, parallaxProps) {
-        return (
-            <SliderEntry
-                data={item}
-                even={(index + 1) % 2 === 0}
-                parallax={true}
-                parallaxProps={parallaxProps}
-            />
-        );
-    }
-
-    mainExample(number, title) {
-        const {slider1ActiveSlide} = this.state;
-
-        return (
-            <View style={styles.exampleContainer}>
-                <Text style={styles.title}>{`Example ${number}`}</Text>
-                <Text style={styles.subtitle}>{title}</Text>
-                <Carousel
-                    ref={c => this._slider1Ref = c}
-                    data={ENTRIES1}
-                    renderItem={this._renderItemWithParallax}
-                    sliderWidth={sliderWidth}
-                    itemWidth={itemWidth}
-                    hasParallaxImages={true}
-                    firstItem={SLIDER_1_FIRST_ITEM}
-                    inactiveSlideScale={0.94}
-                    inactiveSlideOpacity={0.7}
-                    // inactiveSlideShift={20}
-                    containerCustomStyle={styles.slider}
-                    contentContainerCustomStyle={styles.sliderContentContainer}
-                    loop={false}
-                    loopClonesPerSide={2}
-                    autoplay={false}
-                    autoplayDelay={500}
-                    autoplayInterval={3000}
-                    onSnapToItem={(index) => this.setState({slider1ActiveSlide: index})}
-                />
-                <Pagination
-                    dotsLength={ENTRIES1.length}
-                    activeDotIndex={slider1ActiveSlide}
-                    containerStyle={styles.paginationContainer}
-                    dotColor={'rgba(255, 255, 255, 0.92)'}
-                    dotStyle={styles.paginationDot}
-                    inactiveDotColor={colors.black}
-                    inactiveDotOpacity={0.4}
-                    inactiveDotScale={0.6}
-                    carouselRef={this._slider1Ref}
-                    tappableDots={!!this._slider1Ref}
-                />
-            </View>
-        );
-    }
-
-    render () {
-        const example1 = this.mainExample(1, 'Default layout | Loop | Autoplay | Parallax | Scale | Opacity | Pagination with tappable dots');
-
-        return (
-            <SafeAreaView style={styles.safeArea}>
-                <View style={styles.container}>
-                    <StatusBar
-                        translucent={true}
-                        backgroundColor={'rgba(0, 0, 0, 0.3)'}
-                        barStyle={'light-content'}
-                    />
-                    <ScrollView
-                        style={styles.scrollview}
-                        scrollEventThrottle={200}
-                        directionalLockEnabled={true}
-                    >
-                        { example1 }
-                    </ScrollView>
-                </View>
-            </SafeAreaView>
-        );
-    }
-}
-
-const ENTRIES1 = [
-    {
-        title: 'Beautiful and dramatic Antelope Canyon',
-        subtitle: 'Lorem ipsum dolor sit amet et nuncat mergitur',
-        illustration: 'https://i.imgur.com/UYiroysl.jpg'
-    },
-    {
-        title: 'Earlier this morning, NYC',
-        subtitle: 'Lorem ipsum dolor sit amet',
-        illustration: 'https://i.imgur.com/UPrs1EWl.jpg'
-    },
-    {
-        title: 'White Pocket Sunset',
-        subtitle: 'Lorem ipsum dolor sit amet et nuncat ',
-        illustration: 'https://i.imgur.com/MABUbpDl.jpg'
-    },
-];
-const SLIDER_1_FIRST_ITEM = 1;
-
-*/

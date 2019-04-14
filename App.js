@@ -11,6 +11,7 @@ import CalculatorScreen from "./screens/CalculatorScreen";
 import PresentationScreen from "./screens/PresentationScreen";
 import LoginScreen from "./screens/LoginScreen";
 import { firstPage } from "./util";
+import { Font } from 'expo';
 
 // Components
 import LoadingBar from "./components/Loading";
@@ -42,7 +43,7 @@ const MainNavigator = createStackNavigator(
         Login: {screen: LoginScreen},
     },
     {
-        mode: "modal",
+        mode: "card",
         headerMode: "none",
         initialRouteName: firstPage
     });
@@ -56,9 +57,10 @@ export default class App extends React.Component {
     }
 
     async componentWillMount() {
-        await Expo.Font.loadAsync(
-            { Roboto: require("native-base/Fonts/Roboto.ttf"),
-              Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+        await Font.loadAsync(
+            {
+                'poppins-extra-bold': require('./assets/fonts/Poppins-Bold.ttf'),
+                'poppins-medium': require('./assets/fonts/Poppins-Medium.ttf'),
             });
         this.setState({ isReady: true });
     }
