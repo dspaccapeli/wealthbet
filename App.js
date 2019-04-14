@@ -31,7 +31,7 @@ const config = {
 };
 
 firebase.initializeApp(config);
-export const db = firebase.firestore();
+// export const db = firebase.firestore();
 
 const MainNavigator = createStackNavigator(
     {

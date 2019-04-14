@@ -55,7 +55,7 @@ export default class PortfolioScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          portfolio:  [],
+          funds:  apiManager.getPortfolioFunds(),
         };
     }
 
@@ -69,7 +69,7 @@ export default class PortfolioScreen extends Component {
 
     update(changeList) {
         if(changeList === "portfolio") {
-            this.setState({portfolio: apiManager.getPortfolio()})
+            this.setState({funds: apiManager.getPortfolioFunds()})
         }
     }
 
@@ -84,8 +84,8 @@ export default class PortfolioScreen extends Component {
                 <Content>
                     <PortfolioHeader />
                     <PortfolioChart />
-                    <FundList />
-                    <AddFund />
+                    <FundList funds={this.state.funds}/>
+                    <AddFund navigation={this.props.navigation} />
                 </Content>
                 {NavigationFooter}
             </Container>
@@ -196,28 +196,29 @@ class PortfolioStatistics extends Component {
     render() {
         return (
             <Grid>
-                <Col>
-                    <Text>Total value: {apiManager.getPortfolioValue()}</Text>
-                </Col>
-                <Col>
-                    <Text>Monthly growth: {apiManager.getMonthlyGrowth()}%</Text>
-                </Col>
+                <Col><Text>Total value: {apiManager.getPortfolioValue()}</Text></Col>
+                <Col><Text>Monthly growth: {apiManager.getMonthlyGrowth()}%</Text></Col>
             </Grid>
         );
     }
 }
 
 class FundList extends Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            funds: this.props.funds
+        }
+    }
+
     render() {
-        let funds = [1, 2, 3];
-        let fundsList = funds.map((number) => {
-            return < FundCard key={number} />;
+        console.log(this.state.funds);
+        let fundsList = this.state.funds.map((fund) => {
+            return <FundCard key={fund.symbol} fund={fund}/>;
         });
 
         return (
-            <View>
-                {fundsList}
-            </View>
+            <View>{fundsList}</View>
         );
     }
 }
@@ -227,50 +228,39 @@ class FundCard extends Component {
         return (
             <Card>
                 <CardItem>
-                    <Left>
-                        < FundDescription />
-                    </Left>
-                    <Right>
-                        < FundInfo />
-                    </Right>
+                    <Left><Text>{this.props.fund.symbol}</Text></Left>
+                    <Right>< FundInfo fund={this.props.fund}/></Right>
                 </CardItem>
             </Card>
         );
     }
 }
 
-class FundDescription extends Component {
-    render() {
-        return (
-            <Body>
-                <Text>Fund</Text>
-                <Text note> { loremIpsum } </Text>
-            </Body>
-        );
-    }
-}
-
 class FundInfo extends Component {
+    computeGain = () => {
+        let fund = this.props.fund;
+        return ((fund.currentValue - fund.originalValue) / fund.originalValue) * 100;
+    };
+
     render() {
         return (
             <Body>
                 <Text>PUT</Text>
-                <Text note>100</Text>
+                <Text note>{this.props.fund.originalValue}</Text>
                 <Text>VALUE</Text>
-                <Text note>200</Text>
+                <Text note>{this.props.fund.currentValue}</Text>
                 <Text>GAIN</Text>
-                <Text note>3%</Text>
+                <Text note>{this.computeGain()}%</Text>
             </Body>
         );
     }
 }
 
-
-
 class AddFund extends Component {
     render() {
         return (
-            <Button style={styles.roundElement}>
+            <Button title={"Add fund button"} style={styles.roundElement}
+                    onPress={() => this.props.navigation.navigate('Presentation')}>
                 <Icon name='add' />
             </Button>
         );

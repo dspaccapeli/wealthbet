@@ -37,7 +37,7 @@ class DataModel extends ObservableModel {
 
         // Attributes for the portfolio
         this._portfolio = [dummyFund];
-        this.getPortfolio();
+        this.getPortfolioFunds();
     }
 
     getFund(symbol= "FBIFX"){
@@ -80,7 +80,7 @@ class DataModel extends ObservableModel {
     }
 
     //////////////////////////     Functions for portfolio ///////////////////////
-    getPortfolio () {
+    getPortfolioFunds () {
          return this._portfolio;
     }
 
