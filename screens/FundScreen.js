@@ -19,7 +19,7 @@ import * as shape from 'd3-shape'
 import { loremIpsum } from "../constants/util"
 
 // Api manger
-import apiManager from "../DataModel"
+import apiManager from "../data/DataModel"
 import {devMode} from "../util";
 
 /* Structure

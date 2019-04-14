@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container, Button, Form, Item, Label, Text, Input} from 'native-base';
+import {Container, Button, Form, Item, Label, Text, Input, Icon} from 'native-base';
 import {styles} from "../styles/util";
 import * as firebase from "firebase";
 
@@ -71,8 +71,8 @@ export default class LoginScreen extends Component {
         console.log(this.state);
         return (
             <Container styles={styles.loginContainer}>
-                <Form>
-                    <Item floatingLabel>
+                <Form style={{ flex:1, justifyContent: 'center' }}>
+                    <Item floatingLabel style={{padding: 10}}>
                         <Label>Email</Label>
                         <Input
                             autoCorrect={false}
@@ -80,7 +80,7 @@ export default class LoginScreen extends Component {
                             onChangeText={(text) => this.setState({email: text})}
                         />
                     </Item>
-                    <Item floatingLabel>
+                    <Item floatingLabel style={{padding: 10}}>
                         <Label>Password</Label>
                         <Input
                             secureTextEntry={true}

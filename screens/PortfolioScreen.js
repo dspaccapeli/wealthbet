@@ -6,7 +6,7 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 
 
 // Native Base
-import { Container, Content, Left, Right, Text, Body, Button, Icon, CardItem } from 'native-base';
+import { Container, Content, Left, Right, Text, Body, Button, Icon, CardItem, H1 } from 'native-base';
 
 // Styles
 import { styles } from "../styles/util";
@@ -22,6 +22,7 @@ import * as shape from "d3-shape";
 import Card from "react-native-svg-charts/src/card";
 
 import {devMode} from "../util";
+import apiManager from "../data/DataModel";
 
 /* Structure
 
@@ -51,6 +52,27 @@ import {devMode} from "../util";
 */
 
 export default class PortfolioScreen extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          portfolio:  [],
+        };
+    }
+
+    componentDidMount() {
+        apiManager.addObserver(this);
+    }
+
+    componentWillUnmount() {
+        apiManager.removeObserver(this);
+    }
+
+    update(changeList) {
+        if(changeList === "portfolio") {
+            this.setState({portfolio: apiManager.getPortfolio()})
+        }
+    }
+
     render() {
         let NavigationFooter;
         if (devMode) {
@@ -75,12 +97,8 @@ class PortfolioHeader extends Component {
     render() {
         return (
             <Grid>
-                <Col>
-                    <PortfolioTitle />
-                </Col>
-                <Col>
-                    < UserProfile />
-                </Col>
+                <Col><PortfolioTitle/></Col>
+                <Col><UserProfile/></Col>
             </Grid>
         );
     }
@@ -89,7 +107,7 @@ class PortfolioHeader extends Component {
 class PortfolioTitle extends Component {
     render() {
         return (
-            <Text>Portfolio</Text>
+            <H1>Portfolio</H1>
         );
     }
 }
@@ -108,13 +126,14 @@ class PortfolioChart extends Component {
     render() {
         return (
             <View>
-                < ChartArea />
-                < PortfolioStatistics />
+                <ChartArea />
+                <PortfolioStatistics />
             </View>
         );
     }
 }
 
+// TODO: this chart should be dinamic? is there another option?
 class ChartArea extends React.PureComponent {
 
     render() {
@@ -178,10 +197,10 @@ class PortfolioStatistics extends Component {
         return (
             <Grid>
                 <Col>
-                    <Text>Value: 3000</Text>
+                    <Text>Total value: {apiManager.getPortfolioValue()}</Text>
                 </Col>
                 <Col>
-                    <Text>Monthly growth: +3%</Text>
+                    <Text>Monthly growth: {apiManager.getMonthlyGrowth()}%</Text>
                 </Col>
             </Grid>
         );

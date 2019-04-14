@@ -32,7 +32,12 @@ export const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#ffff",
         justifyContent: "center",
+        alignItems: "center",
         padding: 10
+    },
+    slider: {
+        width: 200,
+        height: 40
     }
 });
 

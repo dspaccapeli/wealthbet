@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import {Container, Button, View, Content, Form, Item, Label, Text, Input, Grid, Col, Right } from 'native-base';
+import {Container, Button, View, Content, Item, Label, Text, Input, Right } from 'native-base';
+import { Col, Row, Grid } from 'react-native-easy-grid';
+import {Slider} from "react-native"
 import {styles} from "../styles/util";
-import {FundChart, FundHeader, FundDescription, defaultFund} from "./FundScreen"
+import {FundChart, FundHeader, defaultFund} from "./FundScreen"
 import DevNavigationFooter from "../components/DevNavigationFooter"
 import {devMode} from "../util";
-
 
 export default class CalculatorScreen extends Component {
     render() {
@@ -13,14 +14,11 @@ export default class CalculatorScreen extends Component {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
         }
         return (
-            <Container>
+            <Container style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
                 <View style={ styles.statusBar } />
-                <Content>
-                    <FundHeader fund = {defaultFund}/>
-                    <FundChart/>
-                    <FundDescription/>
-                    <FundCalculator navigation={this.props.navigation}/>
-                </Content>
+                <FundHeader fund = {defaultFund}/>
+                <FundChart/>
+                <FundCalculator navigation={this.props.navigation}/>
                 {NavigationFooter}
             </Container>
         );
@@ -28,43 +26,75 @@ export default class CalculatorScreen extends Component {
 }
 
 class FundCalculator extends Component {
-    setPeriod(value) {
-        this.period = value;
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            yearsPeriod: 3,
+            initialDeposit: 500,
+            monthlyDeposit: 25
+        }
     }
 
-    setInvestment (value) {
-        this.investment = value;
-    }
+    getReturn = () => {
+      return this.state.yearsPeriod * (this.state.initialDeposit + this.state.monthlyDeposit * 12);
+    };
+
 
     render () {
         return (
-            <View>
-                <Form>
-                    <Item years>
-                        <Label>How many years?</Label>
-                        <Input
-                            onChangeText={(text) => this.setPeriod({text})}
-                            value={this.period}
+            <Container style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
+                <Grid>
+                    <Row>
+                        <Col><Text>Years</Text></Col>
+                        <Col><Text>{this.state.yearsPeriod}</Text></Col>
+                    </Row>
+                    <Row>
+                        <Slider
+                            style={styles.slider}
+                            step={1}
+                            maximumValue={20}
+                            onValueChange={(value) => this.setState({yearsPeriod: parseFloat(value)})}
+                            value={this.state.yearsPeriod}
                         />
-                    </Item>
-                    <Item investment>
-                        <Label>Investment</Label>
-                        <Input
-                            onChangeText={(text) => this.setInvestment({text})}
-                            value={this.investment}
+                    </Row>
+                    <Row>
+                        <Col><Text>Initial deposit:</Text></Col>
+                        <Col><Text>{this.state.initialDeposit}</Text></Col>
+                    </Row>
+                    <Row>
+                        <Slider
+                            style={styles.slider}
+                            step={100}
+                            maximumValue={5000}
+                            onValueChange={(value) => this.setState({initialDeposit: parseFloat(value)})}
+                            value={this.state.initialDeposit}
                         />
-                    </Item>
-                </Form>
-                <Grid style={{padding: 10}}>
-                    <Col><Text>Expected Return:</Text></Col>
-                    <Col><Text>100$</Text></Col>
+                    </Row>
+                    <Row>
+                        <Col><Text>Monthly deposit</Text></Col>
+                        <Col><Text>{this.state.monthlyDeposit}</Text></Col>
+                    </Row>
+                    <Row>
+                        <Slider
+                            style={styles.slider}
+                            step={10}
+                            maximumValue={100}
+                            onValueChange={(value) => this.setState({monthlyDeposit: parseFloat(value)})}
+                            value={this.state.monthlyDeposit}
+                        />
+                    </Row>
+                    <Row>
+                        <Col style={{ backgroundColor: '#00CE9F'}}><Text>Expected returns</Text></Col>
+                        <Col style={{ backgroundColor: '#00FFFF'}}><Text>{this.getReturn()}</Text></Col>
+                    </Row>
                 </Grid>
                 <Right>
                     <Button add onPress={() => this.props.navigation.navigate("Portfolio") }>
-                        <Text>Add</Text>
+                        <Text>Buy</Text>
                     </Button>
                 </Right>
-            </View>
+            </Container>
         );
     }
 }

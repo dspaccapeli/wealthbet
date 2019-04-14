@@ -1,22 +1,14 @@
-import React, { Component } from 'react'
-import Swiper from 'react-native-deck-swiper'
-import { Text, View } from 'react-native'
+import React, { Component } from 'react';
+import {Container, Text, View} from "native-base";
+import Swiper from 'react-native-deck-swiper';
 
 import {devMode} from "../util";
-
 import DevNavigationFooter from "../components/DevNavigationFooter"
-import {Container} from "native-base";
 
 import {cardStylesPresentation, cardStylesQuiz, styles} from "../styles/util";
 
 import { Font } from 'expo';
-
-// demo purposes only
-function * range (start, end) {
-    for (let i = start; i <= end; i++) {
-        yield i
-    }
-}
+import {db} from '../App'
 
 export default class QuizScreen extends Component {
     constructor(props){
@@ -28,13 +20,23 @@ export default class QuizScreen extends Component {
     }
 
     updateActiveQuestion(){
-        let newActiveQuestionNumber = this.state.questionNumberActive +1;
+        let newActiveQuestionNumber = this.state.questionNumberActive + 1;
         this.setState({
             questionNumberActive : newActiveQuestionNumber,
         })
     }
 
+    readQuestions() {
+        console.log("somethign 8");
+        db.collection("questions").doc("quiz").get()
+            .then(querySnapshot => {
+                console.log("querysnap");
+            });
+    }
+
+
     render() {
+        this.readQuestions();
         let NavigationFooter;
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
@@ -128,7 +130,8 @@ class CardView extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            cards: [...range(1, this.props.question)],
+            // cards: [...range(1, this.props.question)],
+            cards: this.props.question,
             swipedAllCards: false,
             swipeDirection: '',
             cardIndex: 0

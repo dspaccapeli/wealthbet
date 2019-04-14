@@ -1,8 +1,7 @@
-// React Navigation
-import {createStackNavigator, createAppContainer} from 'react-navigation';
-import {Text, Container} from 'native-base';
 import React from 'react';
 
+// React Navigation
+import {createStackNavigator, createAppContainer} from 'react-navigation';
 
 // Import Screens
 import QuizScreen from "./screens/QuizScreen";
@@ -13,10 +12,14 @@ import PresentationScreen from "./screens/PresentationScreen";
 import LoginScreen from "./screens/LoginScreen";
 import { firstPage } from "./util";
 
+// Components
+import LoadingBar from "./components/Loading";
+
 // Configuration for Firebase
-
 import * as firebase from "firebase";
+import '@firebase/firestore';
 
+// TODO: this should not be committed
 const config = {
     apiKey: "AIzaSyDFz9TsUz9sP9guck1J4Rc2UFzr62tCo_Q",
     authDomain: "wealthbet-19.firebaseapp.com",
@@ -27,6 +30,7 @@ const config = {
 };
 
 firebase.initializeApp(config);
+export const db = firebase.firestore();
 
 const MainNavigator = createStackNavigator(
     {
@@ -46,8 +50,8 @@ const MainNavigator = createStackNavigator(
 const AppContainer = createAppContainer(MainNavigator);
 
 export default class App extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { isReady: false };
     }
 
@@ -62,11 +66,7 @@ export default class App extends React.Component {
     render() {
         if (!this.state.isReady) {
             return (
-                <Container>
-                    <Text>
-                        The app is loading!
-                    </Text>
-                </Container>
+               <LoadingBar/>
             );
         }
         return <AppContainer />;

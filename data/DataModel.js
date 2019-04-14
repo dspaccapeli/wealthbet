@@ -1,12 +1,14 @@
 // Import the IEX token from the .gitignored file
-import { token } from "./IEXToken.js"
+import { token } from "../IEXToken.js"
+import ObservableModel from "./ObservableModel";
 
 // General string search helpful in our search
 const fundManagerName = "Fidelity";
 const fundType = "Index";
 
-class DataModel {
+class DataModel extends ObservableModel {
     constructor(){
+        super();
         // Initialize API request elements
         this.mutualFundRequest = "ref-data/mutual-funds/symbols/";
         this.version = "/beta/";
@@ -32,6 +34,10 @@ class DataModel {
                 }
             });
             */
+
+        // Attributes for the portfolio
+        this._portfolio = [dummyFund];
+        this.getPortfolio();
     }
 
     getFund(symbol= "FBIFX"){
@@ -72,22 +78,80 @@ class DataModel {
         }
         throw response;
     }
+
+    //////////////////////////     Functions for portfolio ///////////////////////
+    getPortfolio () {
+         return this._portfolio;
+    }
+
+    getPortfolioValue () {
+         let value = 0;
+         this._portfolio.forEach(fund => {
+             value += fund.currentValue;
+         });
+         return value;
+    }
+
+    getMonthlyGrowth () {
+         // Wild function that computes the average growth from the portfolio
+        let growth = 0;
+        this._portfolio.forEach(fund => {
+            growth += (fund.currentValue - fund.originalValue) / fund.originalValue;
+        });
+        growth /= this._portfolio.length;
+        return growth * 100;
+    }
+
+    addFundToPortfolio(symbol="FBIFX", shares=100, originalValue=100,currentValue=110) {
+        this._portfolio.add({
+            symbol: symbol,
+            shares: shares,
+            originalValue: originalValue,
+            currentValue: currentValue,
+
+        });
+        this.notifyObservers("portfolio");
+    }
+
+    deleteFundFromPortfolio(symbol="FBIFX") {
+        this._portfolio =  this._portfolio.filter(el => el.symbol !== symbol);
+        this.notifyObservers("portfolio");
+    }
+
+    updateFundAmountFromPortfolio(symbol="FBIFX", shares="200") {
+        const index = this._portfolio.findIndex((el) => {
+            return  el.symbol === symbol;
+        });
+        this._portfolio[index].shares = shares;
+        this.notifyObservers("portfolio");
+    }
+
+    //////////////////////////  END Functions for portfolio ///////////////////////
+
 }
 
-// Utility function to extract _n_ random item from an array
-function getRandomElements(arr, n) {
-    let result = new Array(n),
-        len = arr.length,
-        taken = new Array(len);
-    if (n > len)
-        throw new RangeError("getRandomElements: more elements taken than available");
-    while (n--) {
-        let x = Math.floor(Math.random() * len);
-        result[n] = arr[x in taken ? taken[x] : x];
-        taken[x] = --len in taken ? taken[len] : len;
-    }
-    return result;
-}
+// // Utility function to extract _n_ random item from an array
+// function getRandomElements(arr, n) {
+//     let result = new Array(n),
+//         len = arr.length,
+//         taken = new Array(len);
+//     if (n > len)
+//         throw new RangeError("getRandomElements: more elements taken than available");
+//     while (n--) {
+//         let x = Math.floor(Math.random() * len);
+//         result[n] = arr[x in taken ? taken[x] : x];
+//         taken[x] = --len in taken ? taken[len] : len;
+//     }
+//     return result;
+// }
+
+const dummyFund = {
+    symbol: "FBIFX" ,
+    shares: 100,
+    originalValue: 100,
+    currentValue: 110,
+
+};
 
 const apiManager = new DataModel();
 export default apiManager;
