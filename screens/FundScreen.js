@@ -1,6 +1,6 @@
 // React
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import {TouchableHighlight, View, Linking} from 'react-native';
 
 // Native Base
 import { Text, Button, Container, Content, Card, CardItem, Body, Segment } from 'native-base';
@@ -36,11 +36,7 @@ import {devMode} from "../util";
     |
     --- FundStatistics
     |
-    --- FundInfo
-        |
-        --- FundDescription
-        |
-        --- FundAlert
+    --- FundDescription
     |
     --- News
     |
@@ -92,8 +88,7 @@ export default class FundScreen extends Component {
                 <Content>
                     <FundHeader fund={fund} />
                     <FundChart fund={fund} />
-                    <FundInfo fund={fund}/>
-                    <FundStatistics fund={fund} />
+                    <FundDescription fund={fund}/>
                     <News fund={fund} />
                     <Sell symbol={fund.symbol}  navigation={this.props.navigation} />
                 </Content>
@@ -106,16 +101,16 @@ export default class FundScreen extends Component {
 export class FundHeader extends Component {
     constructor (props) {
         super (props);
-        this.fund = defaultFund;
-    }
-    render() {
-        if (this.props.fund) {
-            this.fund = this.props.fund;
+        this.state = {
+            fund: this.props.fund
         }
+    }
+
+    render() {
         return (
             <View style={{padding: 10}}>
-                <Text>{this.fund.symbol}</Text>
-                <Text>{this.fund.companyName}</Text>
+                <Text>{this.state.fund.symbol}</Text>
+                <Text>{this.state.fund.companyName}</Text>
             </View>
         );
     }
@@ -218,23 +213,40 @@ export class FundStatistics extends Component {
     }
 }
 
-export class FundInfo extends  Component {
-    render() {
-        return (
-            <View>
-                <FundDescription />
-                <FundAlert />
-            </View>
-        );
-    }
-}
-
 export class FundDescription extends  Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            status: "LOADING",
+            description: "",
+        }
+    }
+
+    componentDidMount() {
+        apiManager
+            .getDescription(this.props.fund.symbol)
+            .then(data => {
+                let description = "";
+                if (data.description) {
+                    description = data.description;
+                }
+                this.setState({
+                    status: "LOADED",
+                    description: description,
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    status: "ERROR",
+                });
+            });
+    }
+
     render() {
         return (
             <View>
                 <Text> Info </Text>
-                <Text note> { loremIpsum } </Text>
+                <Text note> {this.state.description} </Text>
             </View>
         );
     }
@@ -260,12 +272,82 @@ class FundAlert extends  Component {
 }
 
 class News extends  Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            status: "LOADING",
+            news: "",
+        }
+    }
+
+    componentDidMount() {
+        apiManager
+            .getNews(this.props.fund.companyName)
+            .then(data => {
+                let currentNews = "No current news for you today!";
+                let newsLink = "";
+                if (data["articles"][0]["description"]) {
+                    currentNews = data["articles"][0]["description"];
+                    newsLink = data["articles"][0]["url"]
+                }
+                this.setState({
+                    status: "LOADED",
+                    news: currentNews,
+                    newsLink: newsLink,
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    status: "ERROR",
+                });
+            });
+    }
+
+    goToURL = () => {
+        let url = this.state.newsLink;
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.log('Don\'t know how to open URI: ' + this.props.url);
+            }
+        });
+    };
+
     render() {
+        let news;
+        switch (this.state.status) {
+            case "LOADING":
+                news = loremIpsum;
+                break;
+            case "LOADED":
+                news = this.state.news;
+                break;
+            case "ERROR":
+                news = loremIpsum;
+        }
         return (
-            <View>
-                <Text> News </Text>
-                <Text note> { loremIpsum } </Text>
-            </View>
+            <TouchableHighlight onPress={this.onPress} underlayColor="white">
+                <Card>
+                    <CardItem header>
+                        <Text>News</Text>
+                    </CardItem>
+                    <CardItem>
+                        <Body>
+                            <Text note>
+                                { news }
+                            </Text>
+                        </Body>
+                    </CardItem>
+                    <CardItem>
+                        <Text>Follow more </Text>
+                        <Text onPress={this.goToURL} style={ {
+                            color: '#0000EE',
+                            fontWeight: 'bold'
+                        }}>here.</Text>
+                    </CardItem>
+                </Card>
+            </TouchableHighlight>
         );
     }
 }

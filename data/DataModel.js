@@ -1,5 +1,5 @@
 // Import the IEX token from the .gitignored file
-import { token } from "../IEXToken.js"
+import { token, newsApiKey } from "../IEXToken.js"
 import ObservableModel from "./ObservableModel";
 
 // General string search helpful in our search
@@ -58,6 +58,23 @@ class DataModel extends ObservableModel {
         fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
             .then(response => response.json())
             .then(json => {selectedFundJson = json});
+    }
+
+    getNews(fundCompnayName) {
+        let url = 'https://newsapi.org/v2/everything?' +
+            'q=' + fundCompnayName + '&' +
+            'from=2019-04-15&' + // TODO: replace this with TODAY
+            'sortBy=popularity&' +
+            'apiKey=' + newsApiKey;
+        let req = new Request(url);
+
+        return fetch(req).then(this.processResponse);
+
+    }
+
+    getDescription(fundSymbol) {
+        return fetch(this.baseUrl + this.version + `stock/${symbol}/company` + this.tokenString)
+            .then(this.processResponse);
     }
 
     /*
@@ -156,6 +173,8 @@ class DataModel extends ObservableModel {
     computeGain(fund) {
         return ((fund.currentValue - fund.originalValue) / fund.originalValue) * 100;
     }
+
+
 
     // readQuestions() {
     //     console.log("somethign 8");
