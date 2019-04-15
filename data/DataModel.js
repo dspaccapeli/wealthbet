@@ -6,6 +6,17 @@ import ObservableModel from "./ObservableModel";
 const fundManagerName = "Fidelity";
 const fundType = "Index";
 
+// Configuration for Firebase
+import * as firebase from "firebase";
+import '@firebase/firestore';
+import {FirebaseConfig} from "../FirebaseConfig";
+
+// TODO: this should not be committed
+const config = FirebaseConfig;
+
+firebase.initializeApp(config);
+export const db = firebase.firestore();
+
 class DataModel extends ObservableModel {
     constructor(){
         super();
@@ -146,20 +157,16 @@ class DataModel extends ObservableModel {
         return ((fund.currentValue - fund.originalValue) / fund.originalValue) * 100;
     }
 
-// // Utility function to extract _n_ random item from an array
-// function getRandomElements(arr, n) {
-//     let result = new Array(n),
-//         len = arr.length,
-//         taken = new Array(len);
-//     if (n > len)
-//         throw new RangeError("getRandomElements: more elements taken than available");
-//     while (n--) {
-//         let x = Math.floor(Math.random() * len);
-//         result[n] = arr[x in taken ? taken[x] : x];
-//         taken[x] = --len in taken ? taken[len] : len;
-//     }
-//     return result;
-// }
+    // readQuestions() {
+    //     console.log("somethign 8");
+    //     db.collection("questions").doc("quiz").get()
+    //         .then(querySnapshot => {
+    //             console.log("querysnap");
+    //         });
+    // }
+
+
+}
 
 const dummyFund = {
     symbol: "FBIFX" ,

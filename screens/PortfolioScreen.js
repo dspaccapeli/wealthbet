@@ -1,7 +1,6 @@
 // React
 import React, { Component } from 'react';
-import { View, TouchableHighlight } from 'react-native';
-
+import {View, TouchableHighlight, TouchableOpacity} from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
 
@@ -15,15 +14,12 @@ import { styles } from "../styles/util";
 import DevNavigationFooter from "../components/DevNavigationFooter"
 
 // JS utils
-
-import { loremIpsum } from "../constants/util"
 import {StackedAreaChart} from "react-native-svg-charts";
 import * as shape from "d3-shape";
 import Card from "react-native-svg-charts/src/card";
 
 import {devMode} from "../util";
 import apiManager from "../data/DataModel";
-import {FundStatistics} from "./FundScreen";
 
 /* Structure
 
@@ -76,8 +72,6 @@ export default class PortfolioScreen extends Component {
     }
 
     render() {
-        console.log("RENDER");
-        console.log(this.state.funds);
         let NavigationFooter;
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
@@ -86,8 +80,8 @@ export default class PortfolioScreen extends Component {
             <Container>
                 <View style={ styles.statusBar } />
                 <Content>
-                    <PortfolioHeader />
-                    <PortfolioChart />
+                    <PortfolioHeader navigation={this.props.navigation} />
+                    <PortfolioChart funds={this.state.funds}/>
                     <FundList funds={this.state.funds} navigation={this.props.navigation}/>
                     <AddFund navigation={this.props.navigation} />
                 </Content>
@@ -102,7 +96,7 @@ class PortfolioHeader extends Component {
         return (
             <Grid >
                 <Col><PortfolioTitle/></Col>
-                <Col><UserProfile/></Col>
+                <Col><UserProfile navigation={this.props.navigation}/></Col>
             </Grid>
         );
     }
@@ -119,7 +113,8 @@ class PortfolioTitle extends Component {
 class UserProfile extends Component {
     render() {
         return (
-            <Button transparent>
+            <Button transparent
+                    onPress={() => this.props.navigation.navigate('Profile')} title={"Go to profile"}>
                 <Icon name='md-contact' />
             </Button>
         );
@@ -130,7 +125,7 @@ class PortfolioChart extends Component {
     render() {
         return (
             <View>
-                <ChartArea />
+                <ChartArea funds={this.props.funds} />
                 <PortfolioStatistics />
             </View>
         );
@@ -140,40 +135,65 @@ class PortfolioChart extends Component {
 // TODO: this chart should be dinamic? is there another option?
 // This should pot each fund that you have with a different color
 class ChartArea extends React.PureComponent {
+    constructor (props) {
+        super(props);
+        this.state = {
+            status: "LOADING",
+            funds: this.props.funds
+        };
+    }
+
+    componentDidMount() {
+        let allData = {};
+        for (let i in this.state.funds) {
+            apiManager.getHistoricalData(symbol=this.state.funds[i].symbol)
+                .then(data => {
+                    allData[this.state.funds[i].symbol] = data;
+                })
+                .then( () => {
+                    this.setState({
+                        status: "LOADED",
+                        data: allData,
+                    })
+                })
+                .catch(() => {
+                    this.this.setState({
+                        status: "ERROR"
+                    });
+                });
+        }
+    }
+
+    processData = (data) => {
+        let finalData = [];
+        // Take just 10 values from the data
+        for (let i = 0; i < 10; i++) {
+            let item = {};
+            for (let fundSymbol in data) {
+                item["value"] = data[fundSymbol][i]["value"] * 10;
+            }
+            finalData.push(item);
+        }
+        return finalData;
+    };
 
     render() {
 
-        const data = [
-            {
-                month: new Date(2015, 0, 1),
-                apples: 3840,
-                bananas: 1920,
-                cherries: 960,
-                dates: 400,
-            },
-            {
-                month: new Date(2015, 1, 1),
-                apples: 1600,
-                bananas: 1440,
-                cherries: 960,
-                dates: 400,
-            },
-            {
-                month: new Date(2015, 2, 1),
-                apples: 640,
-                bananas: 960,
-                cherries: 3640,
-                dates: 400,
-            },
-            {
-                month: new Date(2015, 3, 1),
-                apples: 3320,
-                bananas: 480,
-                cherries: 640,
-                dates: 400,
-            },
-        ];
+        let data;
+        switch (this.state.status) {
+            case "LOADING":
+                data = [{value: 5}];
+                break;
+            case "LOADED":
+                data = this.processData(this.state.data);
+                break;
+            case "ERROR":
+                data = mockData;
+            // console.log("There is a problem in the data");
+        }
 
+        // TODO: change processData so that it works with multiple funds
+        data=mockData;
         const colors = [ '#4D9E67', '#6cb567', '#92bf8f', '#72bf6d' ];
         const keys   = [ 'apples', 'bananas', 'cherries', 'dates' ];
         const svgs = [
@@ -276,3 +296,34 @@ class AddFund extends Component {
         );
     }
 }
+
+const mockData = [
+    {
+        month: new Date(2015, 0, 1),
+        apples: 3840,
+        bananas: 1920,
+        cherries: 960,
+        dates: 400,
+    },
+    {
+        month: new Date(2015, 1, 1),
+        apples: 1600,
+        bananas: 1440,
+        cherries: 960,
+        dates: 400,
+    },
+    {
+        month: new Date(2015, 2, 1),
+        apples: 640,
+        bananas: 960,
+        cherries: 3640,
+        dates: 400,
+    },
+    {
+        month: new Date(2015, 3, 1),
+        apples: 3320,
+        bananas: 480,
+        cherries: 640,
+        dates: 400,
+    },
+];

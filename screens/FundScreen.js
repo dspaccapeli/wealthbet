@@ -48,8 +48,8 @@ import {devMode} from "../util";
 */
 
 export default class FundScreen extends Component {
-    constructor () {
-        super();
+    constructor (props) {
+        super(props);
         this.state = {
             status: "LOADING",
         };
@@ -163,16 +163,13 @@ class ChartArea extends React.PureComponent {
         switch (this.state.status) {
             case "LOADING":
                 data = [{value: 5}];
-                // console.log("Data is loading");
                 break;
             case "LOADED":
                 data = this.state.data;
                 break;
             case "ERROR":
                 data = [{value: 10}, {value: 10}];
-                // console.log("There is a problem in the data");
         }
-
         const colors = [ '#4D9E67', "#4D9E69", "#4D9E87" ];
         const keys   = [ 'value'];
         const svgs = [
@@ -207,10 +204,6 @@ class TimeScale extends React.PureComponent {
 }
 
 export class FundStatistics extends Component {
-    computeGain = (fund) => {
-        return ((fund.currentValue - fund.originalValue) / fund.originalValue) * 100;
-    };
-
     render() {
         return (
             <Container>
