@@ -9,6 +9,8 @@ const fundType = "Index";
 class DataModel extends ObservableModel {
     constructor(){
         super();
+        this.currentFundSymbol = dummyFund.symbol;
+
         // Initialize API request elements
         this.mutualFundRequest = "ref-data/mutual-funds/symbols/";
         this.version = "/beta/";
@@ -18,31 +20,26 @@ class DataModel extends ObservableModel {
         // Initializing mutual fund array
         this.mutualFundList = [];
 
-        // Fetching the funds list
-        /*
-        fetch(this.baseUrl + this.version + this.mutualFundRequest + this.tokenString)
-            .then(response => response.json())
-            .then(data => {this.mutualFundList = data});
-
-        // Filtering the funds
-        this.shownFunds = [];
-
-        Array.from(this.mutualFundList).forEach(
-            (fund) => {
-                if(fund.name.includes(fundManagerName) && fund.name.includes(fundType)) {
-                    this.shownFunds.push(fund);
-                }
-            });
-            */
-
         // Attributes for the portfolio
         this._portfolio = [dummyFund];
         this.getPortfolioFunds();
+
+        // Attributes for the quiz
+        this._quiz = [dummyQuestion];
+        this.getQuiz();
     }
 
-    getFund(symbol= "FBIFX"){
+    getFund(symbol= "FBIFX") {
         return fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
             .then(this.processResponse);
+    }
+
+    getCurrentFund() {
+        return this.getFund(this.currentFundSymbol);
+    }
+
+    setCurrentFund(symbol) {
+        this.currentFundSymbol = symbol;
     }
 
     getFundLogo(symbol= "FBIFX"){
@@ -102,14 +99,26 @@ class DataModel extends ObservableModel {
         return growth * 100;
     }
 
-    addFundToPortfolio(symbol="FBIFX", shares=100, originalValue=100,currentValue=110) {
-        this._portfolio.add({
-            symbol: symbol,
-            shares: shares,
-            originalValue: originalValue,
-            currentValue: currentValue,
+    /**
+     * Add fund to portfolio, if the fund is already in the portfolio, the fund is updated.
+     * @param symbol
+     * @param shares
+     * @param originalValue
+     * @param currentValue
+     */
+    addFundToPortfolio(symbol="FBIFX", shares=100, originalValue=100, currentValue=110) {
+        const index = this._portfolio.findIndex((fund) => {return fund.symbol === symbol;});
+        if (index !== -1) {
+            this.updateFundAmountFromPortfolio(symbol, shares, originalValue, currentValue);
+        } else {
+            this._portfolio.push({
+                symbol: symbol,
+                shares: shares,
+                originalValue: originalValue,
+                currentValue: currentValue,
 
-        });
+            });
+        }
         this.notifyObservers("portfolio");
     }
 
@@ -118,17 +127,24 @@ class DataModel extends ObservableModel {
         this.notifyObservers("portfolio");
     }
 
-    updateFundAmountFromPortfolio(symbol="FBIFX", shares="200") {
+    updateFundAmountFromPortfolio(symbol="FBIFX", shares=200, originalValue=100, currentValue=110) {
         const index = this._portfolio.findIndex((el) => {
             return  el.symbol === symbol;
         });
         this._portfolio[index].shares = shares;
+        this._portfolio[index].originalValue = originalValue;
+        this._portfolio[index].currentValue = currentValue;
         this.notifyObservers("portfolio");
     }
-
     //////////////////////////  END Functions for portfolio ///////////////////////
 
-}
+    getQuiz() {
+         return this._quiz;
+    }
+
+    computeGain(fund) {
+        return ((fund.currentValue - fund.originalValue) / fund.originalValue) * 100;
+    }
 
 // // Utility function to extract _n_ random item from an array
 // function getRandomElements(arr, n) {
@@ -151,6 +167,11 @@ const dummyFund = {
     originalValue: 100,
     currentValue: 110,
 
+};
+
+const dummyQuestion = {
+    question: "Are you interested in hardware?",
+    answers: ["Yes", "No"]
 };
 
 const apiManager = new DataModel();

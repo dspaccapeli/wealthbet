@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import {Container, Button, View, Content, Item, Label, Text, Input, Right } from 'native-base';
+import {Container, Button, View, Content, Item, Label, Text, Input, Left, Right, H1 } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import {Slider} from "react-native"
 import {styles} from "../styles/util";
 import {FundChart, FundHeader, defaultFund} from "./FundScreen"
 import DevNavigationFooter from "../components/DevNavigationFooter"
 import {devMode} from "../util";
+import apiManager from "../data/DataModel";
 
 export default class CalculatorScreen extends Component {
     render() {
@@ -16,9 +17,10 @@ export default class CalculatorScreen extends Component {
         return (
             <Container style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
                 <View style={ styles.statusBar } />
-                <FundHeader fund = {defaultFund}/>
-                <FundChart/>
-                <FundCalculator navigation={this.props.navigation}/>
+                <H1 style={{textAlign: 'center', alignSelf: 'center'}}>Calculator</H1>
+                <FundHeader fund={defaultFund}/>
+                <FundChart fund={defaultFund}/>
+                <FundCalculator fund={defaultFund} navigation={this.props.navigation}/>
                 {NavigationFooter}
             </Container>
         );
@@ -30,6 +32,7 @@ class FundCalculator extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            fund: this.props.fund,
             yearsPeriod: 3,
             initialDeposit: 500,
             monthlyDeposit: 25
@@ -40,16 +43,25 @@ class FundCalculator extends Component {
       return this.state.yearsPeriod * (this.state.initialDeposit + this.state.monthlyDeposit * 12);
     };
 
+    buyFund = () => {
+        let originalValue = this.state.initialDeposit;
+        let currentValue = originalValue + 10; // simulate an increase of value
+        let shares = 10; // simulate the number of shares
+        console.log("bought fund:" ,this.state.fund.symbol);
+        apiManager.addFundToPortfolio(symbol =this.state.fund.symbol, shares=shares, originalValue=originalValue, currentValue=currentValue);
+        this.props.navigation.navigate("Portfolio");
+    };
+
 
     render () {
         return (
-            <Container style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
-                <Grid>
+            <Container style={{ flex: 1, alignItems: 'stretch', justifyContent: "center" }}>
+                <Grid style={{padding: 30}}>
                     <Row>
-                        <Col><Text>Years</Text></Col>
-                        <Col><Text>{this.state.yearsPeriod}</Text></Col>
+                        <Col><Left><Text>Years</Text></Left></Col>
+                        <Col><Right><Text>{this.state.yearsPeriod}</Text></Right></Col>
                     </Row>
-                    <Row>
+                    <Row style={{padding: 10, justifyContent: "center"}}>
                         <Slider
                             style={styles.slider}
                             step={1}
@@ -59,10 +71,10 @@ class FundCalculator extends Component {
                         />
                     </Row>
                     <Row>
-                        <Col><Text>Initial deposit:</Text></Col>
-                        <Col><Text>{this.state.initialDeposit}</Text></Col>
+                        <Col><Left><Text>Initial deposit</Text></Left></Col>
+                        <Col><Right><Text>{this.state.initialDeposit}$</Text></Right></Col>
                     </Row>
-                    <Row>
+                    <Row  style={{padding: 10, justifyContent: "center"}}>
                         <Slider
                             style={styles.slider}
                             step={100}
@@ -72,10 +84,10 @@ class FundCalculator extends Component {
                         />
                     </Row>
                     <Row>
-                        <Col><Text>Monthly deposit</Text></Col>
-                        <Col><Text>{this.state.monthlyDeposit}</Text></Col>
+                        <Col><Left><Text>Monthly deposit</Text></Left></Col>
+                        <Col><Right><Text>{this.state.monthlyDeposit}$</Text></Right></Col>
                     </Row>
-                    <Row>
+                    <Row  style={{padding: 10, justifyContent: "center"}}>
                         <Slider
                             style={styles.slider}
                             step={10}
@@ -84,13 +96,13 @@ class FundCalculator extends Component {
                             value={this.state.monthlyDeposit}
                         />
                     </Row>
-                    <Row>
-                        <Col style={{ backgroundColor: '#00CE9F'}}><Text>Expected returns</Text></Col>
-                        <Col style={{ backgroundColor: '#00FFFF'}}><Text>{this.getReturn()}</Text></Col>
+                    <Row style={{padding: 10}}>
+                        <Col><Left><Text style={{fontWeight: 'bold'}}>Expected returns</Text></Left></Col>
+                        <Col><Right><Text style={{fontWeight: 'bold'}}>{this.getReturn()}$</Text></Right></Col>
                     </Row>
                 </Grid>
                 <Right>
-                    <Button add onPress={() => this.props.navigation.navigate("Portfolio") }>
+                    <Button style={{backgroundColor: "#4D9E67"}} onPress={this.buyFund} title="Buy fund">
                         <Text>Buy</Text>
                     </Button>
                 </Right>

@@ -61,6 +61,8 @@ export default class App extends React.Component {
             {
                 'poppins-extra-bold': require('./assets/fonts/Poppins-Bold.ttf'),
                 'poppins-medium': require('./assets/fonts/Poppins-Medium.ttf'),
+                Roboto: require("native-base/Fonts/Roboto.ttf"),
+                Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
             });
         this.setState({ isReady: true });
     }

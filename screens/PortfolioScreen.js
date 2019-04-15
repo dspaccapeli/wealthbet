@@ -1,12 +1,12 @@
 // React
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, TouchableHighlight } from 'react-native';
 
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
 
 // Native Base
-import { Container, Content, Left, Right, Text, Body, Button, Icon, CardItem, H1 } from 'native-base';
+import { Container, Content, Left, Right, Text, Button, Icon, CardItem, H1, List, ListItem } from 'native-base';
 
 // Styles
 import { styles } from "../styles/util";
@@ -23,6 +23,7 @@ import Card from "react-native-svg-charts/src/card";
 
 import {devMode} from "../util";
 import apiManager from "../data/DataModel";
+import {FundStatistics} from "./FundScreen";
 
 /* Structure
 
@@ -67,13 +68,16 @@ export default class PortfolioScreen extends Component {
         apiManager.removeObserver(this);
     }
 
-    update(changeList) {
-        if(changeList === "portfolio") {
+    update (observer, changeDetails) {
+        console.log("Update function", changeDetails, changeDetails ===  "portfolio" );
+        if(changeDetails === "portfolio") {
             this.setState({funds: apiManager.getPortfolioFunds()})
         }
     }
 
     render() {
+        console.log("RENDER");
+        console.log(this.state.funds);
         let NavigationFooter;
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
@@ -84,7 +88,7 @@ export default class PortfolioScreen extends Component {
                 <Content>
                     <PortfolioHeader />
                     <PortfolioChart />
-                    <FundList funds={this.state.funds}/>
+                    <FundList funds={this.state.funds} navigation={this.props.navigation}/>
                     <AddFund navigation={this.props.navigation} />
                 </Content>
                 {NavigationFooter}
@@ -96,7 +100,7 @@ export default class PortfolioScreen extends Component {
 class PortfolioHeader extends Component {
     render() {
         return (
-            <Grid>
+            <Grid >
                 <Col><PortfolioTitle/></Col>
                 <Col><UserProfile/></Col>
             </Grid>
@@ -134,6 +138,7 @@ class PortfolioChart extends Component {
 }
 
 // TODO: this chart should be dinamic? is there another option?
+// This should pot each fund that you have with a different color
 class ChartArea extends React.PureComponent {
 
     render() {
@@ -169,7 +174,7 @@ class ChartArea extends React.PureComponent {
             },
         ];
 
-        const colors = [ '#8800cc', '#aa00ff', '#cc66ff', '#eeccff' ];
+        const colors = [ '#4D9E67', '#6cb567', '#92bf8f', '#72bf6d' ];
         const keys   = [ 'apples', 'bananas', 'cherries', 'dates' ];
         const svgs = [
             { onPress: () => console.log('apples') },
@@ -212,46 +217,51 @@ class FundList extends Component {
     }
 
     render() {
-        console.log(this.state.funds);
-        let fundsList = this.state.funds.map((fund) => {
-            return <FundCard key={fund.symbol} fund={fund}/>;
-        });
+        let fundList;
+        if (this.state.funds.length > 0) {
+            fundList = this.state.funds.map((fund) => {
+                return <FundCard key={fund.symbol} fund={fund} navigation={this.props.navigation}/>;
+            });
+        } else {
+            fundList = (<Text>There are no funds in the portfolio!</Text>);
+        }
 
         return (
-            <View>{fundsList}</View>
+            <View>{fundList}</View>
         );
     }
 }
 
 class FundCard extends Component {
-    render() {
-        return (
-            <Card>
-                <CardItem>
-                    <Left><Text>{this.props.fund.symbol}</Text></Left>
-                    <Right>< FundInfo fund={this.props.fund}/></Right>
-                </CardItem>
-            </Card>
-        );
+    constructor (props) {
+        super(props);
+        this.state = {
+            fund: this.props.fund
+        }
     }
-}
 
-class FundInfo extends Component {
-    computeGain = () => {
-        let fund = this.props.fund;
-        return ((fund.currentValue - fund.originalValue) / fund.originalValue) * 100;
+    onPress = () => {
+        // Set the current fund
+        apiManager.setCurrentFund(this.props.fund.symbol);
+        this.props.navigation.navigate("Fund");
     };
 
     render() {
         return (
-            <Body>
-                <Text>PUT</Text>
-                <Text note>{this.props.fund.originalValue}</Text>
-                <Text>VALUE</Text>
-                <Text note>{this.props.fund.currentValue}</Text>
-                <Text>GAIN</Text>
-                <Text note>{this.computeGain()}%</Text>
-            </Body>
+            <TouchableHighlight onPress={this.onPress} underlayColor="white">
+                <Card>
+                    <CardItem>
+                        <Left><Text>{this.props.fund.symbol}</Text></Left>
+                        <Right><Text>PUT</Text>
+                            <Text note>{this.props.fund.originalValue}</Text>
+                            <Text>VALUE</Text>
+                            <Text note>{this.props.fund.currentValue}</Text>
+                            <Text>GAIN</Text>
+                            <Text note>{apiManager.computeGain(this.props.fund)}%</Text>
+                        </Right>
+                    </CardItem>
+                </Card>
+            </TouchableHighlight>
         );
     }
 }
