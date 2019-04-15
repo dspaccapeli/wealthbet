@@ -11,7 +11,7 @@ import { Container, Content, Left, Right, Text, Button, Icon, CardItem, H1, List
 import { styles } from "../styles/util";
 
 // Components
-import DevNavigationFooter from "../components/DevNavigationFooter"
+import DevNavigationFooter from "../components/DevNavigationFooter";
 
 // JS utils
 import {StackedAreaChart} from "react-native-svg-charts";
@@ -83,7 +83,7 @@ export default class PortfolioScreen extends Component {
                     <PortfolioHeader navigation={this.props.navigation} />
                     <PortfolioChart funds={this.state.funds}/>
                     <FundList funds={this.state.funds} navigation={this.props.navigation}/>
-                    <AddFund navigation={this.props.navigation} />
+                    <AddFund navigation={this.props.navigation}/>
                 </Content>
                 {NavigationFooter}
             </Container>
@@ -95,17 +95,9 @@ class PortfolioHeader extends Component {
     render() {
         return (
             <Grid >
-                <Col><PortfolioTitle/></Col>
+                <Col><H1>Portfolio</H1></Col>
                 <Col><UserProfile navigation={this.props.navigation}/></Col>
             </Grid>
-        );
-    }
-}
-
-class PortfolioTitle extends Component {
-    render() {
-        return (
-            <H1>Portfolio</H1>
         );
     }
 }
@@ -297,6 +289,7 @@ class AddFund extends Component {
     }
 }
 
+//TODO: delete, this is used only to show a nice graph in the top
 const mockData = [
     {
         month: new Date(2015, 0, 1),

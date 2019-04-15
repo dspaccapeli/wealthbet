@@ -73,7 +73,7 @@ The following is the structure for the component we developed:
     |
     App.js
     DataModel.js
-    (IEXToken.js)
+    (apiKeys.js)
     
 🗺 DevNavigationFooter.js is an helpful components that lets you test all the screens of the app without navigating to each of them one by one.
 

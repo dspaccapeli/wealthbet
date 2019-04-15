@@ -6,10 +6,10 @@ import {
     Image,
     TouchableOpacity
 } from 'react-native';
-import {Button} from "native-base";
 
 export default class ProfileScreen extends Component {
 
+    // TODO: user profile info should be taken from the database
     render() {
         return (
             <View style={styles.container}>
@@ -31,6 +31,7 @@ export default class ProfileScreen extends Component {
     }
 }
 
+// TODO: we should merge all the styles together?
 const styles = StyleSheet.create({
     header:{
         backgroundColor: "#4D9E67",
@@ -46,11 +47,6 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         position: 'absolute',
         marginTop:130
-    },
-    name:{
-        fontSize:22,
-        color:"#FFFFFF",
-        fontWeight:'600',
     },
     body:{
         marginTop:40,

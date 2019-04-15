@@ -11,13 +11,7 @@ import {cardStylesQuiz, cardStyles, styles} from "../styles/util";
 
 //import { Font } from 'expo';
 import StatusDot from "../components/StatusDot";
-
-// demo purposes only
-function * range (start, end) {
-    for (let i = start; i <= end; i++) {
-        yield i
-    }
-}
+import apiManager from "../data/DataModel";
 
 export default class QuizScreen extends Component {
     constructor(props){
@@ -25,6 +19,7 @@ export default class QuizScreen extends Component {
         this.state = {
             questionNumberTotal : 4,
             questionNumberActive : 1,
+            quiz: apiManager.getQuiz(),
         }
     }
 
@@ -33,6 +28,14 @@ export default class QuizScreen extends Component {
         this.setState({
             questionNumberActive : newActiveQuestionNumber,
         })
+    }
+
+    getQuestions() {
+        let questions = [];
+        this.state.quiz.forEach((quiz) => {
+            questions.push(quiz.question);
+        });
+        return questions;
     }
 
     render() {
@@ -47,7 +50,7 @@ export default class QuizScreen extends Component {
                 <Content style={ styles.backgroundColor }>
                     <CardView
                         navigation={this.props.navigation}
-                        question={this.state.questionNumberTotal}
+                        questions={this.getQuestions()}
                         onSwipe={() => this.updateActiveQuestion()}
                     />
                 </Content>
@@ -89,8 +92,9 @@ class QuizHeader extends Component {
 class CardView extends React.Component {
     constructor (props) {
         super(props);
+        // TODO: take questions from the database
         this.state = {
-            cards: [...range(1, this.props.question)],
+            cards: this.props.questions,
             swipedAllCards: false,
             swipeDirection: '',
             cardIndex: 0
@@ -122,12 +126,11 @@ class CardView extends React.Component {
     };
 
     render () {
+        console.log(this.state.cards);
         return (
             <View style={cardStylesQuiz.container}>
                 <Swiper
-                    ref={swiper => {
-                        this.swiper = swiper
-                    }}
+                    ref={swiper => {this.swiper = swiper}}
                     onSwiped={() => this.onSwiped('general')}
                     onSwipedLeft={() => this.onSwiped('left')}
                     onSwipedRight={() => this.onSwiped('right')}
@@ -144,76 +147,7 @@ class CardView extends React.Component {
                     stackSeparation={15}
                     disableTopSwipe={true}
                     disableBottomSwipe={true}
-                    overlayLabels={{
-                        bottom: {
-                            title: 'BLEAH',
-                            style: {
-                                label: {
-                                    backgroundColor: '#20BF55',
-                                    borderColor: '#20BF55',
-                                    color: 'white',
-                                    borderWidth: 1
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }
-                            }
-                        },
-                        left: {
-                            title: 'NOPE',
-                            style: {
-                                label: {
-                                    backgroundColor: '#ea3232',
-                                    borderColor: '#ea3232',
-                                    color: 'white',
-                                    borderWidth: 1
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-end',
-                                    justifyContent: 'flex-start',
-                                    marginTop: 30,
-                                    marginLeft: -30
-                                }
-                            }
-                        },
-                        right: {
-                            title: 'LIKE',
-                            style: {
-                                label: {
-                                    backgroundColor: '#20BF55',
-                                    borderColor: '#20BF55',
-                                    color: 'white',
-                                    borderWidth: 1
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-start',
-                                    justifyContent: 'flex-start',
-                                    marginTop: 30,
-                                    marginLeft: 30
-                                }
-                            }
-                        },
-                        top: {
-                            title: 'SUPER LIKE',
-                            style: {
-                                label: {
-                                    backgroundColor: '#20BF55',
-                                    borderColor: '#20BF55',
-                                    color: 'white',
-                                    borderWidth: 1
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }
-                            }
-                        }
-                    }}
+                    overlayLabels={overlayLabels}
                     animateOverlayLabelsOpacity
                     animateCardOpacity
                     swipeBackCard
@@ -224,3 +158,74 @@ class CardView extends React.Component {
         )
     }
 }
+
+const overlayLabels = {
+    bottom: {
+        title: 'BLEAH',
+        style: {
+            label: {
+                backgroundColor: '#20BF55',
+                borderColor: '#20BF55',
+                color: 'white',
+                borderWidth: 1
+            },
+            wrapper: {
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }
+        }
+    },
+    left: {
+        title: 'NOPE',
+        style: {
+            label: {
+                backgroundColor: '#ea3232',
+                borderColor: '#ea3232',
+                color: 'white',
+                borderWidth: 1
+            },
+            wrapper: {
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+                justifyContent: 'flex-start',
+                marginTop: 30,
+                marginLeft: -30
+            }
+        }
+    },
+    right: {
+        title: 'LIKE',
+        style: {
+            label: {
+                backgroundColor: '#20BF55',
+                borderColor: '#20BF55',
+                color: 'white',
+                borderWidth: 1
+            },
+            wrapper: {
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                marginTop: 30,
+                marginLeft: 30
+            }
+        }
+    },
+    top: {
+        title: 'SUPER LIKE',
+        style: {
+            label: {
+                backgroundColor: '#20BF55',
+                borderColor: '#20BF55',
+                color: 'white',
+                borderWidth: 1
+            },
+            wrapper: {
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }
+        }
+    }
+};
