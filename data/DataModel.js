@@ -1,14 +1,27 @@
 // Import the IEX token from the .gitignored file
-import { token } from "../IEXToken.js"
+import { token, newsApiKey } from "../IEXToken.js"
 import ObservableModel from "./ObservableModel";
 
 // General string search helpful in our search
 const fundManagerName = "Fidelity";
 const fundType = "Index";
 
+// Configuration for Firebase
+import * as firebase from "firebase";
+import '@firebase/firestore';
+import {FirebaseConfig} from "../FirebaseConfig";
+
+// TODO: this should not be committed
+const config = FirebaseConfig;
+
+firebase.initializeApp(config);
+export const db = firebase.firestore();
+
 class DataModel extends ObservableModel {
     constructor(){
         super();
+        this.currentFundSymbol = dummyFund.symbol;
+
         // Initialize API request elements
         this.mutualFundRequest = "ref-data/mutual-funds/symbols/";
         this.version = "/beta/";
@@ -18,31 +31,26 @@ class DataModel extends ObservableModel {
         // Initializing mutual fund array
         this.mutualFundList = [];
 
-        // Fetching the funds list
-        /*
-        fetch(this.baseUrl + this.version + this.mutualFundRequest + this.tokenString)
-            .then(response => response.json())
-            .then(data => {this.mutualFundList = data});
-
-        // Filtering the funds
-        this.shownFunds = [];
-
-        Array.from(this.mutualFundList).forEach(
-            (fund) => {
-                if(fund.name.includes(fundManagerName) && fund.name.includes(fundType)) {
-                    this.shownFunds.push(fund);
-                }
-            });
-            */
-
         // Attributes for the portfolio
         this._portfolio = [dummyFund];
-        this.getPortfolio();
+        this.getPortfolioFunds();
+
+        // Attributes for the quiz
+        this._quiz = [dummyQuestion];
+        this.getQuiz();
     }
 
-    getFund(symbol= "FBIFX"){
+    getFund(symbol= "FBIFX") {
         return fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
             .then(this.processResponse);
+    }
+
+    getCurrentFund() {
+        return this.getFund(this.currentFundSymbol);
+    }
+
+    setCurrentFund(symbol) {
+        this.currentFundSymbol = symbol;
     }
 
     getFundLogo(symbol= "FBIFX"){
@@ -50,6 +58,23 @@ class DataModel extends ObservableModel {
         fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
             .then(response => response.json())
             .then(json => {selectedFundJson = json});
+    }
+
+    getNews(fundCompnayName) {
+        let url = 'https://newsapi.org/v2/everything?' +
+            'q=' + fundCompnayName + '&' +
+            'from=2019-04-15&' + // TODO: replace this with TODAY
+            'sortBy=popularity&' +
+            'apiKey=' + newsApiKey;
+        let req = new Request(url);
+
+        return fetch(req).then(this.processResponse);
+
+    }
+
+    getDescription(fundSymbol) {
+        return fetch(this.baseUrl + this.version + `stock/${symbol}/company` + this.tokenString)
+            .then(this.processResponse);
     }
 
     /*
@@ -80,7 +105,7 @@ class DataModel extends ObservableModel {
     }
 
     //////////////////////////     Functions for portfolio ///////////////////////
-    getPortfolio () {
+    getPortfolioFunds () {
          return this._portfolio;
     }
 
@@ -102,14 +127,26 @@ class DataModel extends ObservableModel {
         return growth * 100;
     }
 
-    addFundToPortfolio(symbol="FBIFX", shares=100, originalValue=100,currentValue=110) {
-        this._portfolio.add({
-            symbol: symbol,
-            shares: shares,
-            originalValue: originalValue,
-            currentValue: currentValue,
+    /**
+     * Add fund to portfolio, if the fund is already in the portfolio, the fund is updated.
+     * @param symbol
+     * @param shares
+     * @param originalValue
+     * @param currentValue
+     */
+    addFundToPortfolio(symbol="FBIFX", shares=100, originalValue=100, currentValue=110) {
+        const index = this._portfolio.findIndex((fund) => {return fund.symbol === symbol;});
+        if (index !== -1) {
+            this.updateFundAmountFromPortfolio(symbol, shares, originalValue, currentValue);
+        } else {
+            this._portfolio.push({
+                symbol: symbol,
+                shares: shares,
+                originalValue: originalValue,
+                currentValue: currentValue,
 
-        });
+            });
+        }
         this.notifyObservers("portfolio");
     }
 
@@ -118,32 +155,37 @@ class DataModel extends ObservableModel {
         this.notifyObservers("portfolio");
     }
 
-    updateFundAmountFromPortfolio(symbol="FBIFX", shares="200") {
+    updateFundAmountFromPortfolio(symbol="FBIFX", shares=200, originalValue=100, currentValue=110) {
         const index = this._portfolio.findIndex((el) => {
             return  el.symbol === symbol;
         });
         this._portfolio[index].shares = shares;
+        this._portfolio[index].originalValue = originalValue;
+        this._portfolio[index].currentValue = currentValue;
         this.notifyObservers("portfolio");
     }
-
     //////////////////////////  END Functions for portfolio ///////////////////////
 
-}
+    getQuiz() {
+         return this._quiz;
+    }
 
-// // Utility function to extract _n_ random item from an array
-// function getRandomElements(arr, n) {
-//     let result = new Array(n),
-//         len = arr.length,
-//         taken = new Array(len);
-//     if (n > len)
-//         throw new RangeError("getRandomElements: more elements taken than available");
-//     while (n--) {
-//         let x = Math.floor(Math.random() * len);
-//         result[n] = arr[x in taken ? taken[x] : x];
-//         taken[x] = --len in taken ? taken[len] : len;
-//     }
-//     return result;
-// }
+    computeGain(fund) {
+        return ((fund.currentValue - fund.originalValue) / fund.originalValue) * 100;
+    }
+
+
+
+    // readQuestions() {
+    //     console.log("somethign 8");
+    //     db.collection("questions").doc("quiz").get()
+    //         .then(querySnapshot => {
+    //             console.log("querysnap");
+    //         });
+    // }
+
+
+}
 
 const dummyFund = {
     symbol: "FBIFX" ,
@@ -151,6 +193,11 @@ const dummyFund = {
     originalValue: 100,
     currentValue: 110,
 
+};
+
+const dummyQuestion = {
+    question: "Are you interested in hardware?",
+    answers: ["Yes", "No"]
 };
 
 const apiManager = new DataModel();

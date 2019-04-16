@@ -10,28 +10,12 @@ import FundScreen from "./screens/FundScreen";
 import CalculatorScreen from "./screens/CalculatorScreen";
 import PresentationScreen from "./screens/PresentationScreen";
 import LoginScreen from "./screens/LoginScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 import { firstPage } from "./util";
 import { Font } from 'expo';
 
 // Components
 import LoadingBar from "./components/Loading";
-
-// Configuration for Firebase
-import * as firebase from "firebase";
-import '@firebase/firestore';
-
-// TODO: this should not be committed
-const config = {
-    apiKey: "AIzaSyDFz9TsUz9sP9guck1J4Rc2UFzr62tCo_Q",
-    authDomain: "wealthbet-19.firebaseapp.com",
-    databaseURL: "https://wealthbet-19.firebaseio.com",
-    projectId: "wealthbet-19",
-    storageBucket: "wealthbet-19.appspot.com",
-    messagingSenderId: "666375374991"
-};
-
-firebase.initializeApp(config);
-export const db = firebase.firestore();
 
 const MainNavigator = createStackNavigator(
     {
@@ -41,6 +25,7 @@ const MainNavigator = createStackNavigator(
         Presentation: {screen: PresentationScreen},
         Calculator: {screen: CalculatorScreen},
         Login: {screen: LoginScreen},
+        Profile: {screen: ProfileScreen},
     },
     {
         mode: "card",
@@ -61,6 +46,8 @@ export default class App extends React.Component {
             {
                 'poppins-extra-bold': require('./assets/fonts/Poppins-Bold.ttf'),
                 'poppins-medium': require('./assets/fonts/Poppins-Medium.ttf'),
+                Roboto: require("native-base/Fonts/Roboto.ttf"),
+                Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
             });
         this.setState({ isReady: true });
     }

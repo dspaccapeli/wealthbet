@@ -1,12 +1,11 @@
 // React
 import React, { Component } from 'react';
-import { View } from 'react-native';
-
+import {View, TouchableHighlight, TouchableOpacity} from 'react-native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
 
 // Native Base
-import { Container, Content, Left, Right, Text, Body, Button, Icon, CardItem, H1 } from 'native-base';
+import { Container, Content, Left, Right, Text, Button, Icon, CardItem, H1, List, ListItem } from 'native-base';
 
 // Styles
 import { styles } from "../styles/util";
@@ -15,8 +14,6 @@ import { styles } from "../styles/util";
 import DevNavigationFooter from "../components/DevNavigationFooter"
 
 // JS utils
-
-import { loremIpsum } from "../constants/util"
 import {StackedAreaChart} from "react-native-svg-charts";
 import * as shape from "d3-shape";
 import Card from "react-native-svg-charts/src/card";
@@ -55,7 +52,7 @@ export default class PortfolioScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          portfolio:  [],
+          funds:  apiManager.getPortfolioFunds(),
         };
     }
 
@@ -67,9 +64,10 @@ export default class PortfolioScreen extends Component {
         apiManager.removeObserver(this);
     }
 
-    update(changeList) {
-        if(changeList === "portfolio") {
-            this.setState({portfolio: apiManager.getPortfolio()})
+    update (observer, changeDetails) {
+        console.log("Update function", changeDetails, changeDetails ===  "portfolio" );
+        if(changeDetails === "portfolio") {
+            this.setState({funds: apiManager.getPortfolioFunds()})
         }
     }
 
@@ -82,10 +80,10 @@ export default class PortfolioScreen extends Component {
             <Container>
                 <View style={ styles.statusBar } />
                 <Content>
-                    <PortfolioHeader />
-                    <PortfolioChart />
-                    <FundList />
-                    <AddFund />
+                    <PortfolioHeader navigation={this.props.navigation} />
+                    <PortfolioChart funds={this.state.funds}/>
+                    <FundList funds={this.state.funds} navigation={this.props.navigation}/>
+                    <AddFund navigation={this.props.navigation} />
                 </Content>
                 {NavigationFooter}
             </Container>
@@ -96,9 +94,9 @@ export default class PortfolioScreen extends Component {
 class PortfolioHeader extends Component {
     render() {
         return (
-            <Grid>
+            <Grid >
                 <Col><PortfolioTitle/></Col>
-                <Col><UserProfile/></Col>
+                <Col><UserProfile navigation={this.props.navigation}/></Col>
             </Grid>
         );
     }
@@ -115,7 +113,8 @@ class PortfolioTitle extends Component {
 class UserProfile extends Component {
     render() {
         return (
-            <Button transparent>
+            <Button transparent
+                    onPress={() => this.props.navigation.navigate('Profile')} title={"Go to profile"}>
                 <Icon name='md-contact' />
             </Button>
         );
@@ -126,7 +125,7 @@ class PortfolioChart extends Component {
     render() {
         return (
             <View>
-                <ChartArea />
+                <ChartArea funds={this.props.funds} />
                 <PortfolioStatistics />
             </View>
         );
@@ -134,42 +133,68 @@ class PortfolioChart extends Component {
 }
 
 // TODO: this chart should be dinamic? is there another option?
+// This should pot each fund that you have with a different color
 class ChartArea extends React.PureComponent {
+    constructor (props) {
+        super(props);
+        this.state = {
+            status: "LOADING",
+            funds: this.props.funds
+        };
+    }
+
+    componentDidMount() {
+        let allData = {};
+        for (let i in this.state.funds) {
+            apiManager.getHistoricalData(symbol=this.state.funds[i].symbol)
+                .then(data => {
+                    allData[this.state.funds[i].symbol] = data;
+                })
+                .then( () => {
+                    this.setState({
+                        status: "LOADED",
+                        data: allData,
+                    })
+                })
+                .catch(() => {
+                    this.this.setState({
+                        status: "ERROR"
+                    });
+                });
+        }
+    }
+
+    processData = (data) => {
+        let finalData = [];
+        // Take just 10 values from the data
+        for (let i = 0; i < 10; i++) {
+            let item = {};
+            for (let fundSymbol in data) {
+                item["value"] = data[fundSymbol][i]["value"] * 10;
+            }
+            finalData.push(item);
+        }
+        return finalData;
+    };
 
     render() {
 
-        const data = [
-            {
-                month: new Date(2015, 0, 1),
-                apples: 3840,
-                bananas: 1920,
-                cherries: 960,
-                dates: 400,
-            },
-            {
-                month: new Date(2015, 1, 1),
-                apples: 1600,
-                bananas: 1440,
-                cherries: 960,
-                dates: 400,
-            },
-            {
-                month: new Date(2015, 2, 1),
-                apples: 640,
-                bananas: 960,
-                cherries: 3640,
-                dates: 400,
-            },
-            {
-                month: new Date(2015, 3, 1),
-                apples: 3320,
-                bananas: 480,
-                cherries: 640,
-                dates: 400,
-            },
-        ];
+        let data;
+        switch (this.state.status) {
+            case "LOADING":
+                data = [{value: 5}];
+                break;
+            case "LOADED":
+                data = this.processData(this.state.data);
+                break;
+            case "ERROR":
+                data = mockData;
+            // console.log("There is a problem in the data");
+        }
 
-        const colors = [ '#8800cc', '#aa00ff', '#cc66ff', '#eeccff' ];
+        // TODO: change processData so that it works with multiple funds
+        data=mockData;
+        const colors = [ '#4D9E67', '#6cb567', '#92bf8f', '#72bf6d' ];
         const keys   = [ 'apples', 'bananas', 'cherries', 'dates' ];
         const svgs = [
             { onPress: () => console.log('apples') },
@@ -196,83 +221,109 @@ class PortfolioStatistics extends Component {
     render() {
         return (
             <Grid>
-                <Col>
-                    <Text>Total value: {apiManager.getPortfolioValue()}</Text>
-                </Col>
-                <Col>
-                    <Text>Monthly growth: {apiManager.getMonthlyGrowth()}%</Text>
-                </Col>
+                <Col><Text>Total value: {apiManager.getPortfolioValue()}</Text></Col>
+                <Col><Text>Monthly growth: {apiManager.getMonthlyGrowth()}%</Text></Col>
             </Grid>
         );
     }
 }
 
 class FundList extends Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            funds: this.props.funds
+        }
+    }
+
     render() {
-        let funds = [1, 2, 3];
-        let fundsList = funds.map((number) => {
-            return < FundCard key={number} />;
-        });
+        let fundList;
+        if (this.state.funds.length > 0) {
+            fundList = this.state.funds.map((fund) => {
+                return <FundCard key={fund.symbol} fund={fund} navigation={this.props.navigation}/>;
+            });
+        } else {
+            fundList = (<Text>There are no funds in the portfolio!</Text>);
+        }
 
         return (
-            <View>
-                {fundsList}
-            </View>
+            <View>{fundList}</View>
         );
     }
 }
 
 class FundCard extends Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            fund: this.props.fund
+        }
+    }
+
+    onPress = () => {
+        // Set the current fund
+        apiManager.setCurrentFund(this.props.fund.symbol);
+        this.props.navigation.navigate("Fund");
+    };
+
     render() {
         return (
-            <Card>
-                <CardItem>
-                    <Left>
-                        < FundDescription />
-                    </Left>
-                    <Right>
-                        < FundInfo />
-                    </Right>
-                </CardItem>
-            </Card>
+            <TouchableHighlight onPress={this.onPress} underlayColor="white">
+                <Card>
+                    <CardItem>
+                        <Left><Text>{this.props.fund.symbol}</Text></Left>
+                        <Right><Text>PUT</Text>
+                            <Text note>{this.props.fund.originalValue}</Text>
+                            <Text>VALUE</Text>
+                            <Text note>{this.props.fund.currentValue}</Text>
+                            <Text>GAIN</Text>
+                            <Text note>{apiManager.computeGain(this.props.fund)}%</Text>
+                        </Right>
+                    </CardItem>
+                </Card>
+            </TouchableHighlight>
         );
     }
 }
-
-class FundDescription extends Component {
-    render() {
-        return (
-            <Body>
-                <Text>Fund</Text>
-                <Text note> { loremIpsum } </Text>
-            </Body>
-        );
-    }
-}
-
-class FundInfo extends Component {
-    render() {
-        return (
-            <Body>
-                <Text>PUT</Text>
-                <Text note>100</Text>
-                <Text>VALUE</Text>
-                <Text note>200</Text>
-                <Text>GAIN</Text>
-                <Text note>3%</Text>
-            </Body>
-        );
-    }
-}
-
-
 
 class AddFund extends Component {
     render() {
         return (
-            <Button style={styles.roundElement}>
+            <Button title={"Add fund button"} style={styles.roundElement}
+                    onPress={() => this.props.navigation.navigate('Presentation')}>
                 <Icon name='add' />
             </Button>
         );
     }
 }
+
+const mockData = [
+    {
+        month: new Date(2015, 0, 1),
+        apples: 3840,
+        bananas: 1920,
+        cherries: 960,
+        dates: 400,
+    },
+    {
+        month: new Date(2015, 1, 1),
+        apples: 1600,
+        bananas: 1440,
+        cherries: 960,
+        dates: 400,
+    },
+    {
+        month: new Date(2015, 2, 1),
+        apples: 640,
+        bananas: 960,
+        cherries: 3640,
+        dates: 400,
+    },
+    {
+        month: new Date(2015, 3, 1),
+        apples: 3320,
+        bananas: 480,
+        cherries: 640,
+        dates: 400,
+    },
+];

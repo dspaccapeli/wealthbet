@@ -90,11 +90,11 @@ export default class LoginScreen extends Component {
                         />
                     </Item>
                     <Button full rounded success style={{margin: 10}}
-                            onPress={this.loginUser}>
+                            onPress={this.loginUser} title="Login button">
                         <Text style={{color: "white"}}>Login</Text>
                     </Button>
                     <Button full rounded primary style={{margin: 10}}
-                            onPress={this.signUpUser}>
+                            onPress={this.signUpUser} title="Sign up button">
                         <Text style={{color: "white"}}>Sign up</Text>
                     </Button>
                 </Form>

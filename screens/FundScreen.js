@@ -1,6 +1,6 @@
 // React
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import {TouchableHighlight, View, Linking} from 'react-native';
 
 // Native Base
 import { Text, Button, Container, Content, Card, CardItem, Body, Segment } from 'native-base';
@@ -36,11 +36,7 @@ import {devMode} from "../util";
     |
     --- FundStatistics
     |
-    --- FundInfo
-        |
-        --- FundDescription
-        |
-        --- FundAlert
+    --- FundDescription
     |
     --- News
     |
@@ -48,8 +44,8 @@ import {devMode} from "../util";
 */
 
 export default class FundScreen extends Component {
-    constructor () {
-        super();
+    constructor (props) {
+        super(props);
         this.state = {
             status: "LOADING",
         };
@@ -58,7 +54,7 @@ export default class FundScreen extends Component {
     // Here we make the API call for fund information.
     componentDidMount() {
         apiManager
-            .getFund()
+            .getCurrentFund()
             .then(fund => {
                 this.setState({
                     status: "LOADED",
@@ -91,11 +87,10 @@ export default class FundScreen extends Component {
                 <View style={ styles.statusBar } />
                 <Content>
                     <FundHeader fund={fund} />
-                    <FundChart />
-                    <FundStatistics />
-                    <FundInfo />
-                    <News />
-                    <Sell />
+                    <FundChart fund={fund} />
+                    <FundDescription fund={fund}/>
+                    <News fund={fund} />
+                    <Sell symbol={fund.symbol}  navigation={this.props.navigation} />
                 </Content>
                 {NavigationFooter}
             </Container>
@@ -104,18 +99,18 @@ export default class FundScreen extends Component {
 }
 
 export class FundHeader extends Component {
-    constructor () {
-        super ();
-        this.fund = defaultFund;
-    }
-    render() {
-        if (this.props.fund) {
-            this.fund = this.props.fund;
+    constructor (props) {
+        super (props);
+        this.state = {
+            fund: this.props.fund
         }
+    }
+
+    render() {
         return (
-            <View>
-                <Text>{this.fund.symbol}</Text>
-                <Text>{this.fund.companyName}</Text>
+            <View style={{padding: 10}}>
+                <Text>{this.state.fund.symbol}</Text>
+                <Text>{this.state.fund.companyName}</Text>
             </View>
         );
     }
@@ -125,7 +120,7 @@ export class FundChart extends  Component {
     render() {
         return (
             <View>
-                <ChartArea />
+                <ChartArea symbol={this.props.fund.symbol}/>
                 <TimeScale />
             </View>
         );
@@ -137,13 +132,14 @@ class ChartArea extends React.PureComponent {
         super(props);
         this.state = {
             status: "LOADING",
+            fundSymbol: this.props.symbol
         };
     }
 
     // Here we make the API call for historical data for the chart.
     componentDidMount() {
         apiManager
-            .getHistoricalData()
+            .getHistoricalData(symbol = this.state.fundSymbol)
             .then(data => {
                 this.setState({
                     status: "LOADED",
@@ -162,7 +158,6 @@ class ChartArea extends React.PureComponent {
         switch (this.state.status) {
             case "LOADING":
                 data = [{value: 5}];
-                // console.log("Data is loading");
                 break;
             case "LOADED":
                 data = this.state.data;
@@ -197,10 +192,8 @@ class ChartArea extends React.PureComponent {
                 break;
             case "ERROR":
                 data = [{value: 10}, {value: 10}];
-                // console.log("There is a problem in the data");
         }
-
-        const colors = [ '#8800cc'];
+        const colors = [ '#4D9E67', "#4D9E69", "#4D9E87" ];
         const keys   = [ 'value'];
         const svgs = [
             { onPress: () => console.log('apples') }
@@ -223,51 +216,65 @@ class ChartArea extends React.PureComponent {
 class TimeScale extends React.PureComponent {
     render() {
         return (
-            <Segment style={{backgroundColor: '#8800cc'}}>
-                <Button first>
-                    <Text>6 months</Text>
-                </Button>
-                <Button>
-                    <Text>YTD</Text>
-                </Button>
-                <Button>
-                    <Text>5 years</Text>
-                </Button>
-                <Button last active>
-                    <Text>All time</Text>
-                </Button>
+            <Segment style={{backgroundColor: '#4D9E67'}}>
+                <Button first><Text>6 months</Text></Button>
+                <Button><Text>YTD</Text></Button>
+                <Button><Text>5 years</Text></Button>
+                <Button last active><Text>All time</Text></Button>
             </Segment>
         )
     }
 }
 
-export class FundStatistics extends  Component {
+export class FundStatistics extends Component {
     render() {
         return (
-            <Body>
-            <Text> PUT 100 VALUE 200 GAIN 3%</Text>
-            </Body>
-        )
-    }
-}
-
-export class FundInfo extends  Component {
-    render() {
-        return (
-            <View>
-                <FundDescription />
-                <FundAlert />
-            </View>
+            <Container>
+                <Text>PUT</Text>
+                <Text note>{this.props.fund.originalValue}</Text>
+                <Text>VALUE</Text>
+                <Text note>{this.props.fund.currentValue}</Text>
+                <Text>GAIN</Text>
+                <Text note>{apiManager.computeGain(this.props.fund)}%</Text>
+            </Container>
         );
     }
 }
 
 export class FundDescription extends  Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            status: "LOADING",
+            description: "",
+        }
+    }
+
+    componentDidMount() {
+        apiManager
+            .getDescription(this.props.fund.symbol)
+            .then(data => {
+                let description = "";
+                if (data.description) {
+                    description = data.description;
+                }
+                this.setState({
+                    status: "LOADED",
+                    description: description,
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    status: "ERROR",
+                });
+            });
+    }
+
     render() {
         return (
             <View>
                 <Text> Info </Text>
-                <Text note> { loremIpsum } </Text>
+                <Text note> {this.state.description} </Text>
             </View>
         );
     }
@@ -293,27 +300,112 @@ class FundAlert extends  Component {
 }
 
 class News extends  Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            status: "LOADING",
+            news: "",
+        }
+    }
+
+    componentDidMount() {
+        apiManager
+            .getNews(this.props.fund.companyName)
+            .then(data => {
+                let currentNews = "No current news for you today!";
+                let newsLink = "";
+                if (data["articles"][0]["description"]) {
+                    currentNews = data["articles"][0]["description"];
+                    newsLink = data["articles"][0]["url"]
+                }
+                this.setState({
+                    status: "LOADED",
+                    news: currentNews,
+                    newsLink: newsLink,
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    status: "ERROR",
+                });
+            });
+    }
+
+    goToURL = () => {
+        let url = this.state.newsLink;
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.log('Don\'t know how to open URI: ' + this.props.url);
+            }
+        });
+    };
+
     render() {
+        let news;
+        switch (this.state.status) {
+            case "LOADING":
+                news = loremIpsum;
+                break;
+            case "LOADED":
+                news = this.state.news;
+                break;
+            case "ERROR":
+                news = loremIpsum;
+        }
         return (
-            <View>
-                <Text> News </Text>
-                <Text note> { loremIpsum } </Text>
-            </View>
+            <TouchableHighlight onPress={this.onPress} underlayColor="white">
+                <Card>
+                    <CardItem header>
+                        <Text>News</Text>
+                    </CardItem>
+                    <CardItem>
+                        <Body>
+                            <Text note>
+                                { news }
+                            </Text>
+                        </Body>
+                    </CardItem>
+                    <CardItem>
+                        <Text>Follow more </Text>
+                        <Text onPress={this.goToURL} style={ {
+                            color: '#0000EE',
+                            fontWeight: 'bold'
+                        }}>here.</Text>
+                    </CardItem>
+                </Card>
+            </TouchableHighlight>
         );
     }
 }
 
 class Sell extends  Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            symbol: this.props.symbol
+        }
+    }
+
+    sellFund = () => {
+      apiManager.deleteFundFromPortfolio(this.state.symbol);
+      this.props.navigation.navigate("Portfolio");
+    };
+
     render() {
         return (
             <Body>
-            <Button><Text>Sell</Text></Button>
+                <Button title="Sell fund" onPress={this.sellFund} style={{backgroundColor: "#4D9E67"}}><Text>Sell</Text></Button>
             </Body>
         );
     }
 }
 
 export const defaultFund = {
-    symbol: "FBIFXXX",
-    companyName: "Freedom Index 2020"
+    symbol: "AAPL",
+    companyName: "Apple Inc.",
+    shares: 100,
+    originalValue: 100,
+    currentValue: 110,
 };
