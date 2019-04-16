@@ -65,7 +65,23 @@ class DataModel extends ObservableModel {
         range = max, 5y, 2y, 1y, ytd, 6m, 3m, 1m, 1d
      */
      getHistoricalData(symbol = "FBIFX", range = "3m", order = "ascending"){
-         return fetch(this.baseUrl + this.version + `stock/${symbol}/chart/${range}` + this.tokenString)
+         let interval = 3;
+         switch (range) {
+             case '3m':
+                 break;
+             case '6m':
+                 interval *= interval*2;
+                 break;
+             case '1y':
+                 interval *= interval*4;
+                 break;
+             case 'max':
+                 interval *= interval*20;
+                 break;
+         }
+         const filter = "&chartInterval=" + interval;
+         console.log(this.baseUrl + this.version + `stock/${symbol}/chart/${range}` + this.tokenString + filter);
+         return fetch(this.baseUrl + this.version + `stock/${symbol}/chart/${range}` + this.tokenString + filter)
             .then(this.processResponse)
             .then(historicalDataJson => {
                 if (order === "ascending") {
