@@ -40,6 +40,7 @@ class DataModel extends ObservableModel {
 
     setCurrentFund(symbol) {
         this.currentFundSymbol = symbol;
+        this.notifyObservers("fund");
     }
 
     getFundLogo(symbol= "FBIFX"){

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {TouchableHighlight, View, Linking} from 'react-native';
 
 // Native Base
-import { Text, Button, Container, Content, Card, CardItem, Body, Segment } from 'native-base';
+import { Text, Button, Container, Content, Card, CardItem, Body } from 'native-base';
 
 // Styles
 import { styles } from "../styles/util";
@@ -19,6 +19,8 @@ import apiManager from "../data/DataModel"
 import {devMode} from "../util";
 import {FundHeader} from "../components/FundHeader";
 import {FundChart} from "../components/FundChart";
+import {FundDescription} from "../components/FundDescription";
+import {News} from "../components/News";
 
 /* Structure
 
@@ -49,8 +51,7 @@ export default class FundScreen extends Component {
         };
     }
 
-    // Here we make the API call for fund information.
-    componentDidMount() {
+    updateFund () {
         apiManager
             .getCurrentFund()
             .then(fund => {
@@ -69,11 +70,31 @@ export default class FundScreen extends Component {
             });
     }
 
+    // Here we make the API call for fund information.
+    componentDidMount() {
+        this.updateFund();
+        apiManager.addObserver(this);
+    }
+
+    componentWillUnmount() {
+        apiManager.removeObserver(this);
+    }
+
+    update (observer, changeDetails) {
+        if(changeDetails === "fund") {
+            this.updateFund();
+        }
+    }
+
     render() {
+
         let fund = defaultFund;
         if (this.state.status === "LOADED") {
             fund = this.state.fund;
         }
+        console.log("FUND SCREEN");
+        console.log(this.state);
+        console.log(fund);
 
         // Dev footer
         let NavigationFooter;
@@ -84,134 +105,19 @@ export default class FundScreen extends Component {
             <Container>
                 <View style={ styles.statusBar } />
                 <Content>
-                    <FundHeader fund={fund} />
+                    <View style={{padding: 10}}>
+                        <Text>{fund.symbol}</Text>
+                        <Text>{fund.companyName}</Text>
+                    </View>
+
                     <FundChart fund={fund} />
                     <FundDescription fund={fund}/>
                     <News fund={fund} />
                     <Sell symbol={fund.symbol}  navigation={this.props.navigation} />
+                    <BackToPortofolio navigation={this.props.navigation}/>
                 </Content>
                 {NavigationFooter}
             </Container>
-        );
-    }
-}
-
-export class FundDescription extends  Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            status: "LOADING",
-            description: "",
-        }
-    }
-
-    componentDidMount() {
-        apiManager
-            .getDescription(this.props.fund.symbol)
-            .then(data => {
-                let description = "";
-                if (data.description) {
-                    description = data.description;
-                }
-                this.setState({
-                    status: "LOADED",
-                    description: description,
-                });
-            })
-            .catch(() => {
-                this.setState({
-                    status: "ERROR",
-                });
-            });
-    }
-
-    render() {
-        return (
-            <View>
-                <Text> Info </Text>
-                <Text note> {this.state.description} </Text>
-            </View>
-        );
-    }
-}
-
-class News extends  Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            status: "LOADING",
-            news: "",
-        }
-    }
-
-    componentDidMount() {
-        apiManager
-            .getNews(this.props.fund.companyName)
-            .then(data => {
-                let currentNews = "No current news for you today!";
-                let newsLink = "";
-                if (data["articles"][0]["description"]) {
-                    currentNews = data["articles"][0]["description"];
-                    newsLink = data["articles"][0]["url"]
-                }
-                this.setState({
-                    status: "LOADED",
-                    news: currentNews,
-                    newsLink: newsLink,
-                });
-            })
-            .catch(() => {
-                this.setState({
-                    status: "ERROR",
-                });
-            });
-    }
-
-    goToURL = () => {
-        let url = this.state.newsLink;
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                Linking.openURL(url);
-            } else {
-                console.log('Don\'t know how to open URI: ' + this.props.url);
-            }
-        });
-    };
-
-    render() {
-        let news;
-        switch (this.state.status) {
-            case "LOADING":
-                news = loremIpsum;
-                break;
-            case "LOADED":
-                news = this.state.news;
-                break;
-            case "ERROR":
-                news = loremIpsum;
-        }
-        return (
-            <TouchableHighlight onPress={this.onPress} underlayColor="white">
-                <Card>
-                    <CardItem header>
-                        <Text>News</Text>
-                    </CardItem>
-                    <CardItem>
-                        <Body>
-                            <Text note>
-                                { news }
-                            </Text>
-                        </Body>
-                    </CardItem>
-                    <CardItem>
-                        <Text>Follow more </Text>
-                        <Text onPress={this.goToURL} style={ {
-                            color: '#0000EE',
-                            fontWeight: 'bold'
-                        }}>here.</Text>
-                    </CardItem>
-                </Card>
-            </TouchableHighlight>
         );
     }
 }
@@ -233,6 +139,20 @@ class Sell extends  Component {
         return (
             <Body>
                 <Button title="Sell fund" onPress={this.sellFund} style={{backgroundColor: "#4D9E67"}}><Text>Sell</Text></Button>
+            </Body>
+        );
+    }
+}
+
+class BackToPortofolio extends React.Component {
+    back = () => {
+        this.props.navigation.navigate("Portfolio");
+    };
+
+    render() {
+        return (
+            <Body>
+                <Button title="Sell fund" onPress={this.back} style={{backgroundColor: "#4D9E67"}}><Text>Back</Text></Button>
             </Body>
         );
     }

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Container, View, DeckSwiper, Button, Content, Card, CardItem, Icon, Text, Right } from 'native-base';
 import {cardStylesPresentation, cardStyles, styles} from "../styles/util";
 import DevNavigationFooter from "../components/DevNavigationFooter"
-import {FundChart, FundDescription, FundHeader} from "./FundScreen";
-
 import { devMode } from '../util.js';
 
 import Swiper from 'react-native-deck-swiper'

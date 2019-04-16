@@ -1,11 +1,11 @@
-import {View} from "react-native";
 import React from "react";
+import {View} from "react-native";
 import apiManager from "../data/DataModel";
 import {StackedAreaChart} from "react-native-svg-charts";
 import * as shape from "d3-shape";
 import {Button, Segment, Text} from "native-base";
 
-export class FundChart extends  Component {
+export class FundChart extends  React.Component {
     render() {
         return (
             <View>
