@@ -166,6 +166,34 @@ class ChartArea extends React.PureComponent {
                 break;
             case "LOADED":
                 data = this.state.data;
+                /* temp work
+                let i;
+                let percentageBreadth = 0.2;
+                let dataMin = data[0].value;
+                for(i=0; i<data.length; i++){
+                    if(data[i].value<dataMin){
+                        dataMin = data[i].value;
+                    }
+                }
+                let dataMax = data[0].value;
+                for(i=0; i<data.length; i++){
+                    if(data[i].value>dataMax){
+                        dataMax = data[i].value;
+                    }
+                }
+                let dataInterval = dataMax - dataMin;
+
+                if(!(dataMin - (dataInterval*percentageBreadth))<=0){
+                    dataMin -= (dataInterval*percentageBreadth);
+                }
+
+                dataMax += (dataInterval*percentageBreadth);
+                this.setState({
+                   dataMin = dataMin;
+                   dataMax = dataMax
+                });
+                // end of temp work
+                */
                 break;
             case "ERROR":
                 data = [{value: 10}, {value: 10}];
