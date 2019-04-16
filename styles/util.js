@@ -28,13 +28,6 @@ export const styles = StyleSheet.create({
     pushedBottom : {
         marginBottom : 100,
     },
-    loginContainer: {
-        flex: 1,
-        backgroundColor: "#ffff",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 10
-    },
     screenTitle: {
         textAlign: 'center',
         alignSelf: 'center'

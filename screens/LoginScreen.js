@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Container, Button, Form, Item, Label, Text, Input, Toast} from 'native-base';
 import {styles} from "../styles/util";
 import firebase from "../firebaseConfig";
+import {LoginStyle} from "../styles/LoginScreenStyle";
 
 export default class LoginScreen extends Component {
 
@@ -78,9 +79,9 @@ export default class LoginScreen extends Component {
 
     render() {
         return (
-            <Container styles={styles.loginContainer}>
-                <Form style={{ flex:1, justifyContent: 'center' }}>
-                    <Item floatingLabel style={{padding: 10}}>
+            <Container styles={LoginStyle.loginContainer}>
+                <Form style={LoginStyle.form}>
+                    <Item floatingLabel style={LoginStyle.formItem}>
                         <Label>Email</Label>
                         <Input
                             autoCorrect={false}
@@ -88,7 +89,7 @@ export default class LoginScreen extends Component {
                             onChangeText={(text) => this.setState({email: text})}
                         />
                     </Item>
-                    <Item floatingLabel style={{padding: 10}}>
+                    <Item floatingLabel style={LoginStyle.formItem}>
                         <Label>Password</Label>
                         <Input
                             secureTextEntry={true}
@@ -97,13 +98,13 @@ export default class LoginScreen extends Component {
                             onChangeText={(text) => this.setState({password: text})}
                         />
                     </Item>
-                    <Button full rounded success style={{margin: 10}}
+                    <Button full rounded success style={LoginStyle.loginButton}
                             onPress={this.loginUser} title="Login button">
-                        <Text style={{color: "white"}}>Login</Text>
+                        <Text style={LoginStyle.textButton}>Login</Text>
                     </Button>
-                    <Button full rounded primary style={{margin: 10}}
+                    <Button full rounded primary style={LoginStyle.signupButton}
                             onPress={this.signUpUser} title="Sign up button">
-                        <Text style={{color: "white"}}>Sign up</Text>
+                        <Text style={LoginStyle.textButton}>Sign up</Text>
                     </Button>
                 </Form>
             </Container>
