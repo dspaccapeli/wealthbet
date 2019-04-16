@@ -1,21 +1,10 @@
 // Import the IEX token from the .gitignored file
-import { token, newsApiKey } from "../IEXToken.js"
+import { token, newsApiKey } from "../apiKeys.js"
 import ObservableModel from "./ObservableModel";
 
 // General string search helpful in our search
 const fundManagerName = "Fidelity";
 const fundType = "Index";
-
-// Configuration for Firebase
-import * as firebase from "firebase";
-import '@firebase/firestore';
-import {FirebaseConfig} from "../FirebaseConfig";
-
-// TODO: this should not be committed
-const config = FirebaseConfig;
-
-firebase.initializeApp(config);
-export const db = firebase.firestore();
 
 class DataModel extends ObservableModel {
     constructor(){
@@ -51,6 +40,7 @@ class DataModel extends ObservableModel {
 
     setCurrentFund(symbol) {
         this.currentFundSymbol = symbol;
+        this.notifyObservers("fund");
     }
 
     getFundLogo(symbol= "FBIFX"){
@@ -60,20 +50,19 @@ class DataModel extends ObservableModel {
             .then(json => {selectedFundJson = json});
     }
 
-    getNews(fundCompnayName) {
+    getNews(fundCompanyName) {
         let url = 'https://newsapi.org/v2/everything?' +
-            'q=' + fundCompnayName + '&' +
+            'q=' + fundCompanyName + '&' +
             'from=2019-04-15&' + // TODO: replace this with TODAY
             'sortBy=popularity&' +
             'apiKey=' + newsApiKey;
         let req = new Request(url);
 
         return fetch(req).then(this.processResponse);
-
     }
 
     getDescription(fundSymbol) {
-        return fetch(this.baseUrl + this.version + `stock/${symbol}/company` + this.tokenString)
+        return fetch(this.baseUrl + this.version + `stock/${fundSymbol}/company` + this.tokenString)
             .then(this.processResponse);
     }
 
@@ -104,7 +93,6 @@ class DataModel extends ObservableModel {
         throw response;
     }
 
-    //////////////////////////     Functions for portfolio ///////////////////////
     getPortfolioFunds () {
          return this._portfolio;
     }
@@ -129,10 +117,6 @@ class DataModel extends ObservableModel {
 
     /**
      * Add fund to portfolio, if the fund is already in the portfolio, the fund is updated.
-     * @param symbol
-     * @param shares
-     * @param originalValue
-     * @param currentValue
      */
     addFundToPortfolio(symbol="FBIFX", shares=100, originalValue=100, currentValue=110) {
         const index = this._portfolio.findIndex((fund) => {return fund.symbol === symbol;});
@@ -164,7 +148,6 @@ class DataModel extends ObservableModel {
         this._portfolio[index].currentValue = currentValue;
         this.notifyObservers("portfolio");
     }
-    //////////////////////////  END Functions for portfolio ///////////////////////
 
     getQuiz() {
          return this._quiz;
@@ -173,18 +156,6 @@ class DataModel extends ObservableModel {
     computeGain(fund) {
         return ((fund.currentValue - fund.originalValue) / fund.originalValue) * 100;
     }
-
-
-
-    // readQuestions() {
-    //     console.log("somethign 8");
-    //     db.collection("questions").doc("quiz").get()
-    //         .then(querySnapshot => {
-    //             console.log("querysnap");
-    //         });
-    // }
-
-
 }
 
 const dummyFund = {

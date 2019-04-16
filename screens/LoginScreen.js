@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container, Button, Form, Item, Label, Text, Input, Icon} from 'native-base';
+import {Container, Button, Form, Item, Label, Text, Input} from 'native-base';
 import {styles} from "../styles/util";
 import * as firebase from "firebase";
 

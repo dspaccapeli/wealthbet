@@ -1,17 +1,17 @@
 // React
 import React, { Component } from 'react';
-import {View, TouchableHighlight, TouchableOpacity} from 'react-native';
-import { Col, Row, Grid } from 'react-native-easy-grid';
+import {View, TouchableHighlight} from 'react-native';
+import { Col, Grid } from 'react-native-easy-grid';
 
 
 // Native Base
-import { Container, Content, Left, Right, Text, Button, Icon, CardItem, H1, List, ListItem } from 'native-base';
+import { Container, Content, Left, Right, Text, Button, Icon, CardItem, H1 } from 'native-base';
 
 // Styles
 import { styles } from "../styles/util";
 
 // Components
-import DevNavigationFooter from "../components/DevNavigationFooter"
+import DevNavigationFooter from "../components/DevNavigationFooter";
 
 // JS utils
 import {StackedAreaChart} from "react-native-svg-charts";
@@ -65,7 +65,6 @@ export default class PortfolioScreen extends Component {
     }
 
     update (observer, changeDetails) {
-        console.log("Update function", changeDetails, changeDetails ===  "portfolio" );
         if(changeDetails === "portfolio") {
             this.setState({funds: apiManager.getPortfolioFunds()})
         }
@@ -83,7 +82,7 @@ export default class PortfolioScreen extends Component {
                     <PortfolioHeader navigation={this.props.navigation} />
                     <PortfolioChart funds={this.state.funds}/>
                     <FundList funds={this.state.funds} navigation={this.props.navigation}/>
-                    <AddFund navigation={this.props.navigation} />
+                    <AddFund navigation={this.props.navigation}/>
                 </Content>
                 {NavigationFooter}
             </Container>
@@ -95,17 +94,9 @@ class PortfolioHeader extends Component {
     render() {
         return (
             <Grid >
-                <Col><PortfolioTitle/></Col>
+                <Col><H1>Portfolio</H1></Col>
                 <Col><UserProfile navigation={this.props.navigation}/></Col>
             </Grid>
-        );
-    }
-}
-
-class PortfolioTitle extends Component {
-    render() {
-        return (
-            <H1>Portfolio</H1>
         );
     }
 }
@@ -262,7 +253,7 @@ class FundCard extends Component {
 
     onPress = () => {
         // Set the current fund
-        apiManager.setCurrentFund(this.props.fund.symbol);
+        apiManager.setCurrentFund(this.state.fund.symbol);
         this.props.navigation.navigate("Fund");
     };
 
@@ -271,13 +262,13 @@ class FundCard extends Component {
             <TouchableHighlight onPress={this.onPress} underlayColor="white">
                 <Card>
                     <CardItem>
-                        <Left><Text>{this.props.fund.symbol}</Text></Left>
+                        <Left><Text>{this.state.fund.symbol}</Text></Left>
                         <Right><Text>PUT</Text>
-                            <Text note>{this.props.fund.originalValue}</Text>
+                            <Text note>{this.state.fund.originalValue}</Text>
                             <Text>VALUE</Text>
-                            <Text note>{this.props.fund.currentValue}</Text>
+                            <Text note>{this.state.fund.currentValue}</Text>
                             <Text>GAIN</Text>
-                            <Text note>{apiManager.computeGain(this.props.fund)}%</Text>
+                            <Text note>{apiManager.computeGain(this.state.fund)}%</Text>
                         </Right>
                     </CardItem>
                 </Card>
@@ -297,6 +288,7 @@ class AddFund extends Component {
     }
 }
 
+//TODO: delete, this is used only to show a nice graph in the top
 const mockData = [
     {
         month: new Date(2015, 0, 1),

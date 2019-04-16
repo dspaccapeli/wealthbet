@@ -3,8 +3,10 @@ import {Container, Button, View, Content, Item, Label, Text, Input, Left, Right,
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import {Slider} from "react-native"
 import {styles} from "../styles/util";
-import {FundChart, FundHeader, defaultFund} from "./FundScreen"
-import DevNavigationFooter from "../components/DevNavigationFooter"
+import {defaultFund} from "./FundScreen";
+import {FundChart} from "../components/FundChart";
+import {FundHeader} from "../components/FundHeader";
+import DevNavigationFooter from "../components/DevNavigationFooter";
 import {devMode} from "../util";
 import apiManager from "../data/DataModel";
 
@@ -28,7 +30,6 @@ export default class CalculatorScreen extends Component {
 }
 
 class FundCalculator extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
