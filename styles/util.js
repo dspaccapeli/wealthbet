@@ -35,9 +35,9 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         padding: 10
     },
-    slider: {
-        width: 200,
-        height: 40
+    screenTitle: {
+        textAlign: 'center',
+        alignSelf: 'center'
     }
 });
 
