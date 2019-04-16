@@ -92,9 +92,6 @@ export default class FundScreen extends Component {
         if (this.state.status === "LOADED") {
             fund = this.state.fund;
         }
-        console.log("FUND SCREEN");
-        console.log(this.state);
-        console.log(fund);
 
         // Dev footer
         let NavigationFooter;
@@ -106,11 +103,7 @@ export default class FundScreen extends Component {
             <Container>
                 <View style={ styles.statusBar } />
                 <Content>
-                    <View style={{padding: 10}}>
-                        <Text>{fund.symbol}</Text>
-                        <Text>{fund.companyName}</Text>
-                    </View>
-
+                    <FundHeader fund={fund}/>
                     <FundChart fund={fund} />
                     <FundDescription fund={fund}/>
                     <News fund={fund} />

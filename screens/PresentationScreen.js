@@ -286,6 +286,7 @@ class FundSlideshow extends React.Component {
                     animateOverlayLabelsOpacity
                     animateCardOpacity
                     infinite={true}
+                    useViewOverflow={false}
                     swipeBackCard={true}
                     showSecondCard={false}
                     goBackToPreviousCardOnSwipeRight={true}

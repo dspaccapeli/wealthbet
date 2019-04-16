@@ -14,6 +14,8 @@ import ProfileScreen from "./screens/ProfileScreen";
 import { firstPage } from "./util";
 import { Font } from 'expo';
 
+// TODO: Initialize firebase here
+
 // Components
 import LoadingBar from "./components/Loading";
 

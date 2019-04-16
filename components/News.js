@@ -1,6 +1,5 @@
 import apiManager from "../data/DataModel";
 import {Linking, TouchableHighlight} from "react-native";
-import {loremIpsum} from "../constants/util";
 import {Body, Card, CardItem, Text} from "native-base";
 import React from "react";
 
@@ -11,6 +10,7 @@ export class News extends  React.Component {
             status: "LOADING",
             fundSymbol: this.props.fund.symbol,
             news: "",
+            newsLink: ""
         }
     }
 
@@ -37,6 +37,7 @@ export class News extends  React.Component {
                 }
                 this.setState({
                     status: "LOADED",
+                    fundSymbol: data.symbol,
                     news: currentNews,
                     newsLink: newsLink,
                 });

@@ -138,6 +138,7 @@ class CardView extends React.Component {
                     onSwipedBottom={() => this.onSwiped('bottom')}
                     onTapCard={this.swipeLeft}
                     cards={this.state.cards}
+                    useViewOverflow={false}
                     cardIndex={this.state.cardIndex}
                     cardVerticalMargin={15}
                     renderCard={this.renderCard}
@@ -151,7 +152,6 @@ class CardView extends React.Component {
                     animateOverlayLabelsOpacity
                     animateCardOpacity
                     swipeBackCard
-                    useViewOverflow={false}
                 >
                     {/*<Button onPress={() => this.swiper.swipeBack()} title='Swipe Back' />*/}
                 </Swiper>

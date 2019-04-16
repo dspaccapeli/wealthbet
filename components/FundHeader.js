@@ -1,29 +1,17 @@
 import {View} from "react-native";
 import {Text} from "native-base";
 import React from "react";
-import apiManager from "../data/DataModel";
 
 export class FundHeader extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            fund: ""
+            fund: this.props.fund.symbol
         }
     }
 
-    componentDidMount() {
-        this.setState({
-            fund: this.props.fund
-        });
-        apiManager.addObserver(this);
-    }
-
-    componentWillUnmount() {
-        apiManager.removeObserver(this);
-    }
-
-    update (observer, changeDetails) {
-        if(changeDetails === "fund") {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps.fund.symbol !== this.props.fund.symbol) {
             this.setState({
                 fund: this.props.fund
             });
