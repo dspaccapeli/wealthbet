@@ -8,6 +8,11 @@ import Swiper from 'react-native-deck-swiper'
 
 import StatusDot from "../components/StatusDot";
 
+import {FundHeader} from "../components/FundHeader";
+import {FundChart} from "../components/FundChart";
+import {FundDescription} from "../components/FundDescription";
+import {defaultFund} from "./FundScreen";
+
 export default class PresentationScreen extends Component {
     constructor(props){
         super(props);
@@ -161,9 +166,9 @@ class FundSlideshow extends React.Component {
     renderCard = (card, index) => {
         return (
             <View style={cardStylesPresentation.card}>
-                    <FundHeader/>
-                    <FundChart/>
-                    <FundDescription/>
+                    <FundHeader fund={defaultFund}/>
+                    <FundChart fund={defaultFund}/>
+                    <FundDescription fund={defaultFund}/>
                     <FundWhy/>
                     <SeeMoreButton navigation = {this.props.navigation}/>
             </View>
