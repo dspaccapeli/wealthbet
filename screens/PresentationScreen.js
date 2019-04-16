@@ -8,6 +8,11 @@ import Swiper from 'react-native-deck-swiper'
 
 import StatusDot from "../components/StatusDot";
 
+import {FundHeader} from "../components/FundHeader";
+import {FundChart} from "../components/FundChart";
+import {FundDescription} from "../components/FundDescription";
+import {defaultFund} from "./FundScreen";
+
 export default class PresentationScreen extends Component {
     constructor(props){
         super(props);
@@ -161,13 +166,22 @@ class FundSlideshow extends React.Component {
     renderCard = (card, index) => {
         return (
             <View style={cardStylesPresentation.card}>
-                <Text style={cardStyles.text}>{card} - {index}</Text>
+                    <FundHeader fund={defaultFund}/>
+                    <FundChart fund={defaultFund}/>
+                    <FundDescription fund={defaultFund}/>
+                    <FundWhy/>
+                    <SeeMoreButton navigation = {this.props.navigation}/>
             </View>
         )
+        /*
+        <View style={cardStylesPresentation.card}>
+                <Text style={cardStyles.text}>{card} - {index}</Text>
+            </View>
+         */
     };
 
     onSwiped = (type) => {
-        console.log(`on swiped ${type}`);
+        //console.log(`on swiped ${type}`);
         //console.log(this.state.cards);
     };
 
@@ -213,76 +227,6 @@ class FundSlideshow extends React.Component {
                     stackSeparation={15}
                     disableTopSwipe={true}
                     disableBottomSwipe={true}
-                    overlayLabels={{
-                        bottom: {
-                            title: 'BLEAH',
-                            style: {
-                                label: {
-                                    backgroundColor: '#20BF55',
-                                    borderColor: '#20BF55',
-                                    color: 'white',
-                                    borderWidth: 1
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }
-                            }
-                        },
-                        left: {
-                            title: 'NOPE',
-                            style: {
-                                label: {
-                                    backgroundColor: '#ea3232',
-                                    borderColor: '#ea3232',
-                                    color: 'white',
-                                    borderWidth: 1
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-end',
-                                    justifyContent: 'flex-start',
-                                    marginTop: 30,
-                                    marginLeft: -30
-                                }
-                            }
-                        },
-                        right: {
-                            title: 'LIKE',
-                            style: {
-                                label: {
-                                    backgroundColor: '#20BF55',
-                                    borderColor: '#20BF55',
-                                    color: 'white',
-                                    borderWidth: 1
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-start',
-                                    justifyContent: 'flex-start',
-                                    marginTop: 30,
-                                    marginLeft: 30
-                                }
-                            }
-                        },
-                        top: {
-                            title: 'SUPER LIKE',
-                            style: {
-                                label: {
-                                    backgroundColor: '#20BF55',
-                                    borderColor: '#20BF55',
-                                    color: 'white',
-                                    borderWidth: 1
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }
-                            }
-                        }
-                    }}
                     animateOverlayLabelsOpacity
                     animateCardOpacity
                     infinite={true}
