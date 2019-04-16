@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {Container, Button, Form, Item, Label, Text, Input} from 'native-base';
+import {Container, Button, Form, Item, Label, Text, Input, Toast} from 'native-base';
 import {styles} from "../styles/util";
-import * as firebase from "firebase";
+import firebase from "../firebaseConfig";
 
 export default class LoginScreen extends Component {
 
@@ -14,9 +14,10 @@ export default class LoginScreen extends Component {
     }
 
     goodPassword = (password) => {
-        if (!password || password.length < 8){
-            console.log("Password is too short!");
-            alert("Password is too short!");
+        if (!password || password.length < 6){
+            Toast.show({
+                text: "Wrong password!",
+            });
             return false;
         }
         return true;
@@ -24,13 +25,15 @@ export default class LoginScreen extends Component {
 
     goodEmail = (email) => {
         if(!email || email.length < 3) {
-            console.log("Email format is too short!");
-            alert("Email format is too short!");
+            Toast.show({
+                text: "Wrong email!",
+            });
             return false;
         }
         if (!email.includes("@") || !email.includes(".") ) {
-            console.log("Email format is bad!");
-            alert("Email format is bad!");
+            Toast.show({
+                text: "Wrong email!",
+            });
             return false;
         }
         return true;
@@ -42,12 +45,14 @@ export default class LoginScreen extends Component {
         }
         try{
             firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(params => {
-                console.log(params);
-                console.log("Go to sign up screen");
-                alert("Go to sign up screen");
+                Toast.show({
+                    text: "Welcome to WealthBet!",
+                });
             });
         }catch (e) {
-            console.log(e.toString());
+            Toast.show({
+                text: "Sign up failed!",
+            });
         }
     };
 
@@ -58,17 +63,20 @@ export default class LoginScreen extends Component {
         try{
             firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then( params =>
             {
-                console.log(params);
-                console.log("User is authenticated");
-                alert("You are authenticated!");
+                Toast.show({
+                    text: "Welcome to WealthBet!",
+                });
+                this.props.navigation.navigate("Quiz");
             });
         }catch (e) {
             console.log(e.toString());
+            Toast.show({
+                text: "Login failed!",
+            });
         }
     };
 
     render() {
-        console.log(this.state);
         return (
             <Container styles={styles.loginContainer}>
                 <Form style={{ flex:1, justifyContent: 'center' }}>

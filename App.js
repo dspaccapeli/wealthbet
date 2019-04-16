@@ -2,6 +2,7 @@ import React from 'react';
 
 // React Navigation
 import {createStackNavigator, createAppContainer} from 'react-navigation';
+import { Root } from "native-base";
 
 // Import Screens
 import QuizScreen from "./screens/QuizScreen";
@@ -13,8 +14,6 @@ import LoginScreen from "./screens/LoginScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import { firstPage } from "./util";
 import { Font } from 'expo';
-
-// TODO: Initialize firebase here
 
 // Components
 import LoadingBar from "./components/Loading";
@@ -60,6 +59,9 @@ export default class App extends React.Component {
                <LoadingBar/>
             );
         }
-        return <AppContainer />;
+        return (
+            <Root>
+                <AppContainer />
+            </Root>);
     }
 }
