@@ -96,9 +96,6 @@ export default class FundScreen extends Component {
         if (this.state.status === "LOADED") {
             fund = this.state.fund;
         }
-        console.log("FUND SCREEN");
-        console.log(this.state);
-        console.log(fund);
 
         // Dev footer
         let NavigationFooter;
