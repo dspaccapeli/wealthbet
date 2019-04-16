@@ -28,16 +28,9 @@ export const styles = StyleSheet.create({
     pushedBottom : {
         marginBottom : 100,
     },
-    loginContainer: {
-        flex: 1,
-        backgroundColor: "#ffff",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 10
-    },
-    slider: {
-        width: 200,
-        height: 40
+    screenTitle: {
+        textAlign: 'center',
+        alignSelf: 'center'
     }
 });
 

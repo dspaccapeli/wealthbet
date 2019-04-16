@@ -3,17 +3,13 @@ import React, { Component } from 'react';
 import {TouchableHighlight, View, Linking} from 'react-native';
 
 // Native Base
-import { Text, Button, Container, Content, Card, CardItem, Body, Segment } from 'native-base';
+import { Text, Button, Container, Content, Card, CardItem, Body } from 'native-base';
 
 // Styles
 import { styles } from "../styles/util";
 
 // Components
 import DevNavigationFooter from "../components/DevNavigationFooter"
-
-// Chart
-import { StackedAreaChart } from 'react-native-svg-charts'
-import * as shape from 'd3-shape'
 
 // JS utils
 import { loremIpsum } from "../constants/util"
@@ -107,7 +103,7 @@ export default class FundScreen extends Component {
             <Container>
                 <View style={ styles.statusBar } />
                 <Content>
-                    <FundHeader fund={fund} />
+                    <FundHeader fund={fund}/>
                     <FundChart fund={fund} />
                     <FundDescription fund={fund}/>
                     <News fund={fund} />

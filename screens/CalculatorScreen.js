@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container, Button, View, Content, Item, Label, Text, Input, Left, Right, H1 } from 'native-base';
+import {Container, Button, View, Text, Left, Right, H1 } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import {Slider} from "react-native"
 import {styles} from "../styles/util";
@@ -9,6 +9,7 @@ import {FundHeader} from "../components/FundHeader";
 import DevNavigationFooter from "../components/DevNavigationFooter";
 import {devMode} from "../util";
 import apiManager from "../data/DataModel";
+import {CalculatorStyle} from "../styles/CalculatorScreenStyle";
 
 export default class CalculatorScreen extends Component {
     render() {
@@ -17,9 +18,9 @@ export default class CalculatorScreen extends Component {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
         }
         return (
-            <Container style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
+            <Container style={CalculatorStyle.fundContainer}>
                 <View style={ styles.statusBar } />
-                <H1 style={{textAlign: 'center', alignSelf: 'center'}}>Calculator</H1>
+                <H1 style={styles.screenTitle}>Calculator</H1>
                 <FundHeader fund={defaultFund}/>
                 <FundChart fund={defaultFund}/>
                 <FundCalculator fund={defaultFund} navigation={this.props.navigation}/>
@@ -56,15 +57,15 @@ class FundCalculator extends Component {
 
     render () {
         return (
-            <Container style={{ flex: 1, alignItems: 'stretch', justifyContent: "center" }}>
-                <Grid style={{padding: 30}}>
+            <Container style={CalculatorStyle.fundContainer}>
+                <Grid style={CalculatorStyle.gridStyle}>
                     <Row>
                         <Col><Left><Text>Years</Text></Left></Col>
                         <Col><Right><Text>{this.state.yearsPeriod}</Text></Right></Col>
                     </Row>
-                    <Row style={{padding: 10, justifyContent: "center"}}>
+                    <Row style={CalculatorStyle.sliderRow}>
                         <Slider
-                            style={styles.slider}
+                            style={CalculatorStyle.slider}
                             step={1}
                             maximumValue={20}
                             onValueChange={(value) => this.setState({yearsPeriod: parseFloat(value)})}
@@ -75,9 +76,9 @@ class FundCalculator extends Component {
                         <Col><Left><Text>Initial deposit</Text></Left></Col>
                         <Col><Right><Text>{this.state.initialDeposit}$</Text></Right></Col>
                     </Row>
-                    <Row  style={{padding: 10, justifyContent: "center"}}>
+                    <Row  style={CalculatorStyle.sliderRow}>
                         <Slider
-                            style={styles.slider}
+                            style={CalculatorStyle.slider}
                             step={100}
                             maximumValue={5000}
                             onValueChange={(value) => this.setState({initialDeposit: parseFloat(value)})}
@@ -88,22 +89,22 @@ class FundCalculator extends Component {
                         <Col><Left><Text>Monthly deposit</Text></Left></Col>
                         <Col><Right><Text>{this.state.monthlyDeposit}$</Text></Right></Col>
                     </Row>
-                    <Row  style={{padding: 10, justifyContent: "center"}}>
+                    <Row  style={CalculatorStyle.sliderRow}>
                         <Slider
-                            style={styles.slider}
+                            style={CalculatorStyle.slider}
                             step={10}
                             maximumValue={100}
                             onValueChange={(value) => this.setState({monthlyDeposit: parseFloat(value)})}
                             value={this.state.monthlyDeposit}
                         />
                     </Row>
-                    <Row style={{padding: 10}}>
+                    <Row style={CalculatorStyle.sliderRow}>
                         <Col><Left><Text style={{fontWeight: 'bold'}}>Expected returns</Text></Left></Col>
                         <Col><Right><Text style={{fontWeight: 'bold'}}>{this.getReturn()}$</Text></Right></Col>
                     </Row>
                 </Grid>
                 <Right>
-                    <Button style={{backgroundColor: "#4D9E67"}} onPress={this.buyFund} title="Buy fund">
+                    <Button style={CalculatorStyle.buyButton} onPress={this.buyFund} title="Buy fund">
                         <Text>Buy</Text>
                     </Button>
                 </Right>

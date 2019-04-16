@@ -2,6 +2,7 @@ import React from 'react';
 
 // React Navigation
 import {createStackNavigator, createAppContainer} from 'react-navigation';
+import { Root } from "native-base";
 
 // Import Screens
 import QuizScreen from "./screens/QuizScreen";
@@ -58,6 +59,9 @@ export default class App extends React.Component {
                <LoadingBar/>
             );
         }
-        return <AppContainer />;
+        return (
+            <Root>
+                <AppContainer />
+            </Root>);
     }
 }
