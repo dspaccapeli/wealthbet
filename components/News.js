@@ -9,9 +9,21 @@ export class News extends  React.Component {
         super(props);
         this.state = {
             status: "LOADING",
+            fundSymbol: this.props.fund.symbol,
             news: "",
         }
     }
+
+    goToURL = () => {
+        let url = this.state.newsLink;
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.log('Don\'t know how to open URI: ' + this.props.url);
+            }
+        });
+    };
 
     updateNews () {
         apiManager
@@ -38,29 +50,13 @@ export class News extends  React.Component {
 
     componentDidMount() {
         this.updateNews();
-        apiManager.addObserver(this);
     }
 
-    componentWillUnmount() {
-        apiManager.removeObserver(this);
-    }
-
-    update (observer, changeDetails) {
-        if(changeDetails === "fund") {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps.fundSymbol !== this.props.fund.symbol) {
             this.updateNews();
         }
     }
-
-    goToURL = () => {
-        let url = this.state.newsLink;
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                Linking.openURL(url);
-            } else {
-                console.log('Don\'t know how to open URI: ' + this.props.url);
-            }
-        });
-    };
 
     render() {
         let news;

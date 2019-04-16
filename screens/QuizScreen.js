@@ -151,6 +151,7 @@ class CardView extends React.Component {
                     animateOverlayLabelsOpacity
                     animateCardOpacity
                     swipeBackCard
+                    useViewOverflow={false}
                 >
                     {/*<Button onPress={() => this.swiper.swipeBack()} title='Swipe Back' />*/}
                 </Swiper>

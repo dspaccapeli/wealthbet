@@ -101,6 +101,7 @@ export default class FundScreen extends Component {
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
         }
+
         return (
             <Container>
                 <View style={ styles.statusBar } />

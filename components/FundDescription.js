@@ -8,6 +8,7 @@ export class FundDescription extends  React.Component {
         super(props);
         this.state = {
             status: "LOADING",
+            fundSymbol: this.props.fund.symbol,
             description: "",
         }
     }
@@ -34,15 +35,10 @@ export class FundDescription extends  React.Component {
 
     componentDidMount() {
         this.updateDescription();
-        apiManager.addObserver(this);
     }
 
-    componentWillUnmount() {
-        apiManager.removeObserver(this);
-    }
-
-    update (observer, changeDetails) {
-        if(changeDetails === "fund") {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(prevProps.fundSymbol !== this.props.fund.symbol) {
             this.updateDescription();
         }
     }
