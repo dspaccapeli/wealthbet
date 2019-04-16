@@ -45,20 +45,14 @@ class DataModel extends ObservableModel {
 
     getFundLogo(symbol= "FBIFX"){
         let selectedFundJson;
-        fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
+        return fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
             .then(response => response.json())
             .then(json => {selectedFundJson = json});
     }
 
-    getNews(fundCompanyName) {
-        let url = 'https://newsapi.org/v2/everything?' +
-            'q=' + fundCompanyName + '&' +
-            'from=2019-04-15&' + // TODO: replace this with TODAY
-            'sortBy=popularity&' +
-            'apiKey=' + newsApiKey;
-        let req = new Request(url);
-
-        return fetch(req).then(this.processResponse);
+    getNews(symbol) {
+        return fetch(this.baseUrl + this.version + `stock/${symbol}/news/last/1` + this.tokenString)
+            .then(this.processResponse);
     }
 
     getDescription(fundSymbol) {

@@ -2,6 +2,7 @@ import apiManager from "../data/DataModel";
 import {View} from "react-native";
 import {Text} from "native-base";
 import React from "react";
+import {cos} from "d3-shape/src/math";
 
 export class FundDescription extends  React.Component {
     constructor (props) {
@@ -37,10 +38,8 @@ export class FundDescription extends  React.Component {
         this.updateDescription();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.fundSymbol !== this.props.fund.symbol) {
-            this.updateDescription();
-        }
+    componentWillReceiveProps (nextProps) {
+        this.updateDescription();
     }
 
     render() {

@@ -27,19 +27,18 @@ export class News extends  React.Component {
 
     updateNews () {
         apiManager
-            .getNews(this.props.fund.companyName)
+            .getNews(this.props.fund.symbol)
             .then(data => {
                 let currentNews = "No current news for you today!";
                 let newsLink = "";
-                if (data["articles"][0]["description"]) {
-                    currentNews = data["articles"][0]["description"];
-                    newsLink = data["articles"][0]["url"]
-                }
+                console.log(data[0]["summary"]);
+                console.log(data[0]);
                 this.setState({
                     status: "LOADED",
-                    fundSymbol: data.symbol,
-                    news: currentNews,
-                    newsLink: newsLink,
+                    fundSymbol: this.props.fund.symbol,
+                    headline: data[0]["headline"],
+                    news: data[0]["summary"],
+                    newsLink: data[0]["url"],
                 });
             })
             .catch(() => {
@@ -53,7 +52,7 @@ export class News extends  React.Component {
         this.updateNews();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentWillReceiveProps(prevProps, prevState, snapshot) {
         if(prevProps.fundSymbol !== this.props.fund.symbol) {
             this.updateNews();
         }
@@ -61,12 +60,14 @@ export class News extends  React.Component {
 
     render() {
         let news;
+        let headline = "";
         switch (this.state.status) {
             case "LOADING":
                 news = "...";
                 break;
             case "LOADED":
                 news = this.state.news;
+                headline = this.state.headline;
                 break;
             default:
                 news = " ";
@@ -76,7 +77,7 @@ export class News extends  React.Component {
             <TouchableHighlight onPress={this.onPress} underlayColor="white">
                 <Card>
                     <CardItem header>
-                        <Text>News</Text>
+                        <Text>News {headline} </Text>
                     </CardItem>
                     <CardItem>
                         <Body>
