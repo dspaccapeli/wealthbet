@@ -6,7 +6,7 @@ import { View, SafeAreaView } from 'react-native';
 import {Button, Body, Card, CardItem, Icon, Container, Content, DeckSwiper, Text, Right} from 'native-base';
 
 // Styles
-import { styles } from "../styles/util";
+import { styles } from "../styles/Common";
 
 // Components
 import DevNavigationFooter from "../components/DevNavigationFooter"

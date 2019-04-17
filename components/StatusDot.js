@@ -1,5 +1,5 @@
 import {View} from "react-native";
-import {statusDotStyle} from "../styles/util";
+import {statusDotStyle} from "../styles/Common";
 import React, { Component } from "react";
 
 export default class StatusDot extends Component {

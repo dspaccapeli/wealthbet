@@ -8,7 +8,7 @@ import { Col, Grid } from 'react-native-easy-grid';
 import { Container, Content, Left, Right, Text, Button, Icon, CardItem, H1 } from 'native-base';
 
 // Styles
-import { styles } from "../styles/util";
+import { styles } from "../styles/Common";
 
 // Components
 import DevNavigationFooter from "../components/DevNavigationFooter";

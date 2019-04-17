@@ -6,7 +6,7 @@ import {TouchableHighlight, View, Linking} from 'react-native';
 import { Text, Button, Container, Content, Card, CardItem, Body } from 'native-base';
 
 // Styles
-import { styles } from "../styles/util";
+import { styles } from "../styles/Common";
 
 // Components
 import DevNavigationFooter from "../components/DevNavigationFooter"

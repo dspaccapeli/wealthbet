@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Container, Button, Form, Item, Label, Text, Input, Toast} from 'native-base';
-import {styles} from "../styles/util";
+import {styles} from "../styles/Common";
 import firebase from "../firebaseConfig";
 import {LoginStyle} from "../styles/LoginScreenStyle";
 

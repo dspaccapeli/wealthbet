@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, View, DeckSwiper, Button, Content, Card, CardItem, Icon, Text, Right } from 'native-base';
-import {cardStylesPresentation, cardStyles, styles} from "../styles/util";
+import {styles} from "../styles/Common";
+import {swiper} from "../styles/PresentationScreenStyle";
 import DevNavigationFooter from "../components/DevNavigationFooter"
 import { devMode } from '../util.js';
 
@@ -79,7 +80,7 @@ class PresentationHeader extends Component {
                 style={Object.assign({},{padding: 10}, styles.backgroundColor)}>
                 <Text
                     style={{
-                        fontFamily: "poppins-medium",
+                        fontFamily: "pp-regular",
                         fontSize: 13,
                         textAlign: "left",
                         marginLeft: 25,
@@ -175,7 +176,7 @@ class FundSlideshow extends React.Component {
 
     renderCard = (card, index) => {
         return (
-            <View style={cardStylesPresentation.card}>
+            <View style={swiper.card}>
                     <FundHeader fund={defaultFund}/>
                     <FundChart fund={defaultFund}/>
                     <FundDescription fund={defaultFund}/>
@@ -214,7 +215,7 @@ class FundSlideshow extends React.Component {
 
     render () {
         return (
-            <View style={cardStyles.container}>
+            <View style={swiper.container}>
                 <Swiper
                     ref={swiper => {
                         this.swiper = swiper

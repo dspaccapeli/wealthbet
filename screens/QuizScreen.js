@@ -7,7 +7,8 @@ import {devMode} from "../util";
 import DevNavigationFooter from "../components/DevNavigationFooter"
 import {Container, Content} from "native-base";
 
-import {cardStylesQuiz, cardStyles, styles} from "../styles/util";
+import {styles} from "../styles/Common";
+import {card} from "../styles/QuizScreenStyle";
 
 //import { Font } from 'expo';
 import StatusDot from "../components/StatusDot";
@@ -70,7 +71,7 @@ class QuizHeader extends Component {
         return (
             <View style={styles.backgroundColor}>
                     <Text style={{
-                            fontFamily: "poppins-extra-bold",
+                            fontFamily: "pp-extra-bold",
                             fontSize: 30,
                             textAlign: "left",
                             marginLeft: 25,
@@ -78,7 +79,7 @@ class QuizHeader extends Component {
                             marginTop: 15,
                         }}>Quiz</Text>
                     <Text note style={{
-                            fontFamily: "poppins-medium",
+                            fontFamily: "pp-medium",
                             fontSize: 17,
                             textAlign: "left",
                             marginLeft: 25,
@@ -103,8 +104,8 @@ class CardView extends React.Component {
 
     renderCard = (card, index) => {
         return (
-            <View style={cardStylesQuiz.card}>
-                <Text style={cardStyles.text}>{card} - {index}</Text>
+            <View style={card.card}>
+                <Text style={card.text}>{card} - {index}</Text>
             </View>
         )
     };
@@ -128,7 +129,7 @@ class CardView extends React.Component {
     render () {
         console.log(this.state.cards);
         return (
-            <View style={cardStylesQuiz.container}>
+            <View style={card.container}>
                 <Swiper
                     ref={swiper => {this.swiper = swiper}}
                     onSwiped={() => this.onSwiped('general')}

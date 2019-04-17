@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Container, Button, View, Text, Left, Right, H1 } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import {Slider} from "react-native"
-import {styles} from "../styles/util";
+import {styles} from "../styles/Common";
 import {defaultFund} from "./FundScreen";
 import {FundChart} from "../components/FundChart";
 import {FundHeader} from "../components/FundHeader";

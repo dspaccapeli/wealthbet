@@ -45,10 +45,9 @@ export default class App extends React.Component {
     async componentWillMount() {
         await Font.loadAsync(
             {
-                'poppins-extra-bold': require('./assets/fonts/Poppins-Bold.ttf'),
-                'poppins-medium': require('./assets/fonts/Poppins-Medium.ttf'),
-                Roboto: require("native-base/Fonts/Roboto.ttf"),
-                Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+                'pp-extra-bold': require('./assets/fonts/Poppins-Bold.ttf'),
+                'pp-medium': require('./assets/fonts/Poppins-Medium.ttf'),
+                'pp-regular': require('./assets/fonts/Poppins-Regular.ttf'),
             });
         this.setState({ isReady: true });
     }
