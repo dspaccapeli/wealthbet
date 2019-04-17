@@ -1,6 +1,6 @@
 import {StyleSheet} from "react-native";
 
-export const card = StyleSheet.create({
+export const swiper = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F5FCFF',

@@ -8,7 +8,7 @@ import DevNavigationFooter from "../components/DevNavigationFooter"
 import {Container, Content} from "native-base";
 
 import {styles} from "../styles/Common";
-import {card} from "../styles/QuizScreenStyle";
+import {swiper} from "../styles/QuizScreenStyle";
 
 import StatusDot from "../components/StatusDot";
 import apiManager from "../data/DataModel";
@@ -35,6 +35,7 @@ export default class QuizScreen extends Component {
     componentWillMount() {
         apiManager.getQuiz()
             .then(value => {
+                console.log(value.questions);
                 this.setState({
                     status: "LOADED",
                     questionNumberTotal: value.totalNumber,
@@ -44,21 +45,27 @@ export default class QuizScreen extends Component {
     }
 
     render() {
-        console.log(this.state);
+        //console.log(this.state);
         let NavigationFooter;
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
         }
+
+        let cardView;
+        if (this.state.status === "LOADED") {
+            cardView = <CardView
+                navigation={this.props.navigation}
+                questions={this.state.questions}
+                onSwipe={() => this.updateActiveQuestion()}
+            />;
+        }
+
         return (
             <Container>
                 <View style={ styles.statusBar } />
                 <QuizHeader />
                 <Content style={ styles.backgroundColor }>
-                    <CardView
-                        navigation={this.props.navigation}
-                        questions={this.state.questions}
-                        onSwipe={() => this.updateActiveQuestion()}
-                    />
+                    {cardView}
                 </Content>
                 <StatusDot
                     number={this.state.questionNumberTotal}
@@ -107,9 +114,12 @@ class CardView extends React.Component {
     }
 
     renderCard = (card, index) => {
+        console.log(this.props.questions);
+
+        //console.log(Object.keys(this.props.questions));
         return (
-            <View style={card.card}>
-                <Text style={card.text}>{card} - {index}</Text>
+            <View style={swiper.card}>
+                <Text style={swiper.text}>{this.props.questions[index]}</Text>
             </View>
         )
     };
@@ -132,7 +142,7 @@ class CardView extends React.Component {
 
     render () {
         return (
-            <View style={card.container}>
+            <View style={swiper.container}>
                 <Swiper
                     ref={swiper => {this.swiper = swiper}}
                     onSwiped={() => this.onSwiped('general')}

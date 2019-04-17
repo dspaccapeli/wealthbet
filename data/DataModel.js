@@ -197,7 +197,7 @@ class DataModel extends ObservableModel {
 
     getQuiz() {
         return firebase.database().ref('/quiz').once('value').then(function(snapshot) {
-            console.log(snapshot.val());
+            //console.log(snapshot.val());
             let totalNumber = (snapshot.val() && snapshot.val().totalNumber) || 0;
             let questions = [];
             for (let i=1; i<=totalNumber; i++) {
