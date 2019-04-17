@@ -6,18 +6,8 @@ import ObservableModel from "./ObservableModel";
 const fundManagerName = "Fidelity";
 const fundType = "Index";
 
-const dummyFund = {
-    symbol: "FBIFX" ,
-    shares: 100,
-    originalValue: 100,
-    currentValue: 110,
-
-};
-
-const dummyQuestion = {
-    question: "Are you interested in hardware?",
-    answers: ["Yes", "No"]
-};
+import firebase from "../firebaseConfig";
+import {dummyFund, dummyQuestion} from "../constants/util";
 
 class DataModel extends ObservableModel {
     constructor(){
@@ -38,8 +28,9 @@ class DataModel extends ObservableModel {
         this.getPortfolioFunds();
 
         // Attributes for the quiz
-        this._quiz = [dummyQuestion];
         this.getQuiz();
+
+        this.uid = "";
 
         this.cache = {};
         this.maxCacheSize = 100;
@@ -205,11 +196,30 @@ class DataModel extends ObservableModel {
     }
 
     getQuiz() {
-         return this._quiz;
+        return firebase.database().ref('/quiz').once('value').then(function(snapshot) {
+            console.log(snapshot.val());
+            let totalNumber = (snapshot.val() && snapshot.val().totalNumber) || 0;
+            let questions = [];
+            for (let i=1; i<=totalNumber; i++) {
+                questions.push((snapshot.val() && snapshot.val()[`q${i}`]) || '');
+            }
+            return {
+                totalNumber: totalNumber,
+                questions: questions
+            }
+        });
     }
 
-    computeGain(fund) {
+    computeGain (fund) {
         return ((fund.currentValue - fund.originalValue) / fund.originalValue) * 100;
+    }
+
+    setCurrentUser(uid) {
+        this.uid = uid;
+    }
+
+    getCurrentUser() {
+        return this.uid;
     }
 }
 

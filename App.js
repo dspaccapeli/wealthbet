@@ -40,6 +40,7 @@ export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = { isReady: false };
+        console.disableYellowBox  = true;
     }
 
     async componentWillMount() {

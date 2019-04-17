@@ -3,6 +3,8 @@ import {Container, Button, Form, Item, Label, Text, Input, Toast} from 'native-b
 import {styles} from "../styles/Common";
 import firebase from "../firebaseConfig";
 import {LoginStyle} from "../styles/LoginScreenStyle";
+import apiManager from "../data/DataModel";
+import {Image} from "react-native";
 
 export default class LoginScreen extends Component {
 
@@ -40,23 +42,6 @@ export default class LoginScreen extends Component {
         return true;
     };
 
-    signUpUser = () => {
-        if (!this.goodPassword(this.state.password) || !this.goodEmail(this.state.email)){
-            return;
-        }
-        try{
-            firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(params => {
-                Toast.show({
-                    text: "Welcome to WealthBet!",
-                });
-            });
-        }catch (e) {
-            Toast.show({
-                text: "Sign up failed!",
-            });
-        }
-    };
-
     loginUser = () => {
         if (!this.goodPassword(this.state.password) || !this.goodEmail(this.state.email)){
             return;
@@ -64,6 +49,7 @@ export default class LoginScreen extends Component {
         try{
             firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then( params =>
             {
+                apiManager.setCurrentUser(params.user.uid);
                 Toast.show({
                     text: "Welcome to WealthBet!",
                 });
@@ -80,6 +66,7 @@ export default class LoginScreen extends Component {
     render() {
         return (
             <Container styles={LoginStyle.loginContainer}>
+                <Image style={LoginStyle.logo} source={require('../assets/images/warrenbee_logo.png')}/>
                 <Form style={LoginStyle.form}>
                     <Item floatingLabel style={LoginStyle.formItem}>
                         <Label>Email</Label>
@@ -101,10 +88,6 @@ export default class LoginScreen extends Component {
                     <Button full rounded success style={LoginStyle.loginButton}
                             onPress={this.loginUser} title="Login button">
                         <Text style={LoginStyle.textButton}>Login</Text>
-                    </Button>
-                    <Button full rounded primary style={LoginStyle.signupButton}
-                            onPress={this.signUpUser} title="Sign up button">
-                        <Text style={LoginStyle.textButton}>Sign up</Text>
                     </Button>
                 </Form>
             </Container>

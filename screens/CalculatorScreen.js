@@ -49,7 +49,6 @@ class FundCalculator extends Component {
         let originalValue = this.state.initialDeposit;
         let currentValue = originalValue + 10; // simulate an increase of value
         let shares = 10; // simulate the number of shares
-        console.log("bought fund:" ,this.state.fund.symbol);
         apiManager.addFundToPortfolio(symbol =this.state.fund.symbol, shares=shares, originalValue=originalValue, currentValue=currentValue);
         this.props.navigation.navigate("Portfolio");
     };

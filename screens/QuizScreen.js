@@ -10,7 +10,6 @@ import {Container, Content} from "native-base";
 import {styles} from "../styles/Common";
 import {card} from "../styles/QuizScreenStyle";
 
-//import { Font } from 'expo';
 import StatusDot from "../components/StatusDot";
 import apiManager from "../data/DataModel";
 
@@ -18,28 +17,34 @@ export default class QuizScreen extends Component {
     constructor(props){
         super(props);
         this.state = {
+            status: "LOADING",
             questionNumberTotal : 4,
             questionNumberActive : 1,
-            quiz: apiManager.getQuiz(),
+            questions: [],
         }
+        // TODO: remember the answers based on the current user from API manager and store the answers in his profile
     }
 
     updateActiveQuestion(){
-        let newActiveQuestionNumber = this.state.questionNumberActive +1;
+        let newActiveQuestionNumber = this.state.questionNumberActive + 1;
         this.setState({
             questionNumberActive : newActiveQuestionNumber,
         })
     }
 
-    getQuestions() {
-        let questions = [];
-        this.state.quiz.forEach((quiz) => {
-            questions.push(quiz.question);
-        });
-        return questions;
+    componentWillMount() {
+        apiManager.getQuiz()
+            .then(value => {
+                this.setState({
+                    status: "LOADED",
+                    questionNumberTotal: value.totalNumber,
+                    questions: value.questions
+                });
+            })
     }
 
     render() {
+        console.log(this.state);
         let NavigationFooter;
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
@@ -51,7 +56,7 @@ export default class QuizScreen extends Component {
                 <Content style={ styles.backgroundColor }>
                     <CardView
                         navigation={this.props.navigation}
-                        questions={this.getQuestions()}
+                        questions={this.state.questions}
                         onSwipe={() => this.updateActiveQuestion()}
                     />
                 </Content>
@@ -93,7 +98,6 @@ class QuizHeader extends Component {
 class CardView extends React.Component {
     constructor (props) {
         super(props);
-        // TODO: take questions from the database
         this.state = {
             cards: this.props.questions,
             swipedAllCards: false,
@@ -127,7 +131,6 @@ class CardView extends React.Component {
     };
 
     render () {
-        console.log(this.state.cards);
         return (
             <View style={card.container}>
                 <Swiper

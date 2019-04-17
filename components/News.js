@@ -29,10 +29,6 @@ export class News extends  React.Component {
         apiManager
             .getNews(this.props.fund.symbol)
             .then(data => {
-                let currentNews = "No current news for you today!";
-                let newsLink = "";
-                console.log(data[0]["summary"]);
-                console.log(data[0]);
                 this.setState({
                     status: "LOADED",
                     fundSymbol: this.props.fund.symbol,

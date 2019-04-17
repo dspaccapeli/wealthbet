@@ -30,6 +30,7 @@ export const defaultFund = {
     currentValue: 110,
 };
 
+//TODO: fix the passing fund problems
 export default class FundScreen extends Component {
     constructor (props) {
         super(props);
