@@ -6,6 +6,19 @@ import ObservableModel from "./ObservableModel";
 const fundManagerName = "Fidelity";
 const fundType = "Index";
 
+const dummyFund = {
+    symbol: "FBIFX" ,
+    shares: 100,
+    originalValue: 100,
+    currentValue: 110,
+
+};
+
+const dummyQuestion = {
+    question: "Are you interested in hardware?",
+    answers: ["Yes", "No"]
+};
+
 class DataModel extends ObservableModel {
     constructor(){
         super();
@@ -27,11 +40,42 @@ class DataModel extends ObservableModel {
         // Attributes for the quiz
         this._quiz = [dummyQuestion];
         this.getQuiz();
+
+        this.cache = {};
+        this.maxCacheSize = 100;
+    }
+
+    cacheLookup(fetchArg){
+        return !!this.cache[fetchArg];
+    }
+
+    async fetchCache(fetchArg){
+       if(this.cacheLookup(fetchArg)){
+           console.log('Saved you some API call: ' + fetchArg);
+           return this.cache[fetchArg];
+       } else {
+           let fetchResponse = fetch(fetchArg)
+               .then(this.processResponse);
+           this.cacheSave(fetchArg, fetchResponse);
+           return fetchResponse;
+       }
+    }
+
+    cacheSave(fetch, response){
+        if(Object.keys(this.cache).length > this.maxCacheSize){
+            let keys = Object.keys(this.cache);
+
+            delete this.cache[keys[getRandomInt(0, keys.length-1)]]
+        }
+
+        if(!this.cacheLookup(fetch)){
+            this.cache[fetch] = response;
+        }
     }
 
     getFund(symbol= "FBIFX") {
-        return fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
-            .then(this.processResponse);
+        let fetchArg = this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString;
+        return this.fetchCache(fetchArg);
     }
 
     getCurrentFund() {
@@ -45,8 +89,8 @@ class DataModel extends ObservableModel {
 
     getFundLogo(symbol= "FBIFX"){
         let selectedFundJson;
-        fetch(this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString)
-            .then(response => response.json())
+        let fetchArg = this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString;
+        this.fetchCache(fetchArg)
             .then(json => {selectedFundJson = json});
     }
 
@@ -58,12 +102,12 @@ class DataModel extends ObservableModel {
             'apiKey=' + newsApiKey;
         let req = new Request(url);
 
-        return fetch(req).then(this.processResponse);
+        return this.fetchCache(req);
     }
 
     getDescription(fundSymbol) {
-        return fetch(this.baseUrl + this.version + `stock/${fundSymbol}/company` + this.tokenString)
-            .then(this.processResponse);
+        let fetchArg = this.baseUrl + this.version + `stock/${fundSymbol}/company` + this.tokenString;
+        return this.fetchCache(fetchArg);
     }
 
     /*
@@ -86,10 +130,11 @@ class DataModel extends ObservableModel {
                  break;
          }
          const filter = "&chartInterval=" + interval;
-         console.log(this.baseUrl + this.version + `stock/${symbol}/chart/${range}` + this.tokenString + filter);
-         return fetch(this.baseUrl + this.version + `stock/${symbol}/chart/${range}` + this.tokenString + filter)
-            .then(this.processResponse)
-            .then(historicalDataJson => {
+
+         let fetchArg = this.baseUrl + this.version + `stock/${symbol}/chart/${range}` + this.tokenString + filter;
+
+         return this.fetchCache(fetchArg)
+             .then(historicalDataJson => {
                 if (order === "ascending") {
                     return historicalDataJson.map(discretePoint => {
                         return {value: discretePoint.close}
@@ -174,18 +219,12 @@ class DataModel extends ObservableModel {
     }
 }
 
-const dummyFund = {
-    symbol: "FBIFX" ,
-    shares: 100,
-    originalValue: 100,
-    currentValue: 110,
-
-};
-
-const dummyQuestion = {
-    question: "Are you interested in hardware?",
-    answers: ["Yes", "No"]
-};
-
 const apiManager = new DataModel();
 export default apiManager;
+
+//
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

@@ -22,26 +22,13 @@ import {FundChart} from "../components/FundChart";
 import {FundDescription} from "../components/FundDescription";
 import {News} from "../components/News";
 
-/* Structure
-
-    FundScreen
-    |
-    --- FundHeader
-    |
-    --- FundChart
-        |
-        --- ChartArea
-        |
-        --- TimeScale
-    |
-    --- FundStatistics
-    |
-    --- FundDescription
-    |
-    --- News
-    |
-    --- Sell
-*/
+export const defaultFund = {
+    symbol: "AAPL",
+    companyName: "Apple Inc.",
+    shares: 100,
+    originalValue: 100,
+    currentValue: 110,
+};
 
 export default class FundScreen extends Component {
     constructor (props) {
@@ -99,14 +86,16 @@ export default class FundScreen extends Component {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
         }
 
+        console.log(fund);
+
         return (
             <Container>
                 <View style={ styles.statusBar } />
                 <Content>
                     <FundHeader fund={fund}/>
-                    <FundChart fund={fund} />
+                    {/*<FundChart fund={fund} />*/}
                     <FundDescription fund={fund}/>
-                    <News fund={fund} />
+                    {/*<News fund={fund} />*/}
                     <Sell symbol={fund.symbol}  navigation={this.props.navigation} />
                     <BackToPortofolio navigation={this.props.navigation}/>
                 </Content>
@@ -151,11 +140,3 @@ class BackToPortofolio extends React.Component {
         );
     }
 }
-
-export const defaultFund = {
-    symbol: "AAPL",
-    companyName: "Apple Inc.",
-    shares: 100,
-    originalValue: 100,
-    currentValue: 110,
-};

@@ -75,8 +75,18 @@ export default class PresentationScreen extends Component {
 class PresentationHeader extends Component {
     render () {
         return (
-            <View style={Object.assign({},{padding: 10}, styles.backgroundColor)}>
-                <Text>These are the funds that we selected for you. You can swipe through them. Click on one if you want to find out more.</Text>
+            <View
+                style={Object.assign({},{padding: 10}, styles.backgroundColor)}>
+                <Text
+                    style={{
+                        fontFamily: "poppins-medium",
+                        fontSize: 13,
+                        textAlign: "left",
+                        marginLeft: 25,
+                        marginRight: 25
+                    }}>
+                    These are the funds that we selected for you. You can swipe through them. Click on one if you want to find out more.
+                </Text>
             </View>
         );
     }
@@ -192,7 +202,7 @@ class FundSlideshow extends React.Component {
         this.props.navigation.navigate('Presentation');
     };
 
-    // Opposite paramters
+    // Opposite parameters
     swipeRight = () => {
         this.props.onSwipeRight();
 

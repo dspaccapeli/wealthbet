@@ -38,7 +38,7 @@ export class FundDescription extends  React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.fundSymbol !== this.props.fund.symbol) {
+        if(prevProps.fund.symbol !== this.props.fund.symbol) {
             this.updateDescription();
         }
     }
