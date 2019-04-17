@@ -1,11 +1,12 @@
 import {StyleSheet} from 'react-native';
+import Colors from '../constants/Colors'
 
 export const LoginStyle = StyleSheet.create({
     loginContainer: {
-        flex: 1,
-        backgroundColor: "#ffff",
-        justifyContent: "center",
-        alignItems: "center",
+        flex:1,
+        backgroundColor: '#4D9E67',
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 10
     },
     logo: {

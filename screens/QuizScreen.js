@@ -124,8 +124,19 @@ class CardView extends React.Component {
         )
     };
 
+    // Controls the actions from swipe
+    // right: YES
+    // left: NO
     onSwiped = (type) => {
         //console.log(`on swiped ${type}`);
+        switch (type) {
+            case 'right':
+                apiManager.writeQuizAnswer("yes", this.state.cardIndex);
+                break;
+            case 'left':
+                apiManager.writeQuizAnswer("no", this.state.cardIndex);
+                break;
+        }
         this.props.onSwipe();
     };
 

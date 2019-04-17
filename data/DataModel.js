@@ -30,7 +30,7 @@ class DataModel extends ObservableModel {
         // Attributes for the quiz
         this.getQuiz();
 
-        this.uid = "";
+        this.uid = "iimkZGI01vhAucMmCZN9Z167aK43";
 
         this.cache = {};
         this.maxCacheSize = 100;
@@ -220,6 +220,18 @@ class DataModel extends ObservableModel {
 
     getCurrentUser() {
         return this.uid;
+    }
+
+    writeQuizAnswer(answer, questionIndex) {
+        let index = "q" + questionIndex;
+        let value = {
+            index: answer
+        };
+        console.log(value);
+        firebase.database().ref('users/' + this.getCurrentUser()+ '/quizAnswers').set(value)
+            .then(() => {
+                console.log("Go check, data was written!");
+            });
     }
 }
 
