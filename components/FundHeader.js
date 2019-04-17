@@ -10,12 +10,10 @@ export class FundHeader extends React.Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevProps.fund.symbol !== this.props.fund.symbol) {
-            this.setState({
-                fund: this.props.fund
-            });
-        }
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            fund: this.props.fund
+        });
     }
 
     render() {

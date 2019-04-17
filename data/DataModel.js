@@ -94,15 +94,9 @@ class DataModel extends ObservableModel {
             .then(json => {selectedFundJson = json});
     }
 
-    getNews(fundCompanyName) {
-        let url = 'https://newsapi.org/v2/everything?' +
-            'q=' + fundCompanyName + '&' +
-            'from=2019-04-15&' + // TODO: replace this with TODAY
-            'sortBy=popularity&' +
-            'apiKey=' + newsApiKey;
-        let req = new Request(url);
-
-        return this.fetchCache(req);
+    getNews(symbol) {
+        let fetchArg = this.baseUrl + this.version + `stock/${symbol}/news/last/1` + this.tokenString;
+        return fetch(fetchArg);
     }
 
     getDescription(fundSymbol) {
