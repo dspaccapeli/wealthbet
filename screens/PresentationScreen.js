@@ -139,7 +139,7 @@ class SeeMoreButton extends Component {
                         onPress={() => this.props.navigation.navigate("Calculator")}
                         style={{
                             backgroundColor: "#9e4d84",
-                            marginVertical: 10
+                            marginVertical: 15,
                         }}>
                     <Text
                         style={{

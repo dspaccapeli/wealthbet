@@ -50,6 +50,7 @@ export default class App extends React.Component {
                 'pp-extra-bold': require('./assets/fonts/Poppins-Bold.ttf'),
                 'pp-medium': require('./assets/fonts/Poppins-Medium.ttf'),
                 'pp-regular': require('./assets/fonts/Poppins-Regular.ttf'),
+                'pp-semib': require('./assets/fonts/Poppins-SemiBold.ttf'),
                 'Roboto': require("native-base/Fonts/Roboto.ttf"),
                 'Roboto_medium': require("native-base/Fonts/Roboto_medium.ttf"),
             });

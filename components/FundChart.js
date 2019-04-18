@@ -23,7 +23,7 @@ export class FundChart extends  React.Component {
         return (
             <View>
                 <ChartArea timeScale={this.state.timeScale} symbol={this.props.fund.symbol}/>
-                <TimeScale changeTimeScale={this.changeTimeScale}/>
+                <TimeScale changeTimeScale={this.changeTimeScale} timeScale={this.state.timeScale}/>
             </View>
         );
     }
@@ -106,7 +106,7 @@ class ChartArea extends React.PureComponent {
 
         return (
             <StackedAreaChart
-                style={ { height: 200, paddingVertical: 16 } }
+                style={ { height: 180, paddingVertical: 13 } }
                 data={data}
                 keys={keys}
                 yMin={yMin}
@@ -143,13 +143,51 @@ class ChartArea extends React.PureComponent {
 }
 
 class TimeScale extends React.PureComponent {
+    constructor(props){
+        super(props);
+
+    }
+
     render() {
+
+        let threeMonths = {};
+        let sixMonths = {};
+        let oneYear = {};
+        let max = {};
+
+        let bold = {fontWeight: '900', textDecorationLine: 'underline'};
+
+        switch (this.props.timeScale) {
+            case "3m":
+                threeMonths = bold;
+                break;
+            case "6m":
+                sixMonths = bold;
+                break;
+            case "1y":
+                oneYear = bold;
+                break;
+            case "max":
+                max = bold;
+                break;
+        }
+
+        let secondaryColor = {color: "#9e4d84"};
+
         return (
             <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                <Button transparent onPress={() => this.props.changeTimeScale('3m')}><Text>3 M</Text></Button>
-                <Button transparent onPress={() => this.props.changeTimeScale('6m')}><Text>6 M</Text></Button>
-                <Button transparent onPress={() => this.props.changeTimeScale('1y')}><Text>1 Y</Text></Button>
-                <Button transparent onPress={() => this.props.changeTimeScale('max')}><Text>MAX</Text></Button>
+                <Button transparent onPress={() => this.props.changeTimeScale('3m')}>
+                    <Text style={Object.assign({}, secondaryColor, threeMonths)}>3 M</Text>
+                </Button>
+                <Button transparent onPress={() => this.props.changeTimeScale('6m')}>
+                    <Text style={Object.assign({}, secondaryColor, sixMonths)}>6 M</Text>
+                </Button>
+                <Button transparent onPress={() => this.props.changeTimeScale('1y')}>
+                    <Text style={Object.assign({}, secondaryColor, oneYear)}>1 Y</Text>
+                </Button>
+                <Button transparent onPress={() => this.props.changeTimeScale('max')}>
+                    <Text style={Object.assign({}, secondaryColor, max)}>MAX</Text>
+                </Button>
             </View>
         )
     }
