@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {Container, Button, Form, Item, Label, Text, Input, Toast} from 'native-base';
+import {View, Text, Toast} from 'native-base';
 import firebase from "../firebaseConfig";
-import {LoginStyle} from "../styles/LoginScreenStyle";
+import {styles} from "../styles/LoginScreenStyle";
 import apiManager from "../data/DataModel";
-import {Image} from "react-native";
+import {Image, TextInput, TouchableHighlight} from "react-native";
 
 export default class LoginScreen extends Component {
 
@@ -64,32 +64,30 @@ export default class LoginScreen extends Component {
 
     render() {
         return (
-            <Container styles={LoginStyle.loginContainer}>
-                <Image style={LoginStyle.logo} source={require('../assets/images/warrenbee_logo.png')}/>
-                <Form style={LoginStyle.form}>
-                    <Item floatingLabel style={LoginStyle.formItem}>
-                        <Label>Email</Label>
-                        <Input
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                            onChangeText={(text) => this.setState({email: text})}
-                        />
-                    </Item>
-                    <Item floatingLabel style={LoginStyle.formItem}>
-                        <Label>Password</Label>
-                        <Input
-                            secureTextEntry={true}
-                            autoCorrect={false}
-                            autoCapitalize="none"
-                            onChangeText={(text) => this.setState({password: text})}
-                        />
-                    </Item>
-                    <Button full rounded success style={LoginStyle.loginButton}
-                            onPress={this.loginUser} title="Login button">
-                        <Text style={LoginStyle.textButton}>Login</Text>
-                    </Button>
-                </Form>
-            </Container>
+            <View style={styles.container}>
+                <Image style={styles.logo} source={require('../assets/images/warrenbee_logo.png')}/>
+                <Text>Wealth Bet</Text>
+                <View style={styles.inputContainer}>
+                    <Image style={styles.inputIcon} source={{uri: 'https://png.icons8.com/message/50'}}/>
+                    <TextInput style={styles.inputs}
+                               placeholder="Email"
+                               underlineColorAndroid='transparent'
+                               onChangeText={(text) => this.setState({email: text})}/>
+                </View>
+
+                <View style={styles.inputContainer}>
+                    <Image style={styles.inputIcon} source={{uri: 'https://png.icons8.com/password/50'}}/>
+                    <TextInput  secureTextEntry={true} style={[ styles.messageInput]}
+                                placeholder="Password"
+                                underlineColorAndroid='transparent'
+
+                                onChangeText={(text) => this.setState({password: text})}/>
+                </View>
+
+                <TouchableHighlight style={[styles.buttonContainer, styles.sendButton]} onPress={this.loginUser}>
+                    <Text style={styles.buttonText}>Login</Text>
+                </TouchableHighlight>
+            </View>
         );
     }
 }

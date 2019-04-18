@@ -12,6 +12,7 @@ import {swiper} from "../styles/QuizScreenStyle";
 
 import StatusDot from "../components/StatusDot";
 import apiManager from "../data/DataModel";
+import LoadingBar from "../components/Loading";
 
 export default class QuizScreen extends Component {
     constructor(props){
@@ -22,7 +23,6 @@ export default class QuizScreen extends Component {
             questionNumberActive : 1,
             questions: [],
         }
-        // TODO: remember the answers based on the current user from API manager and store the answers in his profile
     }
 
     updateActiveQuestion(){
@@ -40,11 +40,10 @@ export default class QuizScreen extends Component {
                     questionNumberTotal: value.totalNumber,
                     questions: value.questions
                 });
-            })
+            });
     }
 
     render() {
-        //console.log(this.state);
         let NavigationFooter;
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
@@ -57,6 +56,8 @@ export default class QuizScreen extends Component {
                 questions={this.state.questions}
                 onSwipe={() => this.updateActiveQuestion()}
             />;
+        } else {
+            cardView = <LoadingBar/>
         }
 
         return (
@@ -139,7 +140,6 @@ class CardView extends React.Component {
     // right: YES
     // left: NO
     onSwiped = (type) => {
-        //console.log(`on swiped ${type}`);
         switch (type) {
             case 'right':
                 apiManager.writeQuizAnswer("yes", this.state.cardIndex);
@@ -172,7 +172,6 @@ class CardView extends React.Component {
                     onSwipedRight={() => this.onSwiped('right')}
                     onSwipedTop={() => this.onSwiped('top')}
                     onSwipedBottom={() => this.onSwiped('bottom')}
-                    //onTapCard={this.swipeLeft}
                     cards={this.state.cards}
                     useViewOverflow={false}
                     cardIndex={this.state.cardIndex}
@@ -189,7 +188,6 @@ class CardView extends React.Component {
                     animateCardOpacity
                     swipeBackCard
                 >
-                    {/*<Button onPress={() => this.swiper.swipeBack()} title='Swipe Back' />*/}
                 </Swiper>
             </View>
         )
