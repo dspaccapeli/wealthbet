@@ -12,6 +12,7 @@ import {swiper} from "../styles/QuizScreenStyle";
 
 import StatusDot from "../components/StatusDot";
 import apiManager from "../data/DataModel";
+import LoadingBar from "../components/Loading";
 
 export default class QuizScreen extends Component {
     constructor(props){
@@ -22,7 +23,6 @@ export default class QuizScreen extends Component {
             questionNumberActive : 1,
             questions: [],
         }
-        // TODO: remember the answers based on the current user from API manager and store the answers in his profile
     }
 
     updateActiveQuestion(){
@@ -41,11 +41,10 @@ export default class QuizScreen extends Component {
                     questionNumberTotal: value.totalNumber,
                     questions: value.questions
                 });
-            })
+            });
     }
 
     render() {
-        //console.log(this.state);
         let NavigationFooter;
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
@@ -58,6 +57,8 @@ export default class QuizScreen extends Component {
                 questions={this.state.questions}
                 onSwipe={() => this.updateActiveQuestion()}
             />;
+        } else {
+            cardView = <LoadingBar/>
         }
 
         return (
@@ -145,7 +146,6 @@ class CardView extends React.Component {
     // right: YES
     // left: NO
     onSwiped = (type) => {
-        //console.log(`on swiped ${type}`);
         switch (type) {
             case 'right':
                 apiManager.writeQuizAnswer("yes", this.state.cardIndex);
@@ -195,7 +195,6 @@ class CardView extends React.Component {
                     animateCardOpacity
                     swipeBackCard
                 >
-                    {/*<Button onPress={() => this.swiper.swipeBack()} title='Swipe Back' />*/}
                 </Swiper>
             </View>
         )
@@ -203,22 +202,6 @@ class CardView extends React.Component {
 }
 
 const overlayLabels = {
-    bottom: {
-        title: 'BLEAH',
-        style: {
-            label: {
-                backgroundColor: '#20BF55',
-                borderColor: '#20BF55',
-                color: 'white',
-                borderWidth: 1
-            },
-            wrapper: {
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }
-        }
-    },
     left: {
         title: 'NOPE',
         style: {
@@ -255,20 +238,4 @@ const overlayLabels = {
             }
         }
     },
-    top: {
-        title: 'SUPER LIKE',
-        style: {
-            label: {
-                backgroundColor: '#20BF55',
-                borderColor: '#20BF55',
-                color: 'white',
-                borderWidth: 1
-            },
-            wrapper: {
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }
-        }
-    }
 };
