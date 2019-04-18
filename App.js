@@ -44,11 +44,14 @@ export default class App extends React.Component {
     }
 
     async componentWillMount() {
+        // Do not remove Roboto from here, please! :)
         await Font.loadAsync(
             {
                 'pp-extra-bold': require('./assets/fonts/Poppins-Bold.ttf'),
                 'pp-medium': require('./assets/fonts/Poppins-Medium.ttf'),
                 'pp-regular': require('./assets/fonts/Poppins-Regular.ttf'),
+                'Roboto': require("native-base/Fonts/Roboto.ttf"),
+                'Roboto_medium': require("native-base/Fonts/Roboto_medium.ttf"),
             });
         this.setState({ isReady: true });
     }
