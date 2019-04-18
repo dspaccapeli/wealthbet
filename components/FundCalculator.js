@@ -10,7 +10,6 @@ export default class FundCalculator extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            fund: this.props.fund,
             yearsPeriod: 3,
             initialDeposit: 500,
             monthlyDeposit: 25
@@ -26,7 +25,7 @@ export default class FundCalculator extends React.Component {
         let currentValue = originalValue + 10; // simulate an increase of value
         let shares = 10; // simulate the number of shares
         apiManager.updateScreen('Portfolio');
-        apiManager.addFundToPortfolio(symbol =this.state.fund.symbol, shares=shares, originalValue=originalValue, currentValue=currentValue);
+        apiManager.addFundToPortfolio(symbol = this.props.fund.symbol, shares=shares, originalValue=originalValue, currentValue=currentValue);
         this.props.navigation.navigate("Portfolio");
     };
 
@@ -84,7 +83,7 @@ export default class FundCalculator extends React.Component {
                     </Row>
                 </Grid>
                 <Right>
-                    <Button style={styles.seeMoreButton} onPress={this.buyFund} title="Buy fund">
+                    <Button style={styles.seeMoreButton} onPress={ this.buyFund} title="Buy fund">
                         <Text style={styles.seeMoreText}>Add to Portfolio</Text>
                     </Button>
                 </Right>

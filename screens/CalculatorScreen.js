@@ -70,7 +70,7 @@ export default class CalculatorScreen extends Component {
                     <FundHeader fund={fund} screen={"Calculator"} navigation={this.props.navigation}/>
                     <FundChart fund={fund} screen={"Calculator"}/>
                     <View style={Object.assign({},{backgroundColor: styles.dimmerColor.color},{height: '100%'})}>
-                        <View style={fundStyle.card}>
+                        <View style={Object.assign({}, fundStyle.card, {paddingHorizontal: 20, paddingTop: 20})}>
                             <FundCalculator fund={fund} navigation={this.props.navigation}/>
                         </View>
                     </View>

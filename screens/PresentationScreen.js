@@ -118,6 +118,7 @@ class SeeMoreButton extends Component {
                 <Button seeMore
                         onPress={() => {
                             apiManager.updateScreen('Fund');
+                            apiManager.setCurrentFund(this.props.fund.symbol);
                             this.props.navigation.navigate("Fund")
                         }}
                         style={styles.seeMoreButton}>
@@ -149,7 +150,7 @@ class FundSlideshow extends React.Component {
                 <FundHeader fund={fund}/>
                 <FundChart fund={fund} screen={'Presentation'}/>
                 <FundDescription fund={fund}/>
-                <SeeMoreButton navigation = {this.props.navigation}/>
+                <SeeMoreButton fund={fund} navigation = {this.props.navigation}/>
             </View>
         );
     };

@@ -105,8 +105,8 @@ class UserProfile extends Component {
 class FundList extends Component {
     render() {
         let fundList = this.props.funds.map((fund) => {
-                return <FundCard key={fund.symbol} fund={fund} navigation={this.props.navigation}/>;
-            });
+            return <FundCard key={fund.symbol} fund={fund} navigation={this.props.navigation}/>;
+        });
         return (
             <View style={{padding:10}}>{fundList}</View>
         );

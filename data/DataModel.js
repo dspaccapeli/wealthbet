@@ -40,9 +40,6 @@ class DataModel extends ObservableModel {
     }
 
     updateScreen (screenName){
-        console.log(this.activeScreen);
-        console.log(screenName);
-
         this.prevScreen = this.activeScreen;
         this.activeScreen = screenName;
     }
