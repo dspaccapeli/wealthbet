@@ -1,2 +1,2 @@
 export const devMode = false;
-export const firstPage = "Fund";
+export const firstPage = "Login";
