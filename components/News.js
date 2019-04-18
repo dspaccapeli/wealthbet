@@ -79,21 +79,21 @@ export class News extends  React.Component {
         }
 
         let title = {
-            marginHorizontal: 25,
+            marginHorizontal: 35,
             marginTop: 5,
             fontFamily: "pp-medium",
             fontSize: 14
         };
 
         let heading = {
-            marginHorizontal: 25,
+            marginHorizontal: 35,
             marginTop: 5,
             fontFamily: "pp-regular",
             fontSize: 14
         };
 
         let content = {
-            marginHorizontal: 25,
+            marginHorizontal: 35,
             marginTop: 10,
             fontFamily: "pp-regular",
             fontSize: 13
