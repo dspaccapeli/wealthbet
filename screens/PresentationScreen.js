@@ -134,7 +134,7 @@ class FundSlideshow extends Component {
 class SeeMoreButton extends Component {
     render () {
         return (
-            <Right>
+            <Right style={{ justifyContent: 'flex-end'}}>
                 <Button seeMore
                         onPress={() => this.props.navigation.navigate("Calculator")}
                         style={{
@@ -224,7 +224,6 @@ class FundSlideshow extends React.Component {
                     onSwipedRight={this.swipeRight}
                     onSwipedTop={() => this.onSwiped('top')}
                     onSwipedBottom={() => this.onSwiped('bottom')}
-                    onTapCard={this.swipeLeft}
                     cards={this.state.cards}
                     cardIndex={this.state.cardIndex}
                     cardVerticalMargin={20}

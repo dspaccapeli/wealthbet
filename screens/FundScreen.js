@@ -23,8 +23,8 @@ import {FundDescription} from "../components/FundDescription";
 import {News} from "../components/News";
 
 export const defaultFund = {
-    symbol: "AAPL",
-    companyName: "Apple Inc.",
+    symbol: "MSFT",
+    companyName: "Microsoft Inc.",
     shares: 100,
     originalValue: 100,
     currentValue: 110,
@@ -94,9 +94,9 @@ export default class FundScreen extends Component {
                 <View style={ styles.statusBar } />
                 <Content>
                     <FundHeader fund={fund}/>
-                    {/*<FundChart fund={fund} />*/}
+                    <FundChart fund={fund} />
                     <FundDescription fund={fund}/>
-                    {/*<News fund={fund} />*/}
+                    <News fund={fund} />
                     <Sell symbol={fund.symbol}  navigation={this.props.navigation} />
                     <BackToPortofolio navigation={this.props.navigation}/>
                 </Content>
