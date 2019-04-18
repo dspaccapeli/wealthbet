@@ -155,6 +155,7 @@ class CardView extends React.Component {
         this.setState({
             swipedAllCards: true
         });
+        apiManager.updateScreen('Presentation');
         this.props.navigation.navigate('Presentation');
     };
 

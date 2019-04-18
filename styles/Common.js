@@ -6,9 +6,12 @@ import { Dimensions } from 'react-native';
 
 // Styles
 
+const background_color = '#4baa70';
+const dimmerColor = '#3a7847';
+
 export const styles = StyleSheet.create({
     statusBar : {
-        backgroundColor: '#4D9E67',
+        backgroundColor: background_color,
         height: (Platform.OS === 'ios') ? 20 : StatusBar.currentHeight,
     },
     underStatusBar : {
@@ -16,6 +19,9 @@ export const styles = StyleSheet.create({
     },
     screenHeight: {
         height: Dimensions.get('window').height,
+    },
+    dimmerColor: {
+        color: dimmerColor,
     },
     screenWidth: {
         width: Dimensions.get('window').width,
@@ -28,7 +34,7 @@ export const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
     },
     backgroundColor : {
-        backgroundColor: '#4D9E67',
+        backgroundColor: background_color,
     },
     roundElement : {
         borderRadius: 64,

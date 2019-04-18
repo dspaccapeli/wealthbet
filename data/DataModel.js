@@ -34,6 +34,18 @@ class DataModel extends ObservableModel {
 
         this.cache = {};
         this.maxCacheSize = 100;
+
+        this.prevScreen = '';
+        this.activeScreen = 'Login';
+    }
+
+    updateScreen (screenName){
+        this.prevScreen = this.activeScreen;
+        this.activeScreen = screenName;
+    }
+
+    getPrevScreen(){
+        return this.prevScreen;
     }
 
     cacheLookup(fetchArg){
@@ -87,7 +99,7 @@ class DataModel extends ObservableModel {
 
     getNews(symbol) {
         let fetchArg = this.baseUrl + this.version + `stock/${symbol}/news/last/1` + this.tokenString;
-        return fetch(fetchArg);
+        return this.fetchCache(fetchArg);
     }
 
     getDescription(fundSymbol) {

@@ -71,7 +71,10 @@ export default class ProfileScreen extends Component {
                         <Text style={ProfileStyle.info}>{about}</Text>
 
                         <TouchableOpacity style={ProfileStyle.buttonContainer}
-                                          onPress={() => this.props.navigation.navigate('Portfolio')}>
+                                          onPress={() => {
+                                              apiManager.updateScreen('Portfolio');
+                                              this.props.navigation.navigate('Portfolio')
+                                          }}>
                             <Text>Portfolio</Text>
                         </TouchableOpacity>
                     </View>

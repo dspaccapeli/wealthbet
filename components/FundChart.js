@@ -4,6 +4,7 @@ import apiManager from "../data/DataModel";
 import {StackedAreaChart} from "react-native-svg-charts";
 import * as shape from "d3-shape";
 import {Button, Segment, Text} from "native-base";
+import {styles} from "../styles/Common";
 
 export class FundChart extends  React.Component {
     constructor(props){
@@ -22,8 +23,8 @@ export class FundChart extends  React.Component {
     render() {
         return (
             <View>
-                <ChartArea timeScale={this.state.timeScale} symbol={this.props.fund.symbol}/>
-                <TimeScale changeTimeScale={this.changeTimeScale} timeScale={this.state.timeScale}/>
+                <ChartArea timeScale={this.state.timeScale} symbol={this.props.fund.symbol} screen={this.props.screen}/>
+                <TimeScale changeTimeScale={this.changeTimeScale} timeScale={this.state.timeScale} screen={this.props.screen}/>
             </View>
         );
     }
@@ -98,15 +99,26 @@ class ChartArea extends React.PureComponent {
             return object.value;
         });*/
 
-        const colors = [ '#4D9E67', "#4D9E69", "#4D9E87" ];
+        let colors = [ '#4D9E67'];
+
+        if(this.props.screen === 'Fund'){
+            colors = [styles.dimmerColor.color];
+        }
+
         const keys   = [ 'value'];
         const svgs = [
             { onPress: () => console.log('apples') }
         ];
 
+        let backColor = {};
+
+        if(this.props.screen === 'Fund'){
+            backColor = styles.backgroundColor;
+        }
+
         return (
             <StackedAreaChart
-                style={ { height: 180, paddingVertical: 13 } }
+                style={ Object.assign({},{ height: 180, paddingVertical: 0 }, backColor )}
                 data={data}
                 keys={keys}
                 yMin={yMin}
@@ -172,10 +184,26 @@ class TimeScale extends React.PureComponent {
                 break;
         }
 
+        let backColor = {};
+
+        switch (this.props.screen) {
+            case "Fund":
+                backColor = {backgroundColor: styles.dimmerColor.color};
+                break;
+
+        }
+
         let secondaryColor = {color: "#9e4d84"};
 
+        switch (this.props.screen) {
+            case "Fund":
+                secondaryColor = {color: "#ffffff"};
+                break;
+
+        }
+
         return (
-            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            <View style={Object.assign({}, {flexDirection: 'row', justifyContent: 'center'}, backColor)}>
                 <Button transparent onPress={() => this.props.changeTimeScale('3m')}>
                     <Text style={Object.assign({}, secondaryColor, threeMonths)}>3 M</Text>
                 </Button>

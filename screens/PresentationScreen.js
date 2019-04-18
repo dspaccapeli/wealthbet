@@ -13,6 +13,7 @@ import {FundHeader} from "../components/FundHeader";
 import {FundChart} from "../components/FundChart";
 import {FundDescription} from "../components/FundDescription";
 import {defaultFund} from "./FundScreen";
+import apiManager from "../data/DataModel";
 
 export default class PresentationScreen extends Component {
     constructor(props){
@@ -136,7 +137,10 @@ class SeeMoreButton extends Component {
         return (
             <Right style={{ justifyContent: 'flex-end'}}>
                 <Button seeMore
-                        onPress={() => this.props.navigation.navigate("Calculator")}
+                        onPress={() => {
+                            apiManager.updateScreen('Fund');
+                            this.props.navigation.navigate("Fund")
+                        }}
                         style={{
                             backgroundColor: "#9e4d84",
                             marginVertical: 15,
@@ -176,7 +180,7 @@ class FundSlideshow extends React.Component {
         return (
             <View style={swiper.card}>
                     <FundHeader fund={defaultFund}/>
-                    <FundChart fund={defaultFund}/>
+                    <FundChart fund={defaultFund} screen={'Presentation'}/>
                     <FundDescription fund={defaultFund}/>
                     <SeeMoreButton navigation = {this.props.navigation}/>
             </View>
@@ -197,6 +201,7 @@ class FundSlideshow extends React.Component {
         this.setState({
             swipedAllCards: true
         });
+        apiManager.updateScreen('Presentation');
         this.props.navigation.navigate('Presentation');
     };
 

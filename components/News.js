@@ -1,7 +1,8 @@
 import apiManager from "../data/DataModel";
-import {Linking, TouchableHighlight} from "react-native";
+import {Linking, TouchableHighlight, View} from "react-native";
 import {Body, Card, CardItem, Text} from "native-base";
 import React from "react";
+import {styles} from "../styles/Common";
 
 export class News extends  React.Component {
     constructor (props) {
@@ -49,7 +50,7 @@ export class News extends  React.Component {
     }
 
     componentWillReceiveProps(prevProps, prevState, snapshot) {
-        if(prevProps.fundSymbol !== this.props.fund.symbol) {
+        if(prevProps.fund.symbol !== this.props.fund.symbol) {
             this.updateNews();
         }
     }
@@ -69,28 +70,63 @@ export class News extends  React.Component {
                 news = " ";
         }
 
+        let backColor = {};
+        let whiteText = {};
+
+        if(this.props.screen === 'Fund'){
+            backColor = {backgroundColor: styles.dimmerColor.color};
+            whiteText = {color: "#ffffff"};
+        }
+
+        let title = {
+            marginHorizontal: 25,
+            marginTop: 5,
+            fontFamily: "pp-medium",
+            fontSize: 14
+        };
+
+        let heading = {
+            marginHorizontal: 25,
+            marginTop: 5,
+            fontFamily: "pp-regular",
+            fontSize: 14
+        };
+
+        let content = {
+            marginHorizontal: 25,
+            marginTop: 10,
+            fontFamily: "pp-regular",
+            fontSize: 13
+        };
+
         return (
-            <TouchableHighlight onPress={this.onPress} underlayColor="white">
-                <Card>
-                    <CardItem header>
-                        <Text>News {headline} </Text>
-                    </CardItem>
-                    <CardItem>
-                        <Body>
-                            <Text note>
-                                { news }
-                            </Text>
-                        </Body>
-                    </CardItem>
-                    <CardItem>
-                        <Text>Follow more </Text>
-                        <Text onPress={this.goToURL} style={ {
-                            color: '#0000EE',
-                            fontWeight: 'bold'
-                        }}>here.</Text>
-                    </CardItem>
-                </Card>
-            </TouchableHighlight>
+            <View style={backColor}>
+                <Text style={Object.assign({}, title, whiteText)}>LATEST NEWS</Text>
+                <Text onPress={this.goToURL} style={Object.assign({}, heading, whiteText)}>{headline}</Text>
+                <Text note style={Object.assign({}, content, whiteText)}>{news} [...]</Text>
+            </View>
         );
     }
 }
+/*
+<TouchableHighlight onPress={this.onPress} underlayColor="white">
+    <Card>
+        <CardItem header>
+            <Text>News {headline} </Text>
+        </CardItem>
+        <CardItem>
+            <Body>
+            <Text note>
+                { news }
+            </Text>
+            </Body>
+        </CardItem>
+        <CardItem>
+            <Text>Follow more </Text>
+            <Text onPress={this.goToURL} style={ {
+                color: '#0000EE',
+                fontWeight: 'bold'
+            }}>here.</Text>
+        </CardItem>
+    </Card>
+</TouchableHighlight>*/

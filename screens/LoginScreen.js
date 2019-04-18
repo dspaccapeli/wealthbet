@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {View, Text, Toast} from 'native-base';
+import {View, Text, Toast, Button, Icon, Right} from 'native-base';
 import firebase from "../firebaseConfig";
 import {styles} from "../styles/LoginScreenStyle";
 import apiManager from "../data/DataModel";
-import {Image, TextInput, TouchableHighlight} from "react-native";
+import {Image, TextInput, TouchableHighlight, KeyboardAvoidingView} from "react-native";
 
 export default class LoginScreen extends Component {
 
@@ -52,6 +52,7 @@ export default class LoginScreen extends Component {
                 Toast.show({
                     text: "Welcome to WealthBet!",
                 });
+                apiManager.updateScreen('Quiz');
                 this.props.navigation.navigate("Quiz");
             });
         }catch (e) {
@@ -64,9 +65,14 @@ export default class LoginScreen extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <KeyboardAvoidingView behavior={'padding'} style={styles.container}>
                 <Image style={styles.logo} source={require('../assets/images/warrenbee_logo.png')}/>
-                <Text>Wealth Bet</Text>
+
+                {/*<Text style={{
+                    marginVertical: 10,
+                    fontFamily: "pp-semib",
+                    fontSize: 19}}>Wealth Bet</Text>*/}
+
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={{uri: 'https://png.icons8.com/message/50'}}/>
                     <TextInput style={styles.inputs}
@@ -77,17 +83,33 @@ export default class LoginScreen extends Component {
 
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={{uri: 'https://png.icons8.com/password/50'}}/>
-                    <TextInput  secureTextEntry={true} style={[ styles.messageInput]}
+                    <TextInput  secureTextEntry={true} style={[ styles.inputs]}
                                 placeholder="Password"
                                 underlineColorAndroid='transparent'
 
                                 onChangeText={(text) => this.setState({password: text})}/>
                 </View>
 
-                <TouchableHighlight style={[styles.buttonContainer, styles.sendButton]} onPress={this.loginUser}>
+                {/*<TouchableHighlight style={[styles.buttonContainer, styles.sendButton]} onPress={this.loginUser}>
                     <Text style={styles.buttonText}>Login</Text>
-                </TouchableHighlight>
-            </View>
+                </TouchableHighlight>*/}
+
+                <View>
+                    <Button seeMore
+                            onPress={this.loginUser}
+                            style={{
+                                backgroundColor: "#9e4d84",
+                                marginVertical: 15,
+                            }}>
+                        <Text
+                            style={{
+                                marginHorizontal: 20,
+                                fontFamily: "pp-regular",
+                                fontSize: 15}}>LOGIN</Text>
+                    </Button>
+                </View>
+
+            </KeyboardAvoidingView>
         );
     }
 }

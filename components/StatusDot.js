@@ -1,6 +1,7 @@
 import {View} from "react-native";
 import {statusDotStyle} from "../styles/StatusDotStyle";
 import React, { Component } from "react";
+import {styles} from "../styles/Common";
 
 export default class StatusDot extends Component {
 
@@ -14,14 +15,13 @@ export default class StatusDot extends Component {
             }
         );
         return(
-            <View style = {{
-                backgroundColor: '#4D9E67',
+            <View style = { Object.assign({},{
                 paddingTop: 10,
                 paddingBottom: 10,
                 justifyContent: 'center',
                 flexDirection: 'row',
                 verticalAlign: 'middle',
-            }}>
+            }, styles.backgroundColor)}>
                 {statusDot}
             </View>
         )

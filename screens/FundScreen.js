@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {TouchableHighlight, View, Linking} from 'react-native';
 
 // Native Base
-import { Text, Button, Container, Content, Card, CardItem, Body } from 'native-base';
+import {Text, Button, Container, Content, Card, CardItem, Body, Icon} from 'native-base';
 
 // Styles
 import { styles } from "../styles/Common";
@@ -21,6 +21,7 @@ import {FundHeader} from "../components/FundHeader";
 import {FundChart} from "../components/FundChart";
 import {FundDescription} from "../components/FundDescription";
 import {News} from "../components/News";
+import {fundStyle} from "../styles/FundScreenStyle";
 
 export const defaultFund = {
     symbol: "MSFT",
@@ -92,13 +93,17 @@ export default class FundScreen extends Component {
         return (
             <Container>
                 <View style={ styles.statusBar } />
-                <Content>
-                    <FundHeader fund={fund}/>
-                    <FundChart fund={fund} />
-                    <FundDescription fund={fund}/>
-                    <News fund={fund} />
-                    <Sell symbol={fund.symbol}  navigation={this.props.navigation} />
-                    <BackToPortofolio navigation={this.props.navigation}/>
+                <Content style={styles.backgroundColor}>
+                    <FundHeader fund={fund} screen={'Fund'} navigation={this.props.navigation}/>
+                    <FundChart fund={fund} screen={'Fund'}/>
+                    <View style={Object.assign({},{backgroundColor: styles.dimmerColor.color},{height: '100%'})}>
+                        <View style={fundStyle.card}>
+                            <FundDescription fund={fund} />
+                            <News fund={fund} />
+                        </View>
+                        <Sell symbol={fund.symbol} navigation={this.props.navigation} />
+                        {/*<BackToPortofolio navigation={this.props.navigation}/>*/}
+                    </View>
                 </Content>
                 {NavigationFooter}
             </Container>
@@ -116,20 +121,33 @@ class Sell extends  Component {
 
     sellFund = () => {
       apiManager.deleteFundFromPortfolio(this.state.symbol);
-      this.props.navigation.navigate("Portfolio");
+      apiManager.updateScreen('Calculator');
+      this.props.navigation.navigate("Calculator");
     };
 
     render() {
         return (
             <Body>
-                <Button title="Sell fund" onPress={this.sellFund} style={{backgroundColor: "#4D9E67"}}><Text>Sell</Text></Button>
+                <Button seeMore
+                        onPress={this.sellFund}
+                        style={{
+                            backgroundColor: "#9e4d84",
+                            marginVertical: 15,
+                        }}>
+                    <Text
+                        style={{
+                            marginHorizontal: 20,
+                            fontFamily: "pp-regular",
+                            fontSize: 15}}>BUY</Text>
+                </Button>
             </Body>
         );
     }
 }
 
-class BackToPortofolio extends React.Component {
+/*class BackToPortofolio extends React.Component {
     back = () => {
+        apiManager.updateScreen('Portfolio');
         this.props.navigation.navigate("Portfolio");
     };
 
@@ -140,4 +158,4 @@ class BackToPortofolio extends React.Component {
             </Body>
         );
     }
-}
+}*/

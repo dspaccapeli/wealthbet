@@ -105,7 +105,10 @@ class UserProfile extends Component {
     render() {
         return (
             <Button transparent
-                    onPress={() => this.props.navigation.navigate('Profile')} title={"Go to profile"}>
+                    onPress={() => {
+                        apiManager.updateScreen('Profile');
+                        this.props.navigation.navigate('Profile')
+                    }} title={"Go to profile"}>
                 <Icon name='md-contact' />
             </Button>
         );
@@ -254,6 +257,7 @@ class FundCard extends Component {
     onPress = () => {
         // Set the current fund
         apiManager.setCurrentFund(this.state.fund.symbol);
+        apiManager.updateScreen('Fund');
         this.props.navigation.navigate("Fund");
     };
 
@@ -281,7 +285,10 @@ class AddFund extends Component {
     render() {
         return (
             <Button title={"Add fund button"} style={styles.roundElement}
-                    onPress={() => this.props.navigation.navigate('Presentation')}>
+                    onPress={() => {
+                        apiManager.updateScreen('Presentation');
+                        this.props.navigation.navigate('Presentation')
+                    }}>
                 <Icon name='add' />
             </Button>
         );

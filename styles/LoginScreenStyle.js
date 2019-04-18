@@ -30,6 +30,8 @@ export const styles = StyleSheet.create({
         marginLeft:16,
         borderBottomColor: '#FFFFFF',
         flex:1,
+        fontFamily: "pp-semib",
+        fontSize: 15,
     },
     inputIcon:{
         width:30,

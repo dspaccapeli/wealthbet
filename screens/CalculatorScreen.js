@@ -22,7 +22,7 @@ export default class CalculatorScreen extends Component {
                 <View style={ styles.statusBar } />
                 <H1 style={styles.screenTitle}>Calculator</H1>
                 <FundHeader fund={defaultFund}/>
-                <FundChart fund={defaultFund}/>
+                <FundChart fund={defaultFund} screen={"Calculator"}/>
                 <FundCalculator fund={defaultFund} navigation={this.props.navigation}/>
                 {NavigationFooter}
             </Container>
@@ -50,6 +50,7 @@ class FundCalculator extends Component {
         let currentValue = originalValue + 10; // simulate an increase of value
         let shares = 10; // simulate the number of shares
         apiManager.addFundToPortfolio(symbol =this.state.fund.symbol, shares=shares, originalValue=originalValue, currentValue=currentValue);
+        apiManager.updateScreen('Portfolio');
         this.props.navigation.navigate("Portfolio");
     };
 
