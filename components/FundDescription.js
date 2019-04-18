@@ -34,7 +34,7 @@ export class FundDescription extends  React.Component {
             });
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.updateDescription();
     }
 

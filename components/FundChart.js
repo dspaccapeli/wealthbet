@@ -71,7 +71,7 @@ class ChartArea extends React.PureComponent {
                 }
             })
             .catch((e) => {
-                console.log(e);
+                console.error(e);
                 this.setState({
                     status: "ERROR" + timeScale,
                 });
@@ -85,7 +85,6 @@ class ChartArea extends React.PureComponent {
                 data = [{value: 5}];
                 break;
             case "LOADED":
-                //data = this.state.data;
                 let [dataNew, minDataRescale, maxDataRescale] = this.rescale(this.state.data[this.props.timeScale]);
                 data=dataNew;
                 yMin = minDataRescale;
@@ -95,13 +94,6 @@ class ChartArea extends React.PureComponent {
                 data = [{value: 10}, {value: 10}];
         }
 
-        /*data = data.map((object)=>{
-            return object.value;
-        });*/
-
-
-        //let colors = [styles.dimmerColor.color];
-
         let colors = [ styles.backgroundColor.backgroundColor];
 
         if(this.props.screen === 'Fund'){
@@ -110,14 +102,8 @@ class ChartArea extends React.PureComponent {
             colors = [styles.dimmerColor.color];
         }
 
-
         const keys   = [ 'value'];
-        const svgs = [
-            { onPress: () => console.log('apples') }
-        ];
-
         let backColor = {};
-
         if(this.props.screen === 'Fund'){
             backColor = styles.backgroundColor;
         }
@@ -132,7 +118,6 @@ class ChartArea extends React.PureComponent {
                 colors={ colors }
                 curve={ shape.curveNatural }
                 showGrid={ false }
-                svgs={ svgs }
             />
         )
     }
@@ -166,7 +151,6 @@ class TimeScale extends React.PureComponent {
     }
 
     render() {
-
         let threeMonths = {};
         let sixMonths = {};
         let oneYear = {};
@@ -190,7 +174,6 @@ class TimeScale extends React.PureComponent {
         }
 
         let backColor = {};
-
         switch (this.props.screen) {
             case "Fund":
             case "Calculator":
@@ -200,7 +183,6 @@ class TimeScale extends React.PureComponent {
         }
 
         let secondaryColor = {color: "#9e4d84"};
-
         switch (this.props.screen) {
             case "Fund":
             case "Calculator":

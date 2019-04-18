@@ -45,6 +45,15 @@ export const styles = StyleSheet.create({
     screenTitle: {
         textAlign: 'center',
         alignSelf: 'center'
+    },
+    seeMoreButton: {
+        backgroundColor: "#9e4d84",
+        marginVertical: 15,
+    },
+    seeMoreText: {
+        marginHorizontal: 20,
+        fontFamily: "pp-regular",
+        fontSize: 15
     }
 });
 

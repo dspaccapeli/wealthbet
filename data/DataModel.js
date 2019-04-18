@@ -43,7 +43,6 @@ class DataModel extends ObservableModel {
         console.log(this.activeScreen);
         console.log(screenName);
 
-
         this.prevScreen = this.activeScreen;
         this.activeScreen = screenName;
     }
@@ -52,7 +51,7 @@ class DataModel extends ObservableModel {
         return this.prevScreen;
     }
 
-    setActiveScree(screeName){}
+    setActiveScreen(screeName){}
 
     cacheLookup(fetchArg){
         return !!this.cache[fetchArg];
@@ -213,7 +212,7 @@ class DataModel extends ObservableModel {
                 currentValue: currentValue,
             })
             .catch(() => {
-                console.log("Write fund in portfolio error");
+                console.error("Write fund in portfolio error");
             });
         }
         this.notifyObservers("portfolio");
@@ -225,7 +224,7 @@ class DataModel extends ObservableModel {
 
         firebase.database().ref('users/' + this.getCurrentUser()+ '/portfolio/' + symbol).remove()
         .catch(() => {
-            console.log("Delete fund from portfolio error");
+            console.error("Delete fund from portfolio error");
         });
         this.notifyObservers("portfolio");
     }
@@ -245,14 +244,13 @@ class DataModel extends ObservableModel {
             currentValue: currentValue,
         })
         .catch(() => {
-            console.log("Update fund in portfolio error");
+            console.error("Update fund in portfolio error");
         });
         this.notifyObservers("portfolio");
     }
 
     getQuiz() {
         return firebase.database().ref('/quiz').once('value').then(function(snapshot) {
-            //console.log(snapshot.val());
             let totalNumber = (snapshot.val() && snapshot.val().totalNumber) || 0;
             let questions = [];
             for (let i=1; i<=totalNumber; i++) {
@@ -283,7 +281,22 @@ class DataModel extends ObservableModel {
             answer: answer
         })
         .catch(() => {
-            console.log("Write quiz answer error");
+            console.error("Write quiz answer error");
+        });
+    }
+
+    getPresentationFunds() {
+        return firebase.database().ref('/presentation').once('value').then(function(snapshot) {
+            let totalNumber = (snapshot.val() && snapshot.val().totalNumber) || 0;
+            let funds = [];
+            for (let i=1; i<=totalNumber; i++) {
+                let fund = (snapshot.val() && snapshot.val()[`f${i}`]) || '';
+                funds.push(fund);
+            }
+            return {
+                totalNumber: totalNumber,
+                funds: funds
+            }
         });
     }
 }

@@ -1,7 +1,6 @@
 // React
 import React, { Component } from 'react';
 import {View, TouchableHighlight, Image} from 'react-native';
-import { Col, Grid } from 'react-native-easy-grid';
 
 // Native Base
 import { Container, Content, Left, Right, Text, Button, Icon, CardItem, H1 } from 'native-base';
@@ -67,7 +66,6 @@ export default class PortfolioScreen extends Component {
                 <View style={ styles.statusBar } />
                 <Content style={Object.assign({}, PortfolioStyle.content, {flex: 1})}>
                     <PortfolioHeader navigation={this.props.navigation} />
-                    <PortfolioChart funds={funds}/>
                     <FundList funds={funds} navigation={this.props.navigation}/>
                     <AddFund navigation={this.props.navigation}/>
                 </Content>
@@ -80,9 +78,9 @@ export default class PortfolioScreen extends Component {
 class PortfolioHeader extends Component {
     render() {
         return (
-           <View style={{flexDirection: 'row'}}>
-               <Text style={{justifyContent: 'flex-start', fontFamily: 'pp-medium', fontSize: 20}}>Portfolio</Text>
-               <View style={{marginLeft: 'auto'}}>
+           <View style={PortfolioStyle.headerRow}>
+               <Text style={PortfolioStyle.headerText}>Portfolio</Text>
+               <View style={PortfolioStyle.headerUser}>
                    <UserProfile navigation={this.props.navigation}/>
                </View>
            </View>
@@ -98,30 +96,8 @@ class UserProfile extends Component {
                         apiManager.updateScreen('Profile');
                         this.props.navigation.navigate('Profile')
                     }} title={"Go to profile"}>
-                <Icon style={{color: 'black', height: 30, width: 50}} name='md-contact' />
+                <Icon style={PortfolioStyle.userIcon} name='md-contact' />
             </Button>
-        );
-    }
-}
-
-class PortfolioChart extends Component {
-    render() {
-        return (
-            <View>
-                {/*<ChartArea funds={this.props.funds} />*/}
-                <PortfolioStatistics />
-            </View>
-        );
-    }
-}
-
-class PortfolioStatistics extends Component {
-    render() {
-        return (
-            <Grid>
-                <Col><Text>Total value: {apiManager.getPortfolioValue()}</Text></Col>
-                <Col><Text>Monthly growth: {apiManager.getMonthlyGrowth()}%</Text></Col>
-            </Grid>
         );
     }
 }
@@ -167,7 +143,7 @@ class FundCard extends Component {
         let logoImage;
         switch (this.state.status) {
             case "LOADED":
-                logoImage = <Image style={{width: 100, height: 70, resizeMode: 'contain',}} source={{uri: this.state.logo}} />;
+                logoImage = <Image style={PortfolioStyle.fundLogo} source={{uri: this.state.logo}} />;
                 break;
             case "LOADING":
                 logoImage = <Text> </Text>;

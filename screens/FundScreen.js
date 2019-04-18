@@ -1,18 +1,15 @@
 // React
 import React, { Component } from 'react';
-import {TouchableHighlight, View, Linking} from 'react-native';
+import {View} from 'react-native';
 
 // Native Base
-import {Text, Button, Container, Content, Card, CardItem, Body, Icon} from 'native-base';
+import {Text, Button, Container, Content, Body} from 'native-base';
 
 // Styles
 import { styles } from "../styles/Common";
 
 // Components
 import DevNavigationFooter from "../components/DevNavigationFooter"
-
-// JS utils
-import { loremIpsum } from "../constants/util"
 
 // Api manger
 import apiManager from "../data/DataModel"
@@ -31,7 +28,7 @@ export const defaultFund = {
     currentValue: 110,
 };
 
-//TODO: fix the passing fund problems
+//TODO: test the passing fund problems
 export default class FundScreen extends Component {
     constructor (props) {
         super(props);
@@ -87,9 +84,6 @@ export default class FundScreen extends Component {
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
         }
-
-        console.log(fund);
-
         return (
             <Container>
                 <View style={ styles.statusBar } />
@@ -102,7 +96,6 @@ export default class FundScreen extends Component {
                             <News fund={fund} />
                         </View>
                         <Sell symbol={fund.symbol} navigation={this.props.navigation} />
-                        {/*<BackToPortofolio navigation={this.props.navigation}/>*/}
                     </View>
                 </Content>
                 {NavigationFooter}
@@ -130,32 +123,10 @@ class Sell extends  Component {
             <Body>
                 <Button seeMore
                         onPress={this.sellFund}
-                        style={{
-                            backgroundColor: "#9e4d84",
-                            marginVertical: 15,
-                        }}>
-                    <Text
-                        style={{
-                            marginHorizontal: 20,
-                            fontFamily: "pp-regular",
-                            fontSize: 15}}>BUY</Text>
+                        style={styles.seeMoreButton}>
+                    <Text style={styles.seeMoreText}>BUY</Text>
                 </Button>
             </Body>
         );
     }
 }
-
-/*class BackToPortofolio extends React.Component {
-    back = () => {
-        apiManager.updateScreen('Portfolio');
-        this.props.navigation.navigate("Portfolio");
-    };
-
-    render() {
-        return (
-            <Body>
-                <Button title="Sell fund" onPress={this.back} style={{backgroundColor: "#4D9E67"}}><Text>Back</Text></Button>
-            </Body>
-        );
-    }
-}*/

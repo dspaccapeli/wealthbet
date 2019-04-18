@@ -25,3 +25,13 @@ export const swiper = StyleSheet.create({
         backgroundColor: 'white'
     },
 });
+
+export const presentationStyle = StyleSheet.create({
+    header: {
+        fontFamily: "pp-medium",
+        fontSize: 15,
+        textAlign: "left",
+        marginTop: 5,
+        marginHorizontal: 15
+    },
+});

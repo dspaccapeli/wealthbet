@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
 import { Container, View, DeckSwiper, Button, Content, Card, CardItem, Icon, Text, Right } from 'native-base';
 import {styles} from "../styles/Common";
-import {swiper} from "../styles/PresentationScreenStyle";
+import {swiper, presentationStyle} from "../styles/PresentationScreenStyle";
 import DevNavigationFooter from "../components/DevNavigationFooter"
 import { devMode } from '../util.js';
-
 import Swiper from 'react-native-deck-swiper'
 
 import StatusDot from "../components/StatusDot";
-
 import {FundHeader} from "../components/FundHeader";
 import {FundChart} from "../components/FundChart";
 import {FundDescription} from "../components/FundDescription";
-import {defaultFund} from "./FundScreen";
 import apiManager from "../data/DataModel";
+import LoadingBar from "../components/Loading";
 
 export default class PresentationScreen extends Component {
     constructor(props){
         super(props);
         this.state = {
-            questionNumberTotal : 3,
-            questionNumberActive : 1,
+            status: "LOADING",
+            fundsNumberTotal : 3,
+            fundsNumberActive : 1,
+            funds: [],
         }
     }
 
@@ -28,22 +28,33 @@ export default class PresentationScreen extends Component {
         let newActiveQuestionNumber;
 
         if (direction === 'left'){
-            if(this.state.questionNumberActive === 3){
+            if(this.state.fundsNumberActive === 3){
                 newActiveQuestionNumber = 1;
             } else {
-                newActiveQuestionNumber = this.state.questionNumberActive +1;
+                newActiveQuestionNumber = this.state.fundsNumberActive +1;
             }
         } else {
-            if(this.state.questionNumberActive === 1){
+            if(this.state.fundsNumberActive === 1){
                 newActiveQuestionNumber = 3;
             } else {
-                newActiveQuestionNumber = this.state.questionNumberActive - 1;
+                newActiveQuestionNumber = this.state.fundsNumberActive - 1;
             }
         }
 
         this.setState({
-            questionNumberActive : newActiveQuestionNumber,
+            fundsNumberActive : newActiveQuestionNumber,
         })
+    }
+
+    componentWillMount() {
+        apiManager.getPresentationFunds()
+            .then(value => {
+                this.setState({
+                    status: "LOADED",
+                    fundsNumberTotal: value.totalNumber,
+                    funds: value.funds
+                });
+            });
     }
 
     render () {
@@ -51,22 +62,34 @@ export default class PresentationScreen extends Component {
         if (devMode) {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
         }
+
+        let cardView =
+            <View style={swiper.card}>
+                <LoadingBar/>
+            </View>;
+
+        // TODO: test if this works
+        if (this.state.status === "LOADED") {
+            cardView = <FundSlideshow
+                funds={this.state.funds}
+                navigation={this.props.navigation}
+                question={this.state.fundsNumberTotal}
+                cardIndex={0}
+                onSwipeLeft={() => this.updateActiveQuestion('left')}
+                onSwipeRight={() => this.updateActiveQuestion('right')}
+            />
+        }
+
         return (
             <Container>
                 <View style={ styles.statusBar } />
                 <PresentationHeader/>
                 <Content style={ styles.backgroundColor }>
-                    <FundSlideshow
-                        navigation={this.props.navigation}
-                        question={this.state.questionNumberTotal}
-                        cardIndex={0}
-                        onSwipeLeft={() => this.updateActiveQuestion('left')}
-                        onSwipeRight={() => this.updateActiveQuestion('right')}
-                    />
+                    {cardView}
                 </Content>
                 <StatusDot
-                    number={this.state.questionNumberTotal}
-                    active={this.state.questionNumberActive}
+                    number={this.state.fundsNumberTotal}
+                    active={this.state.fundsNumberActive}
                 />
                 {NavigationFooter}
             </Container>
@@ -80,57 +103,13 @@ class PresentationHeader extends Component {
             <View
                 style={Object.assign({},{padding: 10}, styles.backgroundColor)}>
                 <Text
-                    style={{
-                        fontFamily: "pp-medium",
-                        fontSize: 15,
-                        textAlign: "left",
-                        marginTop: 5,
-                        marginHorizontal: 15
-                    }}>
+                    style={presentationStyle.header}>
                     These are the three stocks that we selected for you based on your quiz results.
                 </Text>
             </View>
         );
     }
 }
-
-// TODO: replace this with the list of the selected funds
-let cards = [1];
-
-/*
-class FundSlideshow extends Component {
-    render() {
-        return (
-            <Container>
-                <View>
-                    <DeckSwiper
-                        dataSource={cards}
-                        renderItem={item =>
-                            <Card style={{ elevation: 3 }}>
-                                <CardItem>
-                                    <FundHeader/>
-                                </CardItem>
-                                <CardItem>
-                                    <FundChart/>
-                                </CardItem>
-                                <CardItem>
-                                    <FundDescription/>
-                                </CardItem>
-                                <CardItem>
-                                    <FundWhy/>
-                                </CardItem>
-                                <CardItem footer>
-                                    <SeeMoreButton navigation = {this.props.navigation}/>
-                                </CardItem>
-                            </Card>
-                        }
-                    />
-                </View>
-            </Container>
-        );
-    }
-}
-*/
 
 class SeeMoreButton extends Component {
     render () {
@@ -141,26 +120,12 @@ class SeeMoreButton extends Component {
                             apiManager.updateScreen('Fund');
                             this.props.navigation.navigate("Fund")
                         }}
-                        style={{
-                            backgroundColor: "#9e4d84",
-                            marginVertical: 15,
-                        }}>
-                    <Text
-                        style={{
-                            marginHorizontal: 20,
-                            fontFamily: "pp-regular",
-                            fontSize: 15}}>SEE MORE</Text>
+                        style={styles.seeMoreButton}>
+                    <Text style={styles.seeMoreText}>SEE MORE</Text>
                     <Icon name="arrow-forward" />
                 </Button>
             </Right>
         );
-    }
-}
-
-// demo purposes only
-function * range (start, end) {
-    for (let i = start; i <= end; i++) {
-        yield i
     }
 }
 
@@ -169,32 +134,29 @@ class FundSlideshow extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            cards: [...range(1, this.props.question)],
+            cards: this.props.funds,
             swipedAllCards: false,
             swipeDirection: '',
             cardIndex: 0
         }
     }
 
+    // TODO: test this
     renderCard = (card, index) => {
+        let fund = this.state.cards[index];
+        console.log(index);
+        console.log(fund);
         return (
             <View style={swiper.card}>
-                    <FundHeader fund={defaultFund}/>
-                    <FundChart fund={defaultFund} screen={'Presentation'}/>
-                    <FundDescription fund={defaultFund}/>
-                    <SeeMoreButton navigation = {this.props.navigation}/>
+                <FundHeader fund={fund}/>
+                <FundChart fund={fund} screen={'Presentation'}/>
+                <FundDescription fund={fund}/>
+                <SeeMoreButton navigation = {this.props.navigation}/>
             </View>
-        )
-        /*
-        <View style={cardStylesPresentation.card}>
-                <Text style={cardStyles.text}>{card} - {index}</Text>
-            </View>
-         */
+        );
     };
 
     onSwiped = (type) => {
-        //console.log(`on swiped ${type}`);
-        //console.log(this.state.cards);
     };
 
     onSwipedAllCards = () => {
@@ -202,7 +164,7 @@ class FundSlideshow extends React.Component {
             swipedAllCards: true
         });
         apiManager.updateScreen('Presentation');
-        this.props.navigation.navigate('Presentation');
+        this.props.navigation.navigate('Portfolio');
     };
 
     // Opposite parameters
@@ -219,13 +181,9 @@ class FundSlideshow extends React.Component {
         return (
             <View style={swiper.container}>
                 <Swiper
-                    ref={swiper => {
-                        this.swiper = swiper
-                    }}
+                    ref={swiper => {this.swiper = swiper}}
                     onSwiped={() => this.onSwiped('general')}
-                    //onSwipedLeft={() => this.onSwiped('left')}
                     onSwipedLeft={this.swipeLeft}
-                    //onSwipedRight={() => this.onSwiped('right')}
                     onSwipedRight={this.swipeRight}
                     onSwipedTop={() => this.onSwiped('top')}
                     onSwipedBottom={() => this.onSwiped('bottom')}

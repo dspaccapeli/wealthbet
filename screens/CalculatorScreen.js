@@ -7,11 +7,8 @@ import {FundHeader} from "../components/FundHeader";
 import DevNavigationFooter from "../components/DevNavigationFooter";
 import {devMode} from "../util";
 import apiManager from "../data/DataModel";
-import {CalculatorStyle} from "../styles/CalculatorScreenStyle";
 import {fundStyle} from "../styles/FundScreenStyle";
 import FundCalculator from "../components/FundCalculator";
-import {FundDescription} from "../components/FundDescription";
-import {News} from "../components/News";
 
 export default class CalculatorScreen extends Component {
     constructor (props) {

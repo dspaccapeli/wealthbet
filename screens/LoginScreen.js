@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import {View, Text, Toast, Button, Icon, Right} from 'native-base';
 import firebase from "../firebaseConfig";
-import {styles} from "../styles/LoginScreenStyle";
+import {loginStyles} from "../styles/LoginScreenStyle";
+import {styles} from "../styles/Common";
 import apiManager from "../data/DataModel";
-import {Image, TextInput, TouchableHighlight, KeyboardAvoidingView} from "react-native";
+import {Image, TextInput, KeyboardAvoidingView} from "react-native";
 
 export default class LoginScreen extends Component {
 
@@ -56,7 +57,7 @@ export default class LoginScreen extends Component {
                 this.props.navigation.navigate("Quiz");
             });
         }catch (e) {
-            console.log(e.toString());
+            console.error(e.toString());
             Toast.show({
                 text: "Login failed!",
             });
@@ -65,47 +66,30 @@ export default class LoginScreen extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView behavior={'padding'} style={styles.container}>
-                <Image style={styles.logo} source={require('../assets/images/warrenbee_logo.png')}/>
-
-                {/*<Text style={{
-                    marginVertical: 10,
-                    fontFamily: "pp-semib",
-                    fontSize: 19}}>Wealth Bet</Text>*/}
-
-                <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={{uri: 'https://png.icons8.com/message/50'}}/>
-                    <TextInput style={styles.inputs}
+            <KeyboardAvoidingView behavior={'padding'} style={loginStyles.container}>
+                <Image style={loginStyles.logo} source={require('../assets/images/warrenbee_logo.png')}/>
+                <View style={loginStyles.inputContainer}>
+                    <Image style={loginStyles.inputIcon} source={{uri: 'https://png.icons8.com/message/50'}}/>
+                    <TextInput style={loginStyles.inputs}
                                placeholder="Email"
                                underlineColorAndroid='transparent'
                                onChangeText={(text) => this.setState({email: text})}/>
                 </View>
 
-                <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={{uri: 'https://png.icons8.com/password/50'}}/>
-                    <TextInput  secureTextEntry={true} style={[ styles.inputs]}
+                <View style={loginStyles.inputContainer}>
+                    <Image style={loginStyles.inputIcon} source={{uri: 'https://png.icons8.com/password/50'}}/>
+                    <TextInput  secureTextEntry={true} style={[ loginStyles.inputs]}
                                 placeholder="Password"
                                 underlineColorAndroid='transparent'
 
                                 onChangeText={(text) => this.setState({password: text})}/>
                 </View>
 
-                {/*<TouchableHighlight style={[styles.buttonContainer, styles.sendButton]} onPress={this.loginUser}>
-                    <Text style={styles.buttonText}>Login</Text>
-                </TouchableHighlight>*/}
-
                 <View>
                     <Button seeMore
                             onPress={this.loginUser}
-                            style={{
-                                backgroundColor: "#9e4d84",
-                                marginVertical: 15,
-                            }}>
-                        <Text
-                            style={{
-                                marginHorizontal: 20,
-                                fontFamily: "pp-regular",
-                                fontSize: 15}}>LOGIN</Text>
+                            style={styles.seeMoreButton}>
+                        <Text style={styles.seeMoreText}>LOGIN</Text>
                     </Button>
                 </View>
 
