@@ -26,7 +26,5 @@ export const CalculatorStyle = StyleSheet.create({
         width: 200,
         height: 40,
         color: 'white',
-
-
     },
 });

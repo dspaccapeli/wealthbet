@@ -1,6 +1,7 @@
 import apiManager from "../data/DataModel";
-import {Button, Container, Left, Right, Text} from "native-base";
+import {Button, View, Left, Right, Text} from "native-base";
 import {CalculatorStyle} from "../styles/CalculatorScreenStyle";
+import {styles} from "../styles/Common";
 import {Col, Grid, Row} from "react-native-easy-grid";
 import {Slider} from "react-native";
 import React from "react";
@@ -32,7 +33,8 @@ export default class FundCalculator extends React.Component {
 
     render () {
         return (
-            <Container style={CalculatorStyle.fundContainer}>
+            <View style={CalculatorStyle.fundContainer}>
+                <Text style={{textAlign: "center"}}>Configure how much you want to buy from this stock!</Text>
                 <Grid style={CalculatorStyle.gridStyle}>
                     <Row style={CalculatorStyle.infoRow}>
                         <Col><Left><Text>Years</Text></Left></Col>
@@ -82,11 +84,11 @@ export default class FundCalculator extends React.Component {
                     </Row>
                 </Grid>
                 <Right>
-                    <Button style={CalculatorStyle.buyButton} onPress={this.buyFund} title="Buy fund">
-                        <Text>Buy</Text>
+                    <Button style={styles.seeMoreButton} onPress={this.buyFund} title="Buy fund">
+                        <Text style={styles.seeMoreText}>Add to Portfolio</Text>
                     </Button>
                 </Right>
-            </Container>
+            </View>
         );
     }
 }

@@ -154,7 +154,6 @@ class FundCard extends Component {
                 <Card style={{borderRadius: 10, margin: 3}}>
                     <CardItem>
                         <Left style={{marginLeft: 30}}>{logoImage}</Left>
-                        {/*<Left><Text>{this.props.fund.companyName }</Text></Left>*/}
                         <Right>
                             <Text style={{fontFamily: 'pp-regular'}}>PUT</Text>
                             <Text style={{fontFamily: 'pp-regular'}} note>{this.props.fund.originalValue}</Text>
@@ -173,13 +172,15 @@ class FundCard extends Component {
 class AddFund extends Component {
     render() {
         return (
-            <Button title={"Add fund button"} style={styles.roundElement}
-                    onPress={() => {
-                        apiManager.updateScreen('Presentation');
-                        this.props.navigation.navigate('Presentation')
-                    }}>
-                <Icon name='add' />
-            </Button>
+            <Right>
+                <Button  title={"Add fund button"} style={styles.seeMoreButton}
+                         onPress={() => {
+                                apiManager.updateScreen('Presentation');
+                                this.props.navigation.navigate('Presentation')
+                            }}>
+                    <Text style={styles.seeMoreText}>More funds</Text>
+                </Button>
+            </Right>
         );
     }
 }

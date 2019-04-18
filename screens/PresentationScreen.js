@@ -144,8 +144,6 @@ class FundSlideshow extends React.Component {
     // TODO: test this
     renderCard = (card, index) => {
         let fund = this.state.cards[index];
-        console.log(index);
-        console.log(fund);
         return (
             <View style={swiper.card}>
                 <FundHeader fund={fund}/>

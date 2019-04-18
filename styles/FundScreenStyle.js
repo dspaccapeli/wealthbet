@@ -7,6 +7,8 @@ export const fundStyle = StyleSheet.create({
         marginHorizontal: 20,
         paddingVertical: 15,
         borderColor: '#E8E8E8',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
