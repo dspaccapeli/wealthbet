@@ -91,10 +91,8 @@ class DataModel extends ObservableModel {
     }
 
     getFundLogo(symbol= "FBIFX"){
-        let selectedFundJson;
-        let fetchArg = this.baseUrl + this.version + `stock/${symbol}/quote` + this.tokenString;
-        this.fetchCache(fetchArg)
-            .then(json => {selectedFundJson = json});
+        let fetchArg = this.baseUrl + this.version + `/stock/${symbol}/logo` + this.tokenString;
+        return this.fetchCache(fetchArg);
     }
 
     getNews(symbol) {
@@ -152,7 +150,20 @@ class DataModel extends ObservableModel {
     }
 
     getPortfolioFunds () {
-         return this._portfolio;
+         // Read the funds from the portfolio of the current user
+        return firebase.database().ref('/users/' + this.getCurrentUser() + "/portfolio").once('value').then(function(snapshot) {
+            let portfolio = [];
+            for (let fund in snapshot.val()) {
+                portfolio.push({
+                    symbol: fund,
+                    shares: snapshot.val()[fund].shares,
+                    currentValue: snapshot.val()[fund].currentValue,
+                    originalValue: snapshot.val()[fund].originalValue,
+                })
+            }
+            this._portfolio = portfolio;
+            return portfolio;
+        });
     }
 
     getPortfolioValue () {
@@ -188,12 +199,28 @@ class DataModel extends ObservableModel {
                 currentValue: currentValue,
 
             });
+
+            // Add the fund to the user's portfolio
+            firebase.database().ref('users/' + this.getCurrentUser()+ '/portfolio/' + symbol).set({
+                shares: shares,
+                originalValue: originalValue,
+                currentValue: currentValue,
+            })
+            .catch(() => {
+                console.log("Write fund in portfolio error");
+            });
         }
         this.notifyObservers("portfolio");
     }
 
     deleteFundFromPortfolio(symbol="FBIFX") {
         this._portfolio =  this._portfolio.filter(el => el.symbol !== symbol);
+        // Add the fund to the user's portfolio
+
+        firebase.database().ref('users/' + this.getCurrentUser()+ '/portfolio/' + symbol).remove()
+        .catch(() => {
+            console.log("Delete fund from portfolio error");
+        });
         this.notifyObservers("portfolio");
     }
 
@@ -204,6 +231,16 @@ class DataModel extends ObservableModel {
         this._portfolio[index].shares = shares;
         this._portfolio[index].originalValue = originalValue;
         this._portfolio[index].currentValue = currentValue;
+
+        // Update the fund to the user's portfolio
+        firebase.database().ref('users/' + this.getCurrentUser()+ '/portfolio/' + symbol).update({
+            shares: shares,
+            originalValue: originalValue,
+            currentValue: currentValue,
+        })
+        .catch(() => {
+            console.log("Update fund in portfolio error");
+        });
         this.notifyObservers("portfolio");
     }
 
@@ -223,7 +260,7 @@ class DataModel extends ObservableModel {
     }
 
     computeGain (fund) {
-        return ((fund.currentValue - fund.originalValue) / fund.originalValue) * 100;
+        return (((fund.currentValue - fund.originalValue) / fund.originalValue) * 100).toFixed(2);
     }
 
     setCurrentUser(uid) {
@@ -239,9 +276,9 @@ class DataModel extends ObservableModel {
         firebase.database().ref('users/' + this.getCurrentUser()+ '/quizAnswers/' + index).set({
             answer: answer
         })
-            .then(() => {
-                console.log("Go check, data was written!");
-            });
+        .catch(() => {
+            console.log("Write quiz answer error");
+        });
     }
 }
 

@@ -49,15 +49,16 @@ export default class QuizScreen extends Component {
             NavigationFooter = <DevNavigationFooter style={styles.footerBottom} navigation={this.props.navigation}/>;
         }
 
-        let cardView;
+        let cardView =
+            <View style={swiper.card}>
+                <LoadingBar/>
+            </View>;
         if (this.state.status === "LOADED") {
             cardView = <CardView
                 navigation={this.props.navigation}
                 questions={this.state.questions}
                 onSwipe={() => this.updateActiveQuestion()}
             />;
-        } else {
-            cardView = <LoadingBar/>
         }
 
         return (
