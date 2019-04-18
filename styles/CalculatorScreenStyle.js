@@ -8,7 +8,7 @@ export const CalculatorStyle = StyleSheet.create({
         flex: 1,
         alignItems: 'stretch',
         justifyContent: 'center',
-        backgroundColor: '#4D9E67'
+        backgroundColor: '#ffffff'
     },
     gridStyle: {
         padding: 30

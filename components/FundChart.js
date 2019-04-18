@@ -3,7 +3,7 @@ import {View} from "react-native";
 import apiManager from "../data/DataModel";
 import {StackedAreaChart} from "react-native-svg-charts";
 import * as shape from "d3-shape";
-import {Button, Segment, Text} from "native-base";
+import {Button, Text} from "native-base";
 import {styles} from "../styles/Common";
 
 export class FundChart extends  React.Component {
@@ -103,6 +103,8 @@ class ChartArea extends React.PureComponent {
 
         if(this.props.screen === 'Fund'){
             colors = [styles.dimmerColor.color];
+        } else if (this.props.screen === 'Calculator'){
+            colors = [styles.dimmerColor.color];
         }
 
         const keys   = [ 'value'];
@@ -157,7 +159,6 @@ class ChartArea extends React.PureComponent {
 class TimeScale extends React.PureComponent {
     constructor(props){
         super(props);
-
     }
 
     render() {
@@ -188,6 +189,7 @@ class TimeScale extends React.PureComponent {
 
         switch (this.props.screen) {
             case "Fund":
+            case "Calculator":
                 backColor = {backgroundColor: styles.dimmerColor.color};
                 break;
 
@@ -197,6 +199,7 @@ class TimeScale extends React.PureComponent {
 
         switch (this.props.screen) {
             case "Fund":
+            case "Calculator":
                 secondaryColor = {color: "#ffffff"};
                 break;
 
@@ -220,12 +223,3 @@ class TimeScale extends React.PureComponent {
         )
     }
 }
-
-/*
-<Segment>
-                <Button onPress={() => this.props.changeTimeScale('3m')}><Text>3 months</Text></Button>
-                <Button onPress={() => this.props.changeTimeScale('6m')}><Text>6 months</Text></Button>
-                <Button onPress={() => this.props.changeTimeScale('1y')}><Text>1 year</Text></Button>
-                <Button onPress={() => this.props.changeTimeScale('max')}><Text>All time</Text></Button>
-            </Segment>
- */
