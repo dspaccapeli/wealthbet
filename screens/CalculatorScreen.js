@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container, Content, View} from 'native-base';
+import {Container, Content, View, Text} from 'native-base';
 import {styles} from "../styles/Common";
 import {defaultFund} from "./FundScreen";
 import {FundChart} from "../components/FundChart";
@@ -74,6 +74,7 @@ export default class CalculatorScreen extends Component {
                     <FundChart fund={fund} screen={"Calculator"}/>
                     <View style={Object.assign({},{backgroundColor: styles.dimmerColor.color},{height: '100%'})}>
                         <View style={fundStyle.card}>
+                            <Text style={{justifyContent: "center"}}>Configure how much you want to buy from this stock!</Text>
                             <FundCalculator fund={fund} navigation={this.props.navigation}/>
                         </View>
                     </View>

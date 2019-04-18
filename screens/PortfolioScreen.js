@@ -82,10 +82,9 @@ class PortfolioHeader extends Component {
         return (
            <View style={{flexDirection: 'row'}}>
                <Text style={{justifyContent: 'flex-start', fontFamily: 'pp-medium', fontSize: 20}}>Portfolio</Text>
-               <View style={{justifyContent: 'flex-end'}}>
+               <View style={{marginLeft: 'auto'}}>
                    <UserProfile navigation={this.props.navigation}/>
                </View>
-
            </View>
         );
     }
