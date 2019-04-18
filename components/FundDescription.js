@@ -57,8 +57,16 @@ export class FundDescription extends  React.Component {
         }
         return (
             <View>
-                <Text> Info </Text>
-                <Text note> {description} </Text>
+                <Text style={{
+                    marginHorizontal: 25,
+                    marginTop: 5,
+                    fontFamily: "pp-medium",
+                    fontSize: 14}}>DESCRIPTION</Text>
+                <Text note style={{
+                    marginHorizontal: 25,
+                    marginTop: 10,
+                    fontFamily: "pp-regular",
+                    fontSize: 13}}>{description}</Text>
             </View>
         );
     }

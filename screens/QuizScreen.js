@@ -35,7 +35,6 @@ export default class QuizScreen extends Component {
     componentWillMount() {
         apiManager.getQuiz()
             .then(value => {
-                console.log(value.questions);
                 this.setState({
                     status: "LOADED",
                     questionNumberTotal: value.totalNumber,
@@ -83,38 +82,30 @@ class QuizHeader extends Component {
         return (
             <View style={styles.backgroundColor}>
                     <Text style={{
-                            fontFamily: "pp-extra-bold",
-                            fontSize: 30,
-                            textAlign: "left",
-                            marginLeft: 25,
-                            marginRight: 25,
-                            marginTop: 15,
+                        fontFamily: "pp-extra-bold",
+                        fontSize: 30,
+                        textAlign: "left",
+                        marginLeft: 25,
+                        marginRight: 25,
+                        marginTop: 15
                         }}>Quiz
                     </Text>
                     <Text note style={{
-                            fontFamily: "pp-medium",
-                            fontSize: 17,
-                            textAlign: "left",
-                            marginLeft: 25,
-                            marginRight: 25
+                        fontFamily: "pp-medium",
+                        fontSize: 17,
+                        textAlign: "left",
+                        marginLeft: 25,
+                        marginRight: 0,
+                        marginBottom: 10
                     }}>Answer these questions and we'll show you your future 🔮
                     </Text>
-                    <View style={Object.assign({},{flexDirection: 'row'}, styles.screenWidth)}>
+                    <View style={Object.assign({},{flexDirection: 'row', justifyContent: 'center'}, styles.screenWidth)}>
                         <Text note style={{
                             fontFamily: "pp-medium",
                             fontSize: 13,
-                            justifyContent: "flex-start",
                             marginLeft: 25,
                             marginRight: 25
-                        }}>⬅ Left = NO
-                        </Text>
-                        <Text note style={{
-                            fontFamily: "pp-medium",
-                            fontSize: 13,
-                            justifyContent: "flex-end",
-                            marginLeft: 25,
-                            marginRight: 25
-                        }}> Right = YES ➡
+                        }}>⬅ NO                                YES ➡
                         </Text>
                     </View>
             </View>
@@ -136,7 +127,10 @@ class CardView extends React.Component {
     renderCard = (card, index) => {
         return (
             <View style={swiper.card}>
-                <Text style={swiper.text}>{this.props.questions[index]}</Text>
+                <Text style={Object.assign({}, swiper.text, {
+                    marginHorizontal: 20,
+                    fontFamily: "pp-regular",
+                    fontSize: 30})}>{this.props.questions[index]}</Text>
             </View>
         )
     };
@@ -178,7 +172,7 @@ class CardView extends React.Component {
                     onSwipedRight={() => this.onSwiped('right')}
                     onSwipedTop={() => this.onSwiped('top')}
                     onSwipedBottom={() => this.onSwiped('bottom')}
-                    onTapCard={this.swipeLeft}
+                    //onTapCard={this.swipeLeft}
                     cards={this.state.cards}
                     useViewOverflow={false}
                     cardIndex={this.state.cardIndex}
@@ -203,24 +197,8 @@ class CardView extends React.Component {
 }
 
 const overlayLabels = {
-    bottom: {
-        title: 'BLEAH',
-        style: {
-            label: {
-                backgroundColor: '#20BF55',
-                borderColor: '#20BF55',
-                color: 'white',
-                borderWidth: 1
-            },
-            wrapper: {
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }
-        }
-    },
     left: {
-        title: 'NOPE',
+        title: 'NO',
         style: {
             label: {
                 backgroundColor: '#ea3232',
@@ -238,7 +216,7 @@ const overlayLabels = {
         }
     },
     right: {
-        title: 'LIKE',
+        title: 'YES',
         style: {
             label: {
                 backgroundColor: '#20BF55',
@@ -252,22 +230,6 @@ const overlayLabels = {
                 justifyContent: 'flex-start',
                 marginTop: 30,
                 marginLeft: 30
-            }
-        }
-    },
-    top: {
-        title: 'SUPER LIKE',
-        style: {
-            label: {
-                backgroundColor: '#20BF55',
-                borderColor: '#20BF55',
-                color: 'white',
-                borderWidth: 1
-            },
-            wrapper: {
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
             }
         }
     }

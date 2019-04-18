@@ -58,7 +58,7 @@ export default class PresentationScreen extends Component {
                     <FundSlideshow
                         navigation={this.props.navigation}
                         question={this.state.questionNumberTotal}
-                        cardIndex={1}
+                        cardIndex={0}
                         onSwipeLeft={() => this.updateActiveQuestion('left')}
                         onSwipeRight={() => this.updateActiveQuestion('right')}
                     />
@@ -80,13 +80,13 @@ class PresentationHeader extends Component {
                 style={Object.assign({},{padding: 10}, styles.backgroundColor)}>
                 <Text
                     style={{
-                        fontFamily: "pp-regular",
-                        fontSize: 13,
+                        fontFamily: "pp-medium",
+                        fontSize: 15,
                         textAlign: "left",
-                        marginLeft: 25,
-                        marginRight: 25
+                        marginTop: 5,
+                        marginHorizontal: 15
                     }}>
-                    These are the funds that we selected for you. You can swipe through them. Click on one if you want to find out more.
+                    These are the three stocks that we selected for you based on your quiz results.
                 </Text>
             </View>
         );
@@ -131,23 +131,21 @@ class FundSlideshow extends Component {
 }
 */
 
-class FundWhy extends Component {
-    render() {
-        return (
-            <View>
-                <Text> Why? </Text>
-                <Text note> This is a great fund! </Text>
-            </View>
-        );
-    }
-}
-
 class SeeMoreButton extends Component {
     render () {
         return (
             <Right>
-                <Button seeMore onPress={() => this.props.navigation.navigate("Calculator") }>
-                    <Text>See more</Text>
+                <Button seeMore
+                        onPress={() => this.props.navigation.navigate("Calculator")}
+                        style={{
+                            backgroundColor: "#9e4d84",
+                            marginVertical: 10
+                        }}>
+                    <Text
+                        style={{
+                            marginHorizontal: 20,
+                            fontFamily: "pp-regular",
+                            fontSize: 15}}>SEE MORE</Text>
                     <Icon name="arrow-forward" />
                 </Button>
             </Right>
@@ -180,7 +178,6 @@ class FundSlideshow extends React.Component {
                     <FundHeader fund={defaultFund}/>
                     <FundChart fund={defaultFund}/>
                     <FundDescription fund={defaultFund}/>
-                    <FundWhy/>
                     <SeeMoreButton navigation = {this.props.navigation}/>
             </View>
         )

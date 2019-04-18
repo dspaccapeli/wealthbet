@@ -4,9 +4,6 @@ import apiManager from "../data/DataModel";
 import {StackedAreaChart} from "react-native-svg-charts";
 import * as shape from "d3-shape";
 import {Button, Segment, Text} from "native-base";
-import YAxis from "react-native-svg-charts/src/y-axis";
-import LineChart from "react-native-svg-charts/src/line-chart";
-import Grid from "react-native-svg-charts/src/grid";
 
 export class FundChart extends  React.Component {
     constructor(props){
@@ -148,12 +145,21 @@ class ChartArea extends React.PureComponent {
 class TimeScale extends React.PureComponent {
     render() {
         return (
-            <Segment>
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Button transparent onPress={() => this.props.changeTimeScale('3m')}><Text>3 M</Text></Button>
+                <Button transparent onPress={() => this.props.changeTimeScale('6m')}><Text>6 M</Text></Button>
+                <Button transparent onPress={() => this.props.changeTimeScale('1y')}><Text>1 Y</Text></Button>
+                <Button transparent onPress={() => this.props.changeTimeScale('max')}><Text>MAX</Text></Button>
+            </View>
+        )
+    }
+}
+
+/*
+<Segment>
                 <Button onPress={() => this.props.changeTimeScale('3m')}><Text>3 months</Text></Button>
                 <Button onPress={() => this.props.changeTimeScale('6m')}><Text>6 months</Text></Button>
                 <Button onPress={() => this.props.changeTimeScale('1y')}><Text>1 year</Text></Button>
                 <Button onPress={() => this.props.changeTimeScale('max')}><Text>All time</Text></Button>
             </Segment>
-        )
-    }
-}
+ */
