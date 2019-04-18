@@ -65,7 +65,7 @@ export default class PortfolioScreen extends Component {
         return (
             <Container>
                 <View style={ styles.statusBar } />
-                <Content style={PortfolioStyle.content}>
+                <Content style={Object.assign({}, PortfolioStyle.content, {flex: 1})}>
                     <PortfolioHeader navigation={this.props.navigation} />
                     <PortfolioChart funds={funds}/>
                     <FundList funds={funds} navigation={this.props.navigation}/>
@@ -80,10 +80,13 @@ export default class PortfolioScreen extends Component {
 class PortfolioHeader extends Component {
     render() {
         return (
-            <Grid >
-                <Col><H1>Portfolio</H1></Col>
-                <Col><Left><UserProfile navigation={this.props.navigation}/></Left></Col>
-            </Grid>
+           <View style={{flexDirection: 'row'}}>
+               <Text style={{justifyContent: 'flex-start', fontFamily: 'pp-medium', fontSize: 20}}>Portfolio</Text>
+               <View style={{justifyContent: 'flex-end'}}>
+                   <UserProfile navigation={this.props.navigation}/>
+               </View>
+
+           </View>
         );
     }
 }
@@ -96,7 +99,7 @@ class UserProfile extends Component {
                         apiManager.updateScreen('Profile');
                         this.props.navigation.navigate('Profile')
                     }} title={"Go to profile"}>
-                <Icon name='md-contact' />
+                <Icon style={{color: 'black', height: 30, width: 50}} name='md-contact' />
             </Button>
         );
     }
@@ -165,7 +168,7 @@ class FundCard extends Component {
         let logoImage;
         switch (this.state.status) {
             case "LOADED":
-                logoImage = <Image style={{width: "50", height: "50"}} source={{uri: this.state.logo}}/>;
+                logoImage = <Image style={{width: 100, height: 70, resizeMode: 'contain',}} source={{uri: this.state.logo}} />;
                 break;
             case "LOADING":
                 logoImage = <Text> </Text>;
@@ -173,16 +176,17 @@ class FundCard extends Component {
         }
         return (
             <TouchableHighlight onPress={this.onPress} underlayColor="white">
-                <Card>
+                <Card style={{borderRadius: 10, margin: 3}}>
                     <CardItem>
-                        <Left>{logoImage}</Left>
-                        <Left><Text>{this.props.fund.symbol}</Text></Left>
-                        <Right><Text>PUT</Text>
-                            <Text note>{this.props.fund.originalValue}</Text>
-                            <Text>VALUE</Text>
-                            <Text note>{this.props.fund.currentValue}</Text>
-                            <Text>GAIN</Text>
-                            <Text note>{apiManager.computeGain(this.props.fund)}%</Text>
+                        <Left style={{marginLeft: 30}}>{logoImage}</Left>
+                        {/*<Left><Text>{this.props.fund.companyName }</Text></Left>*/}
+                        <Right>
+                            <Text style={{fontFamily: 'pp-regular'}}>PUT</Text>
+                            <Text style={{fontFamily: 'pp-regular'}} note>{this.props.fund.originalValue}</Text>
+                            <Text style={{fontFamily: 'pp-regular'}}>VALUE</Text>
+                            <Text style={{fontFamily: 'pp-regular'}} note>{this.props.fund.currentValue}</Text>
+                            <Text style={{fontFamily: 'pp-regular'}}>GAIN</Text>
+                            <Text style={{fontFamily: 'pp-regular'}} note>{apiManager.computeGain(this.props.fund)}%</Text>
                         </Right>
                     </CardItem>
                 </Card>

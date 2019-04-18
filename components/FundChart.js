@@ -99,13 +99,17 @@ class ChartArea extends React.PureComponent {
             return object.value;
         });*/
 
-        let colors = [ '#4D9E67'];
+
+        //let colors = [styles.dimmerColor.color];
+
+        let colors = [ styles.backgroundColor.backgroundColor];
 
         if(this.props.screen === 'Fund'){
             colors = [styles.dimmerColor.color];
         } else if (this.props.screen === 'Calculator'){
             colors = [styles.dimmerColor.color];
         }
+
 
         const keys   = [ 'value'];
         const svgs = [
