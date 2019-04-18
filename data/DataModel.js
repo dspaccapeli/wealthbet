@@ -223,12 +223,10 @@ class DataModel extends ObservableModel {
     }
 
     writeQuizAnswer(answer, questionIndex) {
-        let index = "q" + questionIndex;
-        let value = {
-            index: answer
-        };
-        console.log(value);
-        firebase.database().ref('users/' + this.getCurrentUser()+ '/quizAnswers').set(value)
+        let index = "q" + (questionIndex + 1);
+        firebase.database().ref('users/' + this.getCurrentUser()+ '/quizAnswers/' + index).set({
+            answer: answer
+        })
             .then(() => {
                 console.log("Go check, data was written!");
             });

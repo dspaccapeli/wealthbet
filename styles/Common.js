@@ -2,6 +2,8 @@ import {StyleSheet} from 'react-native';
 
 import { StatusBar, Platform } from 'react-native';
 
+import { Dimensions } from 'react-native';
+
 // Styles
 
 export const styles = StyleSheet.create({
@@ -11,6 +13,12 @@ export const styles = StyleSheet.create({
     },
     underStatusBar : {
         paddingTop: (Platform.OS === 'ios') ? 20 : StatusBar.currentHeight,
+    },
+    screenHeight: {
+        height: Dimensions.get('window').height,
+    },
+    screenWidth: {
+        width: Dimensions.get('window').width,
     },
     footerBottom : {
         position: 'absolute',

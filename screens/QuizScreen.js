@@ -89,14 +89,34 @@ class QuizHeader extends Component {
                             marginLeft: 25,
                             marginRight: 25,
                             marginTop: 15,
-                        }}>Quiz</Text>
+                        }}>Quiz
+                    </Text>
                     <Text note style={{
                             fontFamily: "pp-medium",
                             fontSize: 17,
                             textAlign: "left",
                             marginLeft: 25,
                             marginRight: 25
-                    }}>Answer these questions and we'll show you your future 🔮</Text>
+                    }}>Answer these questions and we'll show you your future 🔮
+                    </Text>
+                    <View style={Object.assign({},{flexDirection: 'row'}, styles.screenWidth)}>
+                        <Text note style={{
+                            fontFamily: "pp-medium",
+                            fontSize: 13,
+                            justifyContent: "flex-start",
+                            marginLeft: 25,
+                            marginRight: 25
+                        }}>⬅ Left = NO
+                        </Text>
+                        <Text note style={{
+                            fontFamily: "pp-medium",
+                            fontSize: 13,
+                            justifyContent: "flex-end",
+                            marginLeft: 25,
+                            marginRight: 25
+                        }}> Right = YES ➡
+                        </Text>
+                    </View>
             </View>
         );
     }
@@ -114,9 +134,6 @@ class CardView extends React.Component {
     }
 
     renderCard = (card, index) => {
-        console.log(this.props.questions);
-
-        //console.log(Object.keys(this.props.questions));
         return (
             <View style={swiper.card}>
                 <Text style={swiper.text}>{this.props.questions[index]}</Text>
