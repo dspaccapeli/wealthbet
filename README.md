@@ -1,3 +1,4 @@
+![Wealthbet Logo](https://github.com/dspaccapeli/wealthbet/blob/master/assets/images/warrenbee_logo.png)
 # Wealthbet
 _Final project for the Interaction Programming class_
 
